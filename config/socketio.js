@@ -1,5 +1,9 @@
 "use strict";
 
+var fs = require("fs");
+var path = require("path");
+var chatController = require(path.join(__dirname, "../lib/chat/controller"));
+
 module.exports = function (io) {
 	var root = io.of("/");
 	var authorised = io.of("/authorised");
@@ -11,7 +15,8 @@ module.exports = function (io) {
 			username: "Chris (" + socket.id.slice(0,5) + ")",
 			steamId: "11111111",
 			email: "cablanchard@gmail.com",
-			bans: []
+			bans: [],
+			avatar: "http://www.ensl.org/local/avatars/6359.jpg"
 		};
 		next();
 	});
@@ -27,6 +32,9 @@ module.exports = function (io) {
 		});		
 	};
 
+	// Activate chat controller on root namespace
+	chatController(root);
+
 	io.on('connection', function (socket) {
 		refreshGatherers();
 	  
@@ -37,7 +45,3 @@ module.exports = function (io) {
 	  });
 	});
 };
-
-// socket.on('my other event', function (data) {
-//   console.log(data);
-// });

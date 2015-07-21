@@ -1,0 +1,13 @@
+#chatroom {
+	margin-top: 20px;
+}
+
+.add-left {
+	margin-left: 10px;
+}
+
+#chatmessages {
+	max-height: 70%;
+	min-height: 70%;
+	overflow-y: scroll;
+}

@@ -23,6 +23,7 @@ npm start
 - Admin tools
 - Add a backend datastore to persist gather data and messages
 - Add sounds
+- Add WebRTC for internal voice comms
 
 ## License
 

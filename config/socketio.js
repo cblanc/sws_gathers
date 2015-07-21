@@ -6,8 +6,8 @@ module.exports = function (io) {
 
 	// Authorisation
 	root.use(function (socket, next) {
-		console.log(socket)
 		socket._user = {
+			id: 1,
 			username: "Chris (" + socket.id.slice(0,5) + ")",
 			steamId: "11111111",
 			email: "cablanchard@gmail.com",

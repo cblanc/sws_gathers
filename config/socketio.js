@@ -11,7 +11,7 @@ module.exports = function (io) {
 	// Authorisation
 	root.use(function (socket, next) {
 		socket._user = {
-			id: 1,
+			id: Math.floor(Math.random () * 10000000),
 			username: "Chris (" + socket.id.slice(0,5) + ")",
 			steamId: "11111111",
 			email: "cablanchard@gmail.com",

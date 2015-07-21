@@ -186,6 +186,5 @@ var MessageBar = React.createClass({
 	}
 });
 
-
 React.render(<GathererMenu count={0} gatherers={[]} />, document.getElementById('side-menu'));
 React.render(<Chatroom history={[]}/>, document.getElementById('chatroom'));

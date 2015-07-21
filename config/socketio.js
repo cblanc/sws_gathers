@@ -4,26 +4,36 @@ module.exports = function (io) {
 	var root = io.of("/");
 	var authorised = io.of("/authorised");
 
-	var emitCount = function () {
-		root.emit('gatherCount', {
-			count: root.sockets.length
+	// Authorisation
+	root.use(function (socket, next) {
+		console.log(socket)
+		socket._user = {
+			username: "Chris (" + socket.id.slice(0,5) + ")",
+			steamId: "11111111",
+			email: "cablanchard@gmail.com",
+			bans: []
+		};
+		next();
+	});
+
+	var refreshGatherers = function (socket) {
+		var receiver = (socket !== undefined) ? socket : root;
+		
+		receiver.emit('gatherCount', {
+			count: root.sockets.length,
+			gatherers: root.sockets.map(function (socket) {
+				return socket._user
+			})
 		});		
 	};
 
-	var onConnection = function (socket) {
-		emitCount();
-	};
-
-	var onDisconnect = function (socket) {
-		emitCount();
-	};
-
 	io.on('connection', function (socket) {
-
-		onConnection(socket);
+		refreshGatherers();
 	  
+		socket.on('refreshGathers', refreshGatherers.bind(null, socket));
+
 	  socket.on('disconnect', function (socket) {
-	    onDisconnect();
+	    refreshGatherers();
 	  });
 	});
 };

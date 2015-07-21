@@ -1,10 +1,4 @@
-var MenuCounter = React.createClass({displayName: "MenuCounter",
-  componentDidMount: function () {
-    socket.on('gatherCount', this.updateCount)
-  },
-  updateCount: function (data) {
-    this.setProps({count: data.count});
-  },
+var GatherCounter = React.createClass({displayName: "GatherCounter",
   render: function () {
     return (
       React.createElement("li", null, 
@@ -14,4 +8,41 @@ var MenuCounter = React.createClass({displayName: "MenuCounter",
   }
 });
 
-React.render(React.createElement(MenuCounter, {count: 0}), document.getElementById('side-menu'));
+var Gatherer = React.createClass({displayName: "Gatherer",
+  render: function () {
+    return (
+      React.createElement("li", null, 
+        React.createElement("a", {href: "#"}, this.props.gatherer.username)
+      )
+    );
+  }
+});
+
+var GathererMenu = React.createClass({displayName: "GathererMenu",
+  componentDidMount: function () {
+    socket.on('gatherCount', this.updateGatherers);
+  },
+  updateGatherers: function (data) {
+    this.setProps({
+      count: data.count,
+      gatherers: data.gatherers
+    });
+  },
+  render: function () {
+    var gatherers = this.props.gatherers.map(function (gatherer) {
+      return (
+        React.createElement(Gatherer, {gatherer: gatherer})
+      );
+    });
+    return (
+      React.createElement("ul", {className: "nav", id: "side-menu"}, 
+        React.createElement(GatherCounter, React.__spread({},  this.props)), 
+        gatherers
+      )
+    );
+  }
+});
+
+
+
+React.render(React.createElement(GathererMenu, {count: 0, gatherers: []}), document.getElementById('side-menu'));

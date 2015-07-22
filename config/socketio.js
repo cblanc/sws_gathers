@@ -1,12 +1,11 @@
 "use strict";
 
-var fs = require("fs");
-var path = require("path");
-var enslClient = require(path.join(__dirname, "../lib/ensl/client"))();
-var chatController = require(path.join(__dirname, "../lib/chat/controller"));
-var gatherController = require(path.join(__dirname, "../lib/gather/controller"));
-var userController = require(path.join(__dirname, "../lib/user/controller"));
 var winston = require("winston");
+var User = require("../lib/user/user");
+var enslClient = require("../lib/ensl/client")();
+var chatController = require("../lib/chat/controller");
+var gatherController = require("../lib/gather/controller");
+var userController = require("../lib/user/controller");
 
 module.exports = function (io) {
 	var id = 2131;
@@ -22,7 +21,7 @@ module.exports = function (io) {
 				winston.error(error);
 				return next(error)
 			};
-			socket._user = body;
+			socket._user = new User(body);
 			next();
 		});
 	});

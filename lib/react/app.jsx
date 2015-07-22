@@ -165,10 +165,6 @@ var ChatMessage = React.createClass({
 			timeAgo: $.timeago(this.props.createdAt)
 		}
 	},
-	imageUrl: function () {
-		var BASE_URL = "http://www.ensl.org/"
-		return BASE_URL + this.props.avatar;
-	},
 	refreshTime: function () {
 		var self = this;
 		self.setState({
@@ -180,7 +176,7 @@ var ChatMessage = React.createClass({
 			<li className="left clearfix">
 				<span className="chat-img pull-left">
 						<img 
-							src={this.imageUrl()} 
+							src={this.props.avatar} 
 							alt="User Avatar" 
 							height="40"
 							width="40"

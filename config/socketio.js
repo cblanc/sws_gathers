@@ -6,13 +6,11 @@ var enslClient = require(path.join(__dirname, "../lib/ensl/client"))();
 var chatController = require(path.join(__dirname, "../lib/chat/controller"));
 var winston = require("winston");
 
-var gathererCache = {};
+var userCache = {};
 
 module.exports = function (io) {
 	var root = io.of("/");
 	var authorised = io.of("/authorised");
-
-
 
 	var id = 2131;
 
@@ -30,7 +28,7 @@ module.exports = function (io) {
 		});
 	});
 
-	var refreshGatherers = function (socket) {
+	var refreshUsers = function (socket) {
 		var receiver = (socket !== undefined) ? socket : root;
 		
 		var newCache = {};
@@ -38,19 +36,19 @@ module.exports = function (io) {
 			var user = socket._user;
 			newCache[user.id] = user;
 		});
-		gathererCache = newCache;
+		userCache = newCache;
 
-		var gatherers = [];
+		var users = [];
 
-		for (var id in gathererCache) {
-			if (gathererCache.hasOwnProperty(id)) {
-				gatherers.push(gathererCache[id]);
+		for (var id in userCache) {
+			if (userCache.hasOwnProperty(id)) {
+				users.push(userCache[id]);
 			}
 		}
 
-		receiver.emit('gatherCount', {
+		receiver.emit('userCount', {
 			count: root.sockets.length,
-			gatherers: gatherers
+			users: users
 		});		
 	};
 
@@ -58,9 +56,9 @@ module.exports = function (io) {
 	chatController(root);
 
 	io.on('connection', function (socket) {
-		refreshGatherers();
+		refreshUsers();
 	  
-		socket.on('refreshGathers', refreshGatherers.bind(null, socket));
+		socket.on('refreshUsers', refreshUsers.bind(null, socket));
 
 		socket.on("authorize:id", function (data) {
 			var id = parseInt(data.id, 10);
@@ -72,12 +70,12 @@ module.exports = function (io) {
 					return winston.error(error);
 				}
 				socket._user = body;
-				refreshGatherers();
+				refreshUsers();
 			});
 		});
 
 	  socket.on('disconnect', function (socket) {
-	    refreshGatherers();
+	    refreshUsers();
 	  });
 	});
 };

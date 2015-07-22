@@ -2,12 +2,12 @@ $(function () {
 
 "use strict";
 
-var GatherCounter = React.createClass({
+var UserCounter = React.createClass({
 	render: function () {
 		return (
 			<li>
 				<a href="#">
-					<i className="fa fa-users fa-fw"></i> Gatherers 
+					<i className="fa fa-users fa-fw"></i> Online 
 					<span className="badge add-left"> {this.props.count} </span>
 				</a>
 			</li>
@@ -53,30 +53,30 @@ var UserLogin = React.createClass({
 	}
 })
 
-var Gatherer = React.createClass({
+var User = React.createClass({
 	render: function () {
 		return (
 			<li>
-				<a href="#">{this.props.gatherer.username}</a>
+				<a href="#">{this.props.user.username}</a>
 			</li>
 		);
 	}
 });
 
-var GathererMenu = React.createClass({
+var UserMenu = React.createClass({
 	componentDidMount: function () {
-		socket.on('gatherCount', this.updateGatherers);
+		socket.on('userCount', this.updateUsers);
 	},
-	updateGatherers: function (data) {
+	updateUsers: function (data) {
 		this.setProps({
 			count: data.count,
-			gatherers: data.gatherers
+			users: data.users
 		});
 	},
 	render: function () {
-		var gatherers = this.props.gatherers.map(function (gatherer) {
+		var users = this.props.users.map(function (user) {
 			return (
-				<Gatherer gatherer={gatherer} />
+				<User user={user} />
 			);
 		});
 		return (
@@ -84,8 +84,8 @@ var GathererMenu = React.createClass({
 				<li>
 					<UserLogin />
 				</li>
-				<GatherCounter {...this.props} />
-				{gatherers}
+				<UserCounter {...this.props} />
+				{users}
 			</ul>
 		);
 	}
@@ -251,7 +251,7 @@ function initialiseComponents () {
 			console.log("Disconnected")
 		});
 
-	React.render(<GathererMenu count={0} gatherers={[]} />, document.getElementById('side-menu'));
+	React.render(<UserMenu count={0} users={[]} />, document.getElementById('side-menu'));
 	React.render(<Chatroom history={[]}/>, document.getElementById('chatroom'));
 };
 

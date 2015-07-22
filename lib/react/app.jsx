@@ -16,8 +16,19 @@ var GatherCounter = React.createClass({
 });
 
 var UserLogin = React.createClass({
-	handleSubmit: function () {
-
+	authorizeId: function (id) {
+		id = parseInt(id, 10);
+		socket.emit("authorize:id", {
+			id: id
+		});
+	},
+	handleSubmit: function (e) {
+		e.preventDefault();
+		var id = React.findDOMNode(this.refs.authorize_id).value.trim();
+		if (!id) return;
+		React.findDOMNode(this.refs.authorize_id).value = '';
+		this.authorizeId(id);
+		return;
 	},
 	render: function () {
 		return (
@@ -27,6 +38,7 @@ var UserLogin = React.createClass({
 						id="btn-input" 
 						type="text" 
 						className="form-control" 
+						ref="authorize_id"
 						placeholder="Choose an ID..." />
 					<span className="input-group-btn">
 						<input 
@@ -152,6 +164,10 @@ var ChatMessage = React.createClass({
 			timeAgo: $.timeago(this.props.createdAt)
 		}
 	},
+	imageUrl: function () {
+		var BASE_URL = "http://www.ensl.org/"
+		return BASE_URL + this.props.avatar;
+	},
 	refreshTime: function () {
 		var self = this;
 		self.setState({
@@ -163,9 +179,10 @@ var ChatMessage = React.createClass({
 			<li className="left clearfix">
 				<span className="chat-img pull-left">
 						<img 
-							src={this.props.avatar} 
+							src={this.imageUrl()} 
 							alt="User Avatar" 
 							height="40"
+							width="40"
 							className="img-circle" />
 				</span>
 				<div className="chat-body clearfix">

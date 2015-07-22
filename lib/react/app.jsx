@@ -18,7 +18,7 @@ var UserCounter = React.createClass({
 var UserLogin = React.createClass({
 	authorizeId: function (id) {
 		id = parseInt(id, 10);
-		socket.emit("authorize:id", {
+		socket.emit("users:authorize", {
 			id: id
 		});
 	},

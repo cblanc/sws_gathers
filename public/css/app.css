@@ -1,3 +1,4 @@
+
 #chatroom {
 	margin-top: 20px;
 }
@@ -10,4 +11,8 @@
 	max-height: 70%;
 	min-height: 70%;
 	overflow-y: scroll;
+}
+
+.signin {
+	margin: 0px 10px;
 }

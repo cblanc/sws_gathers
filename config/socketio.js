@@ -47,7 +47,7 @@ module.exports = function (io) {
 		}
 
 		receiver.emit('userCount', {
-			count: root.sockets.length,
+			count: users.length,
 			users: users
 		});		
 	};

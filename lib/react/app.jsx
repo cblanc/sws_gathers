@@ -33,7 +33,7 @@ var UserLogin = React.createClass({
 	render: function () {
 		return (
 			<form onSubmit={this.handleSubmit} >
-				<div className="input-group">
+				<div className="input-group signin">
 					<input 
 						id="btn-input" 
 						type="text" 
@@ -48,12 +48,15 @@ var UserLogin = React.createClass({
 							value="Login" />
 					</span>
 				</div>
+				<div className="signin">
+				<p className="text-center"><small>Just a temporary measure until genuine authentication is implemented</small></p>
+				</div>
 			</form>
 		);
 	}
 })
 
-var User = React.createClass({
+var UserLine = React.createClass({
 	render: function () {
 		return (
 			<li>
@@ -76,16 +79,14 @@ var UserMenu = React.createClass({
 	render: function () {
 		var users = this.props.users.map(function (user) {
 			return (
-				<User user={user} />
+				<UserLine user={user} />
 			);
 		});
 		return (
 			<ul className="nav" id="side-menu">
-				<li>
-					<UserLogin />
-				</li>
 				<UserCounter {...this.props} />
 				{users}
+				<li><br /><UserLogin /><br /></li>
 			</ul>
 		);
 	}

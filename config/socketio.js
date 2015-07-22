@@ -6,6 +6,8 @@ var enslClient = require(path.join(__dirname, "../lib/ensl/client"))();
 var chatController = require(path.join(__dirname, "../lib/chat/controller"));
 var winston = require("winston");
 
+var gathererCache = {};
+
 module.exports = function (io) {
 	var root = io.of("/");
 	var authorised = io.of("/authorised");
@@ -31,11 +33,24 @@ module.exports = function (io) {
 	var refreshGatherers = function (socket) {
 		var receiver = (socket !== undefined) ? socket : root;
 		
+		var newCache = {};
+		root.sockets.forEach(function (socket) {
+			var user = socket._user;
+			newCache[user.id] = user;
+		});
+		gathererCache = newCache;
+
+		var gatherers = [];
+
+		for (var id in gathererCache) {
+			if (gathererCache.hasOwnProperty(id)) {
+				gatherers.push(gathererCache[id]);
+			}
+		}
+
 		receiver.emit('gatherCount', {
 			count: root.sockets.length,
-			gatherers: root.sockets.map(function (socket) {
-				return socket._user
-			})
+			gatherers: gatherers
 		});		
 	};
 

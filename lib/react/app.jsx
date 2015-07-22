@@ -1,3 +1,7 @@
+$(function () {
+
+"use strict";
+
 var GatherCounter = React.createClass({
 	render: function () {
 		return (
@@ -10,6 +14,32 @@ var GatherCounter = React.createClass({
 		);
 	}
 });
+
+var UserLogin = React.createClass({
+	handleSubmit: function () {
+
+	},
+	render: function () {
+		return (
+			<form onSubmit={this.handleSubmit} >
+				<div className="input-group">
+					<input 
+						id="btn-input" 
+						type="text" 
+						className="form-control" 
+						placeholder="Choose an ID..." />
+					<span className="input-group-btn">
+						<input 
+							type="submit" 
+							className="btn btn-primary" 
+							id="btn-chat" 
+							value="Login" />
+					</span>
+				</div>
+			</form>
+		);
+	}
+})
 
 var Gatherer = React.createClass({
 	render: function () {
@@ -39,6 +69,9 @@ var GathererMenu = React.createClass({
 		});
 		return (
 			<ul className="nav" id="side-menu">
+				<li>
+					<UserLogin />
+				</li>
 				<GatherCounter {...this.props} />
 				{gatherers}
 			</ul>
@@ -186,5 +219,27 @@ var MessageBar = React.createClass({
 	}
 });
 
-React.render(<GathererMenu count={0} gatherers={[]} />, document.getElementById('side-menu'));
-React.render(<Chatroom history={[]}/>, document.getElementById('chatroom'));
+var socket;
+
+function initialiseComponents () {
+	socket = io("http://localhost:8000/")
+		.on("connect", function () {
+			console.log("Connected");
+		})
+		.on("reconnect", function () {
+			console.log("Reconnected");
+		})
+		.on("disconnect", function () {
+			console.log("Disconnected")
+		});
+
+	React.render(<GathererMenu count={0} gatherers={[]} />, document.getElementById('side-menu'));
+	React.render(<Chatroom history={[]}/>, document.getElementById('chatroom'));
+};
+
+initialiseComponents();
+
+
+
+});
+

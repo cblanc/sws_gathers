@@ -2,23 +2,26 @@
 
 var fs = require("fs");
 var path = require("path");
+var enslClient = require(path.join(__dirname, "../lib/ensl/client"))();
 var chatController = require(path.join(__dirname, "../lib/chat/controller"));
 
 module.exports = function (io) {
 	var root = io.of("/");
 	var authorised = io.of("/authorised");
 
+
+	var id = 2131;
+
 	// Authorisation
 	root.use(function (socket, next) {
-		socket._user = {
-			id: Math.floor(Math.random () * 10000000),
-			username: "Chris (" + socket.id.slice(0,5) + ")",
-			steamId: "11111111",
-			email: "cablanchard@gmail.com",
-			bans: [],
-			avatar: "http://www.ensl.org/local/avatars/6359.jpg"
-		};
-		next();
+		enslClient.getUserById({
+			id: id
+		}, function (error, response, body) {
+			if (error) return next(error);
+			socket._user = body;
+			socket._user.avatar = enslClient.getFullAvatarUri(socket._user.avatar);
+			next();
+		});
 	});
 
 	var refreshGatherers = function (socket) {

@@ -5,6 +5,8 @@ var path = require("path");
 
 var helpers = {}
 
-helpers.app = require(path.join(__dirname, "../../index.js"));
+helpers.server = require(path.join(__dirname, "../../index.js"));
+
+helpers.app = helpers.server.app;
 
 module.exports = helpers;

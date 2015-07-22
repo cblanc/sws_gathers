@@ -4,18 +4,43 @@ var fs = require("fs");
 var path = require("path");
 var enslClient = require(path.join(__dirname, "../lib/ensl/client"))();
 var chatController = require(path.join(__dirname, "../lib/chat/controller"));
+var gatherController = require(path.join(__dirname, "../lib/gather/controller"));
 var winston = require("winston");
 
+var rootNamespace;
+
 var userCache = {};
+var refreshUsers = function (socket) {
+	var receiver = (socket !== undefined) ? socket : rootNamespace;
+	
+	var newCache = {};
+	rootNamespace.sockets.forEach(function (socket) {
+		var user = socket._user;
+		newCache[user.id] = user;
+	});
+	userCache = newCache;
+
+	var users = [];
+
+	for (var id in userCache) {
+		if (userCache.hasOwnProperty(id)) {
+			users.push(userCache[id]);
+		}
+	}
+
+	receiver.emit('userCount', {
+		count: users.length,
+		users: users
+	});		
+};
 
 module.exports = function (io) {
-	var root = io.of("/");
-	var authorised = io.of("/authorised");
+	rootNamespace = io.of("/");
 
 	var id = 2131;
 
 	// Authorisation
-	root.use(function (socket, next) {
+	rootNamespace.use(function (socket, next) {
 		enslClient.getUserById({
 			id: id
 		}, function (error, response, body) {
@@ -28,33 +53,6 @@ module.exports = function (io) {
 		});
 	});
 
-	var refreshUsers = function (socket) {
-		var receiver = (socket !== undefined) ? socket : root;
-		
-		var newCache = {};
-		root.sockets.forEach(function (socket) {
-			var user = socket._user;
-			newCache[user.id] = user;
-		});
-		userCache = newCache;
-
-		var users = [];
-
-		for (var id in userCache) {
-			if (userCache.hasOwnProperty(id)) {
-				users.push(userCache[id]);
-			}
-		}
-
-		receiver.emit('userCount', {
-			count: users.length,
-			users: users
-		});		
-	};
-
-	// Activate chat controller on root namespace
-	chatController(root);
-
 	io.on('connection', function (socket) {
 		refreshUsers();
 	  
@@ -66,8 +64,11 @@ module.exports = function (io) {
 			enslClient.getUserById({
 				id: id
 			}, function (error, response, body) {
-				if (error) {
-					return winston.error(error);
+				if (error || response.statusCode !== 200) {
+					winston.error("An error occurred in authorising id", id);
+					winston.error(error);
+					winston.error("ENSL API status:", response.statusCode);
+					return;
 				}
 				socket._user = body;
 				refreshUsers();
@@ -78,4 +79,10 @@ module.exports = function (io) {
 	    refreshUsers();
 	  });
 	});
+
+	// Activate chat controller on rootNamespace namespace
+	chatController(rootNamespace);
+	
+	// Activate gather controller on rootNamespace namespace
+	gatherController(rootNamespace);
 };

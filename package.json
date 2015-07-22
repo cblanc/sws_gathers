@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "test": "NODE_ENV=test mocha spec/",
-    "start": "node index.js",
+    "start": "npm run compile:react && node index.js",
     "compile:dev:react": "node_modules/react-tools/bin/jsx --watch --no-cache-dir --source-map-inline -x jsx lib/react/ public/js/",
     "compile:react": "node_modules/react-tools/bin/jsx -x jsx lib/react/ public/js/",
     "dev": "nodemon index.js"

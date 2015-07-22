@@ -222,7 +222,8 @@ var MessageBar = React.createClass({
 var socket;
 
 function initialiseComponents () {
-	socket = io("http://localhost:8000/")
+	var socketUrl = window.location.protocol + "//" + window.location.host;
+	socket = io(socketUrl)
 		.on("connect", function () {
 			console.log("Connected");
 		})

@@ -237,6 +237,30 @@ var MessageBar = React.createClass({
 	}
 });
 
+var Gather = React.createClass({
+	joinGather: function (e) {
+		e.preventDefault();
+		alert("Joined gather!");
+	},
+	render: function () {
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					Current Gather
+				</div>
+				<div className="panel-body">
+				</div>
+				<div className="panel-footer">
+					<button 
+						onClick={this.joinGather} 
+						className="btn btn-primary" 
+						ref="joinbutton">Join Gather</button>
+				</div>
+			</div>
+		);
+	}
+});
+
 var socket;
 
 function initialiseComponents () {
@@ -254,6 +278,7 @@ function initialiseComponents () {
 
 	React.render(<UserMenu count={0} users={[]} />, document.getElementById('side-menu'));
 	React.render(<Chatroom history={[]}/>, document.getElementById('chatroom'));
+	React.render(<Gather history={[]}/>, document.getElementById('gathers'));
 };
 
 initialiseComponents();

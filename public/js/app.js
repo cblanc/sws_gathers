@@ -166,6 +166,7 @@ var ChatMessage = React.createClass({displayName: "ChatMessage",
 							src: this.props.avatar, 
 							alt: "User Avatar", 
 							height: "40", 
+							width: "40", 
 							className: "img-circle"})
 				), 
 				React.createElement("div", {className: "chat-body clearfix"}, 

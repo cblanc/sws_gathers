@@ -28,6 +28,7 @@
     "express": "~4.13.1",
     "express-handlebars": "~2.0.1",
     "extend": "^3.0.0",
+    "javascript-state-machine": "^2.3.5",
     "morgan": "~1.6.1",
     "node-mysql": "~0.4.2",
     "react-tools": "~0.13.3",

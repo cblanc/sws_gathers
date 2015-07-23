@@ -8,12 +8,11 @@ var gatherController = require("../lib/gather/controller");
 var userController = require("../lib/user/controller");
 
 module.exports = function (io) {
-	var id = 2131;
-
 	var rootNamespace = io.of('/')
 
 	// Authorisation
 	io.use(function (socket, next) {
+		var id = Math.floor(Math.random() * 5000) + 1;
 		enslClient.getUserById({
 			id: id
 		}, function (error, response, body) {

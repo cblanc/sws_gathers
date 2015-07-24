@@ -67,6 +67,12 @@ var UserLine = React.createClass({
 });
 
 var UserMenu = React.createClass({
+	getDefaultProps: function () {
+		return {
+			count: 0,
+			users: []
+		};
+	},
 	componentDidMount: function () {
 		socket.on('userCount', this.updateUsers);
 	},
@@ -93,6 +99,11 @@ var UserMenu = React.createClass({
 });
 
 var Chatroom = React.createClass({
+	getDefaultProps: function () {
+		return {
+			history: []
+		};
+	},
 	componentDidMount: function () {
 		var self = this;
 		var TIMER_INTERVAL = 60000; // Every minute
@@ -129,7 +140,6 @@ var Chatroom = React.createClass({
 	},
 	scrollToBottom: function () {
 		var node = React.findDOMNode(this.refs.messageContainer);
-		console.log(node)
 	  node.scrollTop = node.scrollHeight;
 	},
 	render: function () {
@@ -234,16 +244,40 @@ var MessageBar = React.createClass({
 });
 
 var Gather = React.createClass({
+	getDefaultProps: function () {
+		return {
+			gather: {
+				gatherers: []
+			}
+		}
+	},
+	componentDidMount: function () {
+		var self = this;
+		socket.on("gather:refresh", function (data) {
+			self.setProps({
+				gather: data.gather
+			});
+		});
+	},
 	joinGather: function (e) {
 		e.preventDefault();
-		alert("Joined gather!");
+		socket.emit("gather:join", {});
 	},
 	render: function () {
+		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
+			console.log(gatherer)
+			return (<Gatherer gatherer={gatherer} />);
+		})
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
 					Current Gather
 				</div>
+				<table className="table">
+					<tbody>
+						{gatherers}
+					</tbody>
+				</table>
 				<div className="panel-body">
 				</div>
 				<div className="panel-footer">
@@ -253,6 +287,14 @@ var Gather = React.createClass({
 						ref="joinbutton">Join Gather</button>
 				</div>
 			</div>
+		);
+	}
+});
+
+var Gatherer = React.createClass({
+	render: function () {
+		return (
+			<tr><td>{this.props.gatherer.user.username}</td></tr>
 		);
 	}
 });
@@ -272,9 +314,9 @@ function initialiseComponents () {
 			console.log("Disconnected")
 		});
 
-	React.render(<UserMenu count={0} users={[]} />, document.getElementById('side-menu'));
-	React.render(<Chatroom history={[]}/>, document.getElementById('chatroom'));
-	React.render(<Gather history={[]}/>, document.getElementById('gathers'));
+	React.render(<UserMenu />, document.getElementById('side-menu'));
+	React.render(<Chatroom />, document.getElementById('chatroom'));
+	React.render(<Gather />, document.getElementById('gathers'));
 };
 
 initialiseComponents();

@@ -41,4 +41,8 @@ var createUser = helpers.createUser = (function () {
 	}
 })()
 
+var random = helpers.random = function (n) {
+	return Math.floor(Math.random () * n);
+}
+
 module.exports = helpers;

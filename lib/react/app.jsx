@@ -251,11 +251,18 @@ var Gather = React.createClass({
 			}
 		}
 	},
+	joinedGather: function () {
+		var self = this;
+		return this.props.gather.gatherers.some(function (gatherer) {
+			return gatherer.user.id === self.props.user.id;
+		});
+	},
 	componentDidMount: function () {
 		var self = this;
 		socket.on("gather:refresh", function (data) {
 			self.setProps({
-				gather: data.gather
+				gather: data.gather,
+				user: data.user
 			});
 		});
 	},
@@ -263,38 +270,81 @@ var Gather = React.createClass({
 		e.preventDefault();
 		socket.emit("gather:join", {});
 	},
+	leaveGather: function (e) {
+		e.preventDefault();
+		socket.emit("gather:leave", {});
+	},
 	render: function () {
-		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
-			console.log(gatherer)
-			return (<Gatherer gatherer={gatherer} />);
-		})
+		var joinButton;
+		if (this.joinedGather()) {
+			joinButton = (<button 
+							onClick={this.leaveGather} 
+							className="btn btn-danger">Leave Gather</button>);
+		} else {
+			joinButton = (<button 
+							onClick={this.joinGather} 
+							className="btn btn-primary">Join Gather</button>);
+		}
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					Current Gather
+					Current Gather 
+					<span className="badge add-left"> {this.props.gather.gatherers.length} </span>
 				</div>
-				<table className="table">
-					<tbody>
-						{gatherers}
-					</tbody>
-				</table>
+				<Gatherers gatherers={this.props.gather.gatherers} />
 				<div className="panel-body">
 				</div>
-				<div className="panel-footer">
-					<button 
-						onClick={this.joinGather} 
-						className="btn btn-primary" 
-						ref="joinbutton">Join Gather</button>
+				<div className="panel-footer text-right">
+					{joinButton}
 				</div>
 			</div>
 		);
 	}
 });
 
-var Gatherer = React.createClass({
+// var GatherState = React.createClass({
+// 	getDefaultProps: function () {
+// 		return {
+// 			"state": "none"
+// 		}
+// 	},
+// 	stateDescription: function () {
+// 		switch(this.props.date) {
+// 			case "gathering":
+// 				return "Waiting on more players to join"
+// 		}
+// 	},
+// 	render: function () {
+// 		<div className="well">
+// 			<p>{this.displayState}</p>
+// 		</div>
+// 	}
+// })
+
+var Gatherers = React.createClass({
 	render: function () {
+		var gatherers = this.props.gatherers.map(function (gatherer) {
+			return (
+				<tr>
+					<td>{gatherer.user.username}</td>
+					<td>Division 2</td>
+					<td>Lerk</td>
+				</tr>
+			);
+		})
 		return (
-			<tr><td>{this.props.gatherer.user.username}</td></tr>
+			<table className="table table-condensed">
+				<thead>
+					<tr>
+						<th>Player</th>
+						<th>Ability</th>
+						<th>Life Forms</th>
+					</tr>
+				</thead>
+				<tbody>
+					{gatherers}
+				</tbody>
+			</table>
 		);
 	}
 });

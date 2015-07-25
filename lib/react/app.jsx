@@ -324,16 +324,23 @@ var Gather = React.createClass({
 var Gatherers = React.createClass({
 	render: function () {
 		var gatherers = this.props.gatherers.map(function (gatherer) {
+			var lifeforms = (
+				gatherer.user.ability.lifeforms.map(function (lifeform) {
+					return <span className="label label-default">{lifeform}</span>;
+				})
+			);
+			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>)
+
 			return (
 				<tr>
 					<td>{gatherer.user.username}</td>
-					<td>Division 2</td>
-					<td>Lerk</td>
+					<td>{division}</td>
+					<td>{lifeforms}</td>
 				</tr>
 			);
 		})
 		return (
-			<table className="table table-condensed">
+			<table className="table table-striped gatherer-table">
 				<thead>
 					<tr>
 						<th>Player</th>

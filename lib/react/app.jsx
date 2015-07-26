@@ -56,16 +56,6 @@ var UserLogin = React.createClass({
 	}
 })
 
-var UserLine = React.createClass({
-	render: function () {
-		return (
-			<li>
-				<a href="#">{this.props.user.username}</a>
-			</li>
-		);
-	}
-});
-
 var UserMenu = React.createClass({
 	getDefaultProps: function () {
 		return {
@@ -85,7 +75,7 @@ var UserMenu = React.createClass({
 	render: function () {
 		var users = this.props.users.map(function (user) {
 			return (
-				<UserLine user={user} />
+				<li key={user.id}><a href="#">{user.username}</a></li>
 			);
 		});
 		return (
@@ -128,7 +118,7 @@ var Chatroom = React.createClass({
 		socket.emit("message:refresh", {});
 
 		self.timer = setInterval(function () {
-			self.refs.messages.refreshTime();
+			if (self.refs.messages) self.refs.messages.refreshTime();
 		}, TIMER_INTERVAL);
 	},
 
@@ -243,6 +233,93 @@ var MessageBar = React.createClass({
 	}
 });
 
+var JoinGatherButton = React.createClass({
+	joinGather: function (e) {
+		e.preventDefault();
+		socket.emit("gather:join", {});
+	},
+	render: function () {
+		var message = this.props.buttonName || "Join Gather";
+		var buttonClass = "btn btn-primary";
+		if (this.props.buttonClass) {
+			buttonClass += " " + this.props.buttonClass;
+		}
+		return (<button 
+							onClick={this.joinGather} 
+							className={buttonClass}>{message}</button>)
+	}
+});
+
+var GatherProgress = React.createClass({
+	gatheringProgress: function () {
+		var num = this.props.gather.gatherers.length;
+		var den = 12;
+		return {
+			num: num,
+			den: den,
+			message: num + " / " + den
+		};
+	},
+	electionProgress: function () {
+		var num = this.props.gather.gatherers.reduce(function (acc, gatherer) {
+			if (gatherer.leaderVote) acc++;
+			return acc;
+		}, 0);
+		var den = 12;
+		return {
+			num: num,
+			den: den,
+			message: den - num + " more votes required"
+		};
+	},
+	selectionProgress: function () {
+		var num = this.props.gather.gatherers.reduce(function (acc, gatherer) {
+			if (gatherer.team !== "lobby") acc++;
+			return acc;
+		}, 0);
+		var den = 12;
+
+		return {
+			num: num,
+			den: den,
+			message: num + " out of " + den + " players assigned"
+		};
+	},
+	render: function () {
+		var progress;
+		var gatherState = this.props.gather.state;
+		if (gatherState === 'gathering' && this.props.gather.gatherers.length) {
+			progress = this.gatheringProgress();
+		} else if (gatherState === 'election') {
+			progress = this.electionProgress();
+		} else if (gatherState === 'selection') {
+			progress = this.selectionProgress();
+		}
+		if (progress) {
+			var style = {
+				width: Math.round((progress.num / progress.den * 100)) + "%"
+			};
+			return (
+				<div className="panel-body">
+					<p>Gather Progress</p>
+					<div className="progress">
+					  <div className="progress-bar progress-bar-striped active" 
+					  	data-role="progressbar" 
+					  	data-aria-valuenow={progress.num} 
+					  	data-aria-valuemin="0" 
+					  	data-aria-valuemax={progress.den} 
+					  	style={style}>
+					    {progress.message}
+					  </div>
+				  </div>
+				</div>
+			);
+		} else {
+			return false;
+		}
+	}
+});
+
 var Gather = React.createClass({
 	getDefaultProps: function () {
 		return {
@@ -266,93 +343,116 @@ var Gather = React.createClass({
 			});
 		});
 	},
-	joinGather: function (e) {
-		e.preventDefault();
-		socket.emit("gather:join", {});
+	stateDescription: function () {
+		switch(this.props.gather.state) {
+			case "gathering":
+				return "Waiting for more gatherers";
+			case "election":
+				return "Currently voting for team leaders";
+			case "selection":
+				return "Waiting for leaders to picking teams";
+			case "done":
+				return "Gather completed";
+			default:
+				return "Initialising gather";
+		}
 	},
 	leaveGather: function (e) {
 		e.preventDefault();
 		socket.emit("gather:leave", {});
 	},
+	inviteToGather: function (e) {
+		e.preventDefault();
+	},
 	render: function () {
 		var joinButton;
 		if (this.joinedGather()) {
-			joinButton = (<button 
+			joinButton = (<li><button 
 							onClick={this.leaveGather} 
-							className="btn btn-danger">Leave Gather</button>);
+							className="btn btn-danger">Leave Gather</button></li>);
 		} else {
-			joinButton = (<button 
-							onClick={this.joinGather} 
-							className="btn btn-primary">Join Gather</button>);
+			joinButton = (<li><JoinGatherButton /></li>);
+		}
+		var inviteButton;
+		if (this.props.gather.state === 'gathering') {
+			inviteButton = (<li><button
+							onClick={this.inviteToGather}
+							className="btn btn-primary">Invite to Gather</button></li>);
 		}
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					Current Gather 
-					<span className="badge add-left"> {this.props.gather.gatherers.length} </span>
+					<strong>NS2 Gather </strong>
+					<span className="badge add-left">{this.props.gather.gatherers.length}</span>
+					<br />
+					{this.stateDescription()}
 				</div>
 				<Gatherers gatherers={this.props.gather.gatherers} />
-				<div className="panel-body">
-				</div>
+				<GatherProgress gather={this.props.gather} />
 				<div className="panel-footer text-right">
-					{joinButton}
+					<ul className="list-inline">
+						{inviteButton}
+						{joinButton}
+					</ul>
 				</div>
 			</div>
 		);
 	}
 });
 
-// var GatherState = React.createClass({
-// 	getDefaultProps: function () {
-// 		return {
-// 			"state": "none"
-// 		}
-// 	},
-// 	stateDescription: function () {
-// 		switch(this.props.date) {
-// 			case "gathering":
-// 				return "Waiting on more players to join"
-// 		}
-// 	},
-// 	render: function () {
-// 		<div className="well">
-// 			<p>{this.displayState}</p>
-// 		</div>
-// 	}
-// })
+var LeaderPoll = React.createClass({
+	render: function () {
+		return (
+			<div className="panel-body">
+			</div>
+		);
+	}
+});
 
 var Gatherers = React.createClass({
 	render: function () {
 		var gatherers = this.props.gatherers.map(function (gatherer) {
 			var lifeforms = (
 				gatherer.user.ability.lifeforms.map(function (lifeform) {
-					return <span className="label label-default">{lifeform}</span>;
+					return (<span className="label label-default">{lifeform}</span>);
 				})
 			);
-			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>)
+			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>);
+			var commBadge;
+			if (gatherer.user.ability.commander) {
+				commBadge = (<img src="/images/commander.png" 
+							alt="Commander" 
+							height="20"
+							width="20" />)
+			}
 
 			return (
-				<tr>
-					<td>{gatherer.user.username}</td>
-					<td>{division}</td>
-					<td>{lifeforms}</td>
+				<tr key={gatherer.user.id}>
+					<td className="col-md-1">{commBadge}</td>
+					<td className="col-md-5">{gatherer.user.username}</td>
+					<td className="col-md-3">{division}&nbsp;</td>
+					<td className="col-md-3">{lifeforms}&nbsp;</td>
 				</tr>
 			);
 		})
-		return (
-			<table className="table table-striped gatherer-table">
-				<thead>
-					<tr>
-						<th>Player</th>
-						<th>Ability</th>
-						<th>Life Forms</th>
-					</tr>
-				</thead>
-				<tbody>
-					{gatherers}
-				</tbody>
-			</table>
-		);
+		if (this.props.gatherers.length) {
+			return (
+				<div className="panel-body">
+					<div className="panel panel-default">
+						<div className="panel-heading">
+							<h5 className="panel-title">Roster</h5>
+						</div>
+						<table className="table roster-table">
+							<tbody>
+								{gatherers}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			);
+		} else {
+			return (<div className="panel-body text-center"><JoinGatherButton buttonClass="btn-lg" buttonName="Start a Gather" /></div>);
+		}
 	}
 });
 

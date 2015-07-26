@@ -7,6 +7,8 @@ var chatController = require("../lib/chat/controller");
 var gatherController = require("../lib/gather/controller");
 var userController = require("../lib/user/controller");
 
+var createUser = require("../spec/helpers/index.js").createUser;
+
 module.exports = function (io) {
 	var rootNamespace = io.of('/')
 

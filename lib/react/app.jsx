@@ -196,6 +196,26 @@ var ChatMessage = React.createClass({
 	}
 });
 
+var CurrentUser = React.createClass({
+	getDefaultProps: function () {
+		return {
+			username: "",
+			avatar: ""
+		}
+	},
+	componentDidMount: function () {
+		
+	},
+	render: function () {
+		return (
+			<a href="#">{this.props.user.username} &nbsp;<img src={this.props.user.avatar}
+				alt="User Avatar" 
+				height="20"
+				width="20" /></a>
+		);
+	}
+});
+
 var MessageBar = React.createClass({
 	sendMessage: function (content) {
 		socket.emit("message:new", {
@@ -423,7 +443,7 @@ var Gatherers = React.createClass({
 				commBadge = (<img src="/images/commander.png" 
 							alt="Commander" 
 							height="20"
-							width="20" />)
+							width="20" />);
 			}
 
 			return (
@@ -474,6 +494,7 @@ function initialiseComponents () {
 	React.render(<UserMenu />, document.getElementById('side-menu'));
 	React.render(<Chatroom />, document.getElementById('chatroom'));
 	React.render(<Gather />, document.getElementById('gathers'));
+	React.render(<CurrentUser />, document.getElementById('currentuser'));
 };
 
 initialiseComponents();

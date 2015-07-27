@@ -64,7 +64,7 @@ var UserMenu = React.createClass({
 		};
 	},
 	componentDidMount: function () {
-		socket.on('userCount', this.updateUsers);
+		socket.on('users:update', this.updateUsers);
 	},
 	updateUsers: function (data) {
 		this.setProps({
@@ -197,22 +197,65 @@ var ChatMessage = React.createClass({
 });
 
 var CurrentUser = React.createClass({
-	getDefaultProps: function () {
-		return {
-			username: "",
-			avatar: ""
-		}
-	},
 	componentDidMount: function () {
-		
+		var self = this;
+		socket.on("users:update", function (data) {
+			self.setProps({
+				user: data.currentUser
+			});
+		});
+		socket.emit("users:refresh", {});
 	},
 	render: function () {
-		return (
-			<a href="#">{this.props.user.username} &nbsp;<img src={this.props.user.avatar}
-				alt="User Avatar" 
-				height="20"
-				width="20" /></a>
-		);
+		if (this.props.user) {
+			return (
+				<a href="#">{this.props.user.username} &nbsp;<img src={this.props.user.avatar}
+					alt="User Avatar" 
+					height="20"
+					width="20" /></a>
+			);
+		} else {
+			return false;
+		}
+	}
+});
+
+var VoteButton = React.createClass({
+	cancelVote: function (e) {
+		socket.emit("gather:vote", {
+			leader: {
+				candidate: null
+			}
+		});
+	},
+	vote: function (e) {
+		e.preventDefault();
+		socket.emit("gather:vote", {
+			leader: {
+				candidate: parseInt(e.target.value, 10)
+			}
+		});
+	},
+	render: function () {
+		if (this.props.currentGatherer === null) {
+			return false;
+		}
+		if (this.props.currentGatherer.leaderVote === this.props.candidate.id) {
+			return (
+				<button 
+					onClick={this.cancelVote} 
+					className="btn btn-xs btn-success">Voted
+				</button>
+			);
+		} else {
+			return (
+				<button 
+					onClick={this.vote} 
+					className="btn btn-xs btn-default"
+					value={this.props.candidate.id}>Vote
+				</button>
+			);
+		}
 	}
 });
 
@@ -351,7 +394,7 @@ var Gather = React.createClass({
 	joinedGather: function () {
 		var self = this;
 		return this.props.gather.gatherers.some(function (gatherer) {
-			return gatherer.user.id === self.props.user.id;
+			return gatherer.user.id === self.props.currentUser.id;
 		});
 	},
 	componentDidMount: function () {
@@ -359,7 +402,7 @@ var Gather = React.createClass({
 		socket.on("gather:refresh", function (data) {
 			self.setProps({
 				gather: data.gather,
-				user: data.user
+				currentUser: data.currentUser
 			});
 		});
 	},
@@ -384,6 +427,14 @@ var Gather = React.createClass({
 	inviteToGather: function (e) {
 		e.preventDefault();
 	},
+	currentGatherer: function () {
+		var current = null;
+		var self = this;
+		this.props.gather.gatherers.forEach(function (gatherer) {
+			if (gatherer.id === self.props.currentUser.id) current = gatherer;
+		});
+		return current;
+	},
 	render: function () {
 		var joinButton;
 		if (this.joinedGather()) {
@@ -407,7 +458,7 @@ var Gather = React.createClass({
 					<br />
 					{this.stateDescription()}
 				</div>
-				<Gatherers gatherers={this.props.gather.gatherers} />
+				<Gatherers gather={this.props.gather} currentGatherer={this.currentGatherer()} />
 				<GatherProgress gather={this.props.gather} />
 				<div className="panel-footer text-right">
 					<ul className="list-inline">
@@ -431,13 +482,14 @@ var LeaderPoll = React.createClass({
 
 var Gatherers = React.createClass({
 	render: function () {
-		var gatherers = this.props.gatherers.map(function (gatherer) {
+		var self = this;
+		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
 			var lifeforms = (
 				gatherer.user.ability.lifeforms.map(function (lifeform) {
 					return (<span className="label label-default">{lifeform}</span>);
 				})
 			);
-			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>);
+
 			var commBadge;
 			if (gatherer.user.ability.commander) {
 				commBadge = (<img src="/images/commander.png" 
@@ -446,16 +498,32 @@ var Gatherers = React.createClass({
 							width="20" />);
 			}
 
+			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>);
+			var action = lifeforms;
+			if (self.props.gather.state === "election") {
+				var votes = self.props.gather.gatherers.reduce(function (acc, voter) {
+					if (voter.leaderVote === gatherer.id) acc++;
+					return acc;
+				}, 0)
+				action = (
+					<div className="text-right">
+					<small>{votes + " votes"} &nbsp;</small>
+
+					<VoteButton currentGatherer={self.props.currentGatherer} candidate={gatherer} />
+					</div>
+				);
+			}
+
 			return (
 				<tr key={gatherer.user.id}>
 					<td className="col-md-1">{commBadge}</td>
 					<td className="col-md-5">{gatherer.user.username}</td>
 					<td className="col-md-3">{division}&nbsp;</td>
-					<td className="col-md-3">{lifeforms}&nbsp;</td>
+					<td className="col-md-2">{action}&nbsp;</td>
 				</tr>
 			);
 		})
-		if (this.props.gatherers.length) {
+		if (this.props.gather.gatherers.length) {
 			return (
 				<div className="panel-body">
 					<div className="panel panel-default">

@@ -2,29 +2,35 @@
 
 var winston = require("winston");
 var User = require("../lib/user/user");
-var enslClient = require("../lib/ensl/client")();
+var client = require("../lib/ensl/client")();
 var chatController = require("../lib/chat/controller");
 var gatherController = require("../lib/gather/controller");
 var userController = require("../lib/user/controller");
 
-var createUser = require("../spec/helpers/index.js").createUser;
+var getRandomUser = function (callback) {
+	var id = Math.floor(Math.random() * 5000) + 1;
+	console.log(id);
+	client.getUserById({
+		id: id
+	}, function (error, response, body) {
+		if (response.statusCode !== 200) return getRandomUser(callback);
+		return callback(error, response, body);
+	});
+};
 
 module.exports = function (io) {
 	var rootNamespace = io.of('/')
 
 	// Authorisation
 	io.use(function (socket, next) {
-		var id = Math.floor(Math.random() * 5000) + 1;
-		enslClient.getUserById({
-			id: id
-		}, function (error, response, body) {
+		getRandomUser(function (error, _, body) {
 			if (error) {
 				winston.error(error);
 				return next(error)
 			};
 			socket._user = new User(body);
 			next();
-		});
+		})
 	});
 
 	userController(rootNamespace);

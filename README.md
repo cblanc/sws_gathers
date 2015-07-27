@@ -27,13 +27,14 @@ npm start
 - ENSL.org: Authentication
 - ENSL.org: Pull user data and bans
 - ENSL.org: API to allow ENSL to pull current gather status
-- Steam Integration: Pull hive stats
+- Hive Integration: Pull stats
 - Steam Integration: Outbound steam messaging
-- Admin tools
+- Admin tools - kick user/edit messages
 - Add a backend datastore to persist gather data and messages
 - Add sounds
-- Add WebRTC for internal voice comms
+- WebRTC?
 - Add user lifeform + div information
+- Show online status
 
 ## License
 

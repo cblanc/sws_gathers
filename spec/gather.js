@@ -231,9 +231,8 @@ describe("Gather Model:", function () {
 	describe("toJson", function () {
 		it ("returns a json representation of the gather instance", function () {
 			var output = gather.toJson();
-			assert.isArray(output.lobby);
-			assert.isArray(output.marines);
-			assert.isArray(output.aliens);
+			assert.isArray(output.gatherers);
+			assert.isString(output.state);
 		});
 	});
 	describe("leaderVotes", function () {

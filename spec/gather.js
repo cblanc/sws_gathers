@@ -147,6 +147,7 @@ describe("Gather Model:", function () {
 			});
 		});
 	});
+
 	describe("addUser", function () {
 		it ("adds gatherer to lobby", function () {
 			gather.addUser(user);
@@ -159,6 +160,7 @@ describe("Gather Model:", function () {
 			assert.equal(gather.gatherers.length, 1);
 		});
 	});
+
 	describe("removeUser", function () {
 		it ("removes gatherer altogether", function () {
 			gather.addUser(user);
@@ -168,6 +170,7 @@ describe("Gather Model:", function () {
 			assert.equal(gather.gatherers.length, 0);
 		});
 	});
+
 	describe("moveToMarine", function () {
 		it ("moves a player to marine", function () {
 			gather.addUser(user);
@@ -183,6 +186,7 @@ describe("Gather Model:", function () {
 			});
 		});
 	});
+
 	describe("moveToAlien", function () {
 		it ("moves a player to alien", function () {
 			gather.addUser(user);
@@ -198,6 +202,7 @@ describe("Gather Model:", function () {
 			});
 		});
 	});
+
 	describe("moveToLobby", function () {
 		it ("moves a player to lobby", function () {
 			gather.addUser(user);
@@ -208,6 +213,7 @@ describe("Gather Model:", function () {
 			assert.equal(gather.lobby()[0].id, user.id);
 		});
 	});
+
 	describe("aliens", function () {
 		it ("returns all gatherers in aliens", function () {
 			gather.addUser(user);
@@ -215,6 +221,7 @@ describe("Gather Model:", function () {
 			assert.equal(gather.aliens().length, 1);
 		});
 	});
+
 	describe("marines", function () {
 		it ("returns all gatherers in marines", function () {
 			gather.addUser(user);
@@ -222,12 +229,14 @@ describe("Gather Model:", function () {
 			assert.equal(gather.marines().length, 1);
 		});
 	});
+
 	describe("lobby", function () {
 		it ("returns all gatherers in lobby", function () {
 			gather.addUser(user);
 			assert.equal(gather.lobby().length, 1);
 		});
 	});
+
 	describe("toJson", function () {
 		it ("returns a json representation of the gather instance", function () {
 			var output = gather.toJson();
@@ -235,6 +244,7 @@ describe("Gather Model:", function () {
 			assert.isString(output.state);
 		});
 	});
+
 	describe("leaderVotes", function () {
 		beforeEach(function () {
 			gatherers.forEach(function (user) {
@@ -261,6 +271,7 @@ describe("Gather Model:", function () {
 			assert.equal(gather.leaderVotes().length, 0);
 		});
 	});
+
 	describe("voteForLeader", function () {
 		beforeEach(function () {
 			gatherers.forEach(function (user) {
@@ -289,6 +300,7 @@ describe("Gather Model:", function () {
 			assert.equal(votes[0], secondCandidate.id);
 		});
 	});
+
 	describe("alienLeader", function () {
 		beforeEach(function () {
 			gatherers.forEach(function (gatherer) {
@@ -304,6 +316,7 @@ describe("Gather Model:", function () {
 			assert.isUndefined(gather.alienLeader());
 		});
 	});
+
 	describe("marineLeader", function () {
 		beforeEach(function () {
 			gatherers.forEach(function (gatherer) {
@@ -319,6 +332,7 @@ describe("Gather Model:", function () {
 			assert.isUndefined(gather.marineLeader());
 		});
 	});
+
 	describe("assignMarineLeader", function () {
 		it ("assigns a marine leader", function () {
 			gather.addUser(user);
@@ -327,6 +341,7 @@ describe("Gather Model:", function () {
 			assert.equal(leader.id, user.id);
 		});
 	});
+
 	describe("assignAlienLeader", function () {
 		it ("assigns an alien leader", function () {
 			gather.addUser(user);
@@ -335,6 +350,21 @@ describe("Gather Model:", function () {
 			assert.equal(leader.id, user.id);
 		});
 	});
+
+	describe("getGatherer", function () {
+		beforeEach(function () {
+			gather.addGatherer(user);
+		});
+		it ("returns a gatherer given a user", function () {
+			var gatherer = gather.getGatherer(user);
+			assert.equal(gatherer.id, user.id);
+		});
+		it ("returns null if user is not a gatherer", function () {
+			var gatherer = gather.getGatherer(gatherers[0]);
+			assert.isNull(gatherer);
+		});
+	});
+
 	describe("confirmTeam", function () {
 		var leader;
 		beforeEach(function () {

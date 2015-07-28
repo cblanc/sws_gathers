@@ -19,6 +19,9 @@ var UserLogin = React.createClass({
 		socket.emit("users:authorize", {
 			id: id
 		});
+		setTimeout(function () {
+			socket.emit("gather:refresh");
+		}, 5000);
 	},
 	handleSubmit: function (e) {
 		e.preventDefault();

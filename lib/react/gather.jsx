@@ -59,33 +59,39 @@ var JoinGatherButton = React.createClass({
 var SelectPlayerButton = React.createClass({
 	selectPlayer: function (e) {
 		e.preventDefault();
+		socket.emit("gather:select", {
+			player: parseInt(e.target.value, 10)
+		})
 	},
 	render: function () {
-		if (!this.props.currentGatherer.leader) {
-			return false;
+		if (this.props.gatherer.leader) {
+			return (<button 
+				className="btn btn-xs btn-default"
+				data-disabled="true">Leader</button>);
 		} else {
 			return (<button
 				onClick={this.selectPlayer}
+				value={this.props.gatherer.id}
 				className="btn btn-xs btn-primary"> Select
 				</button>
 			);
 		}
 	}
-})
+});
 
 var GatherTeams = React.createClass({
 	alienGatherers: function () {
 		return this.props.gather.gatherers.filter(function (gatherer) {
 			return gatherer.team === "alien";
 		}).sort(function (gatherer) {
-			return (gatherer.leader) ? 1 : 0;
+			return (gatherer.leader) ? 1 : -1;
 		});
 	},
 	marineGatherers: function () {
 		return this.props.gather.gatherers.filter(function (gatherer) {
 			return gatherer.team === "marine";
 		}).sort(function (gatherer) {
-			return (gatherer.leader) ? 1 : 0;
+			return (gatherer.leader) ? 1 : -1;
 		});
 	},
 	render: function () {
@@ -224,6 +230,79 @@ var GatherProgress = React.createClass({
 	}
 });
 
+var GatherActions = React.createClass({
+	leaveGather: function (e) {
+		e.preventDefault();
+		socket.emit("gather:leave");
+	},
+	confirmTeam: function (e) {
+		e.preventDefault();
+		socket.emit("gather:select:confirm");
+	},
+	inviteToGather: function (e) {
+		e.preventDefault();
+	},
+	render: function () {
+		var joinButton;
+		if (this.props.currentGatherer) {
+			joinButton = (<li><button 
+							onClick={this.leaveGather} 
+							className="btn btn-danger">Leave Gather</button></li>);
+		} else {
+			joinButton = (<li><JoinGatherButton /></li>);
+		}
+
+		var confirmTeam;
+		if (this.props.currentGatherer &&
+					this.props.currentGatherer.leader &&
+					this.props.gather.state === 'selection' &&
+					this.props.gather.gatherers.every(function (gatherer) {
+						return gatherer.team !== 'lobby';
+					}) ) {
+			if (this.props.currentGatherer.confirm) {
+				confirmTeam = (
+					<li>
+						<button
+							className="btn btn-default"
+							data-disabled="true"
+							>
+							Confirmed
+						</button>
+					</li>
+				);
+			} else {
+				confirmTeam = (
+					<li>
+					<button
+						className="btn btn-primary"
+						onClick={this.confirmTeam}
+						>
+						Confirm Team
+					</button>
+					</li>
+				);
+			}
+		}
+
+		var inviteButton;
+		if (this.props.gather.state === 'gathering') {
+			inviteButton = (<li><button
+							onClick={this.inviteToGather}
+							className="btn btn-primary">Invite to Gather</button></li>);
+		}
+
+		return (
+			<div className="panel-footer text-right">
+				<ul className="list-inline">
+					{confirmTeam}
+					{inviteButton}
+					{joinButton}
+				</ul>
+			</div>
+		);
+	}
+});
+
 var Gather = React.createClass({
 	getDefaultProps: function () {
 		return {
@@ -231,9 +310,6 @@ var Gather = React.createClass({
 				gatherers: []
 			}
 		}
-	},
-	joinedGather: function () {
-		return this.props.currentGatherer !== null;
 	},
 	componentDidMount: function () {
 		var self = this;
@@ -244,28 +320,13 @@ var Gather = React.createClass({
 			});
 		});
 	},
-	leaveGather: function (e) {
-		e.preventDefault();
-		socket.emit("gather:leave", {});
-	},
-	inviteToGather: function (e) {
-		e.preventDefault();
-	},
+	
 	render: function () {
-		var joinButton;
-		if (this.joinedGather()) {
-			joinButton = (<li><button 
-							onClick={this.leaveGather} 
-							className="btn btn-danger">Leave Gather</button></li>);
-		} else {
-			joinButton = (<li><JoinGatherButton /></li>);
+		if (this.props.gather.state === 'done') {
+			return (<h1>Gather Completed! Now restart the app</h1>);
 		}
-		var inviteButton;
-		if (this.props.gather.state === 'gathering') {
-			inviteButton = (<li><button
-							onClick={this.inviteToGather}
-							className="btn btn-primary">Invite to Gather</button></li>);
-		}
+
+		
 		var gatherTeams;
 		if (this.props.gather.state === 'selection') {
 			gatherTeams = <GatherTeams gather={this.props.gather} />
@@ -279,12 +340,7 @@ var Gather = React.createClass({
 				<Gatherers gather={this.props.gather} currentGatherer={this.props.currentGatherer} />
 				{gatherTeams}
 				<GatherProgress gather={this.props.gather} />
-				<div className="panel-footer text-right">
-					<ul className="list-inline">
-						{inviteButton}
-						{joinButton}
-					</ul>
-				</div>
+				<GatherActions {...this.props} />
 			</div>
 		);
 	}
@@ -294,19 +350,20 @@ var Gatherers = React.createClass({
 	render: function () {
 		var self = this;
 		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
-			var lifeforms = (
-				gatherer.user.ability.lifeforms.map(function (lifeform) {
-					return (<span className="label label-default">{lifeform}</span>);
-				})
-			);
-
 			// Switch this to online status
-			var online= (<span src="/images/commander.png" 
-							alt="online" 
-							className="user-online">&nbsp;</span>);
+			var online= (<div className="dot online"></div>);
 
 			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>);
-			var action = lifeforms;
+			var action;
+
+			if (self.props.gather.state === 'gathering') {
+				action = (
+					gatherer.user.ability.lifeforms.map(function (lifeform) {
+						return (<span className="label label-default">{lifeform}</span>);
+					})
+				);
+			}
+
 			if (self.props.gather.state === "election") {
 				var votes = self.props.gather.gatherers.reduce(function (acc, voter) {
 					if (voter.leaderVote === gatherer.id) acc++;
@@ -320,12 +377,20 @@ var Gatherers = React.createClass({
 				);
 			}
 
+			if (self.props.gather.state === 'selection') {
+				action = (
+					<span>
+						<SelectPlayerButton gatherer={gatherer} />
+					</span>
+				);
+			}
+
 			return (
 				<tr key={gatherer.user.id}>
-					<td className="col-md-1">{online}</td>
-					<td className="col-md-5">{gatherer.user.username}</td>
+					<td className="col-md-2">{online}</td>
+					<td className="col-md-4">{gatherer.user.username}</td>
 					<td className="col-md-3">{division}&nbsp;</td>
-					<td className="col-md-2 text-right">{action}&nbsp;</td>
+					<td className="col-md-3 text-right">{action}&nbsp;</td>
 				</tr>
 			);
 		})

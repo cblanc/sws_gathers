@@ -59,33 +59,39 @@ var JoinGatherButton = React.createClass({displayName: "JoinGatherButton",
 var SelectPlayerButton = React.createClass({displayName: "SelectPlayerButton",
 	selectPlayer: function (e) {
 		e.preventDefault();
+		socket.emit("gather:select", {
+			player: parseInt(e.target.value, 10)
+		})
 	},
 	render: function () {
-		if (!this.props.currentGatherer.leader) {
-			return false;
+		if (this.props.gatherer.leader) {
+			return (React.createElement("button", {
+				className: "btn btn-xs btn-default", 
+				"data-disabled": "true"}, "Leader"));
 		} else {
 			return (React.createElement("button", {
 				onClick: this.selectPlayer, 
+				value: this.props.gatherer.id, 
 				className: "btn btn-xs btn-primary"}, " Select"
 				)
 			);
 		}
 	}
-})
+});
 
 var GatherTeams = React.createClass({displayName: "GatherTeams",
 	alienGatherers: function () {
 		return this.props.gather.gatherers.filter(function (gatherer) {
 			return gatherer.team === "alien";
 		}).sort(function (gatherer) {
-			return (gatherer.leader) ? 1 : 0;
+			return (gatherer.leader) ? 1 : -1;
 		});
 	},
 	marineGatherers: function () {
 		return this.props.gather.gatherers.filter(function (gatherer) {
 			return gatherer.team === "marine";
 		}).sort(function (gatherer) {
-			return (gatherer.leader) ? 1 : 0;
+			return (gatherer.leader) ? 1 : -1;
 		});
 	},
 	render: function () {
@@ -224,6 +230,79 @@ var GatherProgress = React.createClass({displayName: "GatherProgress",
 	}
 });
 
+var GatherActions = React.createClass({displayName: "GatherActions",
+	leaveGather: function (e) {
+		e.preventDefault();
+		socket.emit("gather:leave");
+	},
+	confirmTeam: function (e) {
+		e.preventDefault();
+		socket.emit("gather:select:confirm");
+	},
+	inviteToGather: function (e) {
+		e.preventDefault();
+	},
+	render: function () {
+		var joinButton;
+		if (this.props.currentGatherer) {
+			joinButton = (React.createElement("li", null, React.createElement("button", {
+							onClick: this.leaveGather, 
+							className: "btn btn-danger"}, "Leave Gather")));
+		} else {
+			joinButton = (React.createElement("li", null, React.createElement(JoinGatherButton, null)));
+		}
+
+		var confirmTeam;
+		if (this.props.currentGatherer &&
+					this.props.currentGatherer.leader &&
+					this.props.gather.state === 'selection' &&
+					this.props.gather.gatherers.every(function (gatherer) {
+						return gatherer.team !== 'lobby';
+					}) ) {
+			if (this.props.currentGatherer.confirm) {
+				confirmTeam = (
+					React.createElement("li", null, 
+						React.createElement("button", {
+							className: "btn btn-default", 
+							"data-disabled": "true"
+							}, 
+							"Confirmed"
+						)
+					)
+				);
+			} else {
+				confirmTeam = (
+					React.createElement("li", null, 
+					React.createElement("button", {
+						className: "btn btn-primary", 
+						onClick: this.confirmTeam
+						}, 
+						"Confirm Team"
+					)
+					)
+				);
+			}
+		}
+
+		var inviteButton;
+		if (this.props.gather.state === 'gathering') {
+			inviteButton = (React.createElement("li", null, React.createElement("button", {
+							onClick: this.inviteToGather, 
+							className: "btn btn-primary"}, "Invite to Gather")));
+		}
+
+		return (
+			React.createElement("div", {className: "panel-footer text-right"}, 
+				React.createElement("ul", {className: "list-inline"}, 
+					confirmTeam, 
+					inviteButton, 
+					joinButton
+				)
+			)
+		);
+	}
+});
+
 var Gather = React.createClass({displayName: "Gather",
 	getDefaultProps: function () {
 		return {
@@ -231,9 +310,6 @@ var Gather = React.createClass({displayName: "Gather",
 				gatherers: []
 			}
 		}
-	},
-	joinedGather: function () {
-		return this.props.currentGatherer !== null;
 	},
 	componentDidMount: function () {
 		var self = this;
@@ -244,28 +320,13 @@ var Gather = React.createClass({displayName: "Gather",
 			});
 		});
 	},
-	leaveGather: function (e) {
-		e.preventDefault();
-		socket.emit("gather:leave", {});
-	},
-	inviteToGather: function (e) {
-		e.preventDefault();
-	},
+	
 	render: function () {
-		var joinButton;
-		if (this.joinedGather()) {
-			joinButton = (React.createElement("li", null, React.createElement("button", {
-							onClick: this.leaveGather, 
-							className: "btn btn-danger"}, "Leave Gather")));
-		} else {
-			joinButton = (React.createElement("li", null, React.createElement(JoinGatherButton, null)));
+		if (this.props.gather.state === 'done') {
+			return (React.createElement("h1", null, "Gather Completed! Now restart the app"));
 		}
-		var inviteButton;
-		if (this.props.gather.state === 'gathering') {
-			inviteButton = (React.createElement("li", null, React.createElement("button", {
-							onClick: this.inviteToGather, 
-							className: "btn btn-primary"}, "Invite to Gather")));
-		}
+
+		
 		var gatherTeams;
 		if (this.props.gather.state === 'selection') {
 			gatherTeams = React.createElement(GatherTeams, {gather: this.props.gather})
@@ -279,12 +340,7 @@ var Gather = React.createClass({displayName: "Gather",
 				React.createElement(Gatherers, {gather: this.props.gather, currentGatherer: this.props.currentGatherer}), 
 				gatherTeams, 
 				React.createElement(GatherProgress, {gather: this.props.gather}), 
-				React.createElement("div", {className: "panel-footer text-right"}, 
-					React.createElement("ul", {className: "list-inline"}, 
-						inviteButton, 
-						joinButton
-					)
-				)
+				React.createElement(GatherActions, React.__spread({},  this.props))
 			)
 		);
 	}
@@ -294,19 +350,20 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 	render: function () {
 		var self = this;
 		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
-			var lifeforms = (
-				gatherer.user.ability.lifeforms.map(function (lifeform) {
-					return (React.createElement("span", {className: "label label-default"}, lifeform));
-				})
-			);
-
 			// Switch this to online status
-			var online= (React.createElement("span", {src: "/images/commander.png", 
-							alt: "online", 
-							className: "user-online"}, " "));
+			var online= (React.createElement("div", {className: "dot online"}));
 
 			var division = (React.createElement("span", {className: "label label-primary"}, gatherer.user.ability.division));
-			var action = lifeforms;
+			var action;
+
+			if (self.props.gather.state === 'gathering') {
+				action = (
+					gatherer.user.ability.lifeforms.map(function (lifeform) {
+						return (React.createElement("span", {className: "label label-default"}, lifeform));
+					})
+				);
+			}
+
 			if (self.props.gather.state === "election") {
 				var votes = self.props.gather.gatherers.reduce(function (acc, voter) {
 					if (voter.leaderVote === gatherer.id) acc++;
@@ -320,12 +377,20 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 				);
 			}
 
+			if (self.props.gather.state === 'selection') {
+				action = (
+					React.createElement("span", null, 
+						React.createElement(SelectPlayerButton, {gatherer: gatherer})
+					)
+				);
+			}
+
 			return (
 				React.createElement("tr", {key: gatherer.user.id}, 
-					React.createElement("td", {className: "col-md-1"}, online), 
-					React.createElement("td", {className: "col-md-5"}, gatherer.user.username), 
+					React.createElement("td", {className: "col-md-2"}, online), 
+					React.createElement("td", {className: "col-md-4"}, gatherer.user.username), 
 					React.createElement("td", {className: "col-md-3"}, division, " "), 
-					React.createElement("td", {className: "col-md-2 text-right"}, action, " ")
+					React.createElement("td", {className: "col-md-3 text-right"}, action, " ")
 				)
 			);
 		})
@@ -543,6 +608,9 @@ var UserLogin = React.createClass({displayName: "UserLogin",
 		socket.emit("users:authorize", {
 			id: id
 		});
+		setTimeout(function () {
+			socket.emit("gather:refresh");
+		}, 5000);
 	},
 	handleSubmit: function (e) {
 		e.preventDefault();

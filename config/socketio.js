@@ -9,7 +9,6 @@ var userController = require("../lib/user/controller");
 
 var getRandomUser = function (callback) {
 	var id = Math.floor(Math.random() * 5000) + 1;
-	console.log(id);
 	client.getUserById({
 		id: id
 	}, function (error, response, body) {
@@ -29,6 +28,7 @@ module.exports = function (io) {
 				return next(error)
 			};
 			socket._user = new User(body);
+			console.log("You:", body.username, body.id);
 			next();
 		})
 	});

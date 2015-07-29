@@ -536,18 +536,7 @@ var Gatherers = React.createClass({
 
 var CompletedGather = React.createClass({
 	votedMaps: function () {
-		var maps = this.props.maps;
-		var mapVotes = this.props.gather.gatherers.map(function (gatherer) {
-			return gatherer.mapVote;
-		}).filter(function (elem) {
-			return elem !== null;
-		}).map(function (mapId) {
-			var result;
-			maps.forEach(function (map) {
-				if (map.id === mapId) result = map;
-			});
-			return result;
-		});
+		
 	},
 	votedServer: function () {
 
@@ -560,14 +549,11 @@ var CompletedGather = React.createClass({
 				</div>
 				<div className="panel-body">
 					<h3>Join Up:</h3>
-					<p>{this.votedMaps()
-									.map(function (map) {return map.name})
-									.join(",")}</p>
+					<p>Map Voted: To be completed</p>
+					<p>Server Voted: To be completed</p>
 				</div>
 				<GatherTeams gather={this.props.gather} />
 			</div>
 		);
 	}
 });
-
-

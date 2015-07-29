@@ -40,7 +40,7 @@ function initialiseComponents () {
 			console.log("Disconnected")
 		});
 
-	// 
+	initialiseVisibilityMonitoring(socket);
 
 	// Render Page
 	React.render(<UserMenu />, document.getElementById('side-menu'));

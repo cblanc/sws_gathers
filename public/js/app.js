@@ -460,7 +460,7 @@ function initialiseComponents () {
 			console.log("Disconnected")
 		});
 
-	// 
+	initialiseVisibilityMonitoring(socket);
 
 	// Render Page
 	React.render(React.createElement(UserMenu, null), document.getElementById('side-menu'));
@@ -468,6 +468,7 @@ function initialiseComponents () {
 	React.render(React.createElement(Gather, null), document.getElementById('gathers'));
 	React.render(React.createElement(CurrentUser, null), document.getElementById('currentuser'));
 };
+
 "use strict";
 
 var Chatroom = React.createClass({displayName: "Chatroom",

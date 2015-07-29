@@ -34,6 +34,7 @@
     "gulp-react": "^3.0.1",
     "gulp-watch": "^4.3.4",
     "javascript-state-machine": "^2.3.5",
+    "lodash": "^3.10.0",
     "morgan": "~1.6.1",
     "node-mysql": "~0.4.2",
     "react-tools": "~0.13.3",

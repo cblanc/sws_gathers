@@ -39,23 +39,6 @@ var VoteButton = React.createClass({
 	}
 });
 
-var JoinGatherButton = React.createClass({
-	joinGather: function (e) {
-		e.preventDefault();
-		socket.emit("gather:join", {});
-	},
-	render: function () {
-		var message = this.props.buttonName || "Join Gather";
-		var buttonClass = "btn btn-success";
-		if (this.props.buttonClass) {
-			buttonClass += " " + this.props.buttonClass;
-		}
-		return (<button 
-							onClick={this.joinGather} 
-							className={buttonClass}>{message}</button>)
-	}
-});
-
 var SelectPlayerButton = React.createClass({
 	selectPlayer: function (e) {
 		e.preventDefault();
@@ -231,6 +214,10 @@ var GatherProgress = React.createClass({
 });
 
 var GatherActions = React.createClass({
+	joinGather: function (e) {
+		e.preventDefault();
+		socket.emit("gather:join");
+	},
 	leaveGather: function (e) {
 		e.preventDefault();
 		socket.emit("gather:leave");
@@ -241,6 +228,7 @@ var GatherActions = React.createClass({
 	},
 	inviteToGather: function (e) {
 		e.preventDefault();
+		alert("Boop!");
 	},
 	render: function () {
 		var joinButton;
@@ -248,8 +236,12 @@ var GatherActions = React.createClass({
 			joinButton = (<li><button 
 							onClick={this.leaveGather} 
 							className="btn btn-danger">Leave Gather</button></li>);
-		} else {
-			joinButton = (<li><JoinGatherButton /></li>);
+		} else if (this.props.gather.state === 'gathering') {
+			joinButton = (
+				<button 
+					onClick={this.joinGather} 
+					className="btn btn-success">Join Gather</button>
+			);
 		}
 
 		var confirmTeam;
@@ -428,7 +420,7 @@ var Gather = React.createClass({
 	
 	render: function () {
 		if (this.props.gather.state === 'done') {
-			return (<h1>Gather Completed! Now restart the app</h1>);
+			return (<CompletedGather {...this.props} />);
 		}
 
 		var voting;
@@ -459,8 +451,8 @@ var Gather = React.createClass({
 				</div>
 				<GatherProgress gather={this.props.gather} />
 				<Gatherers gather={this.props.gather} currentGatherer={this.props.currentGatherer} />
-				{voting}
 				{gatherTeams}
+				{voting}
 				<GatherActions {...this.props} />
 			</div>
 		);
@@ -468,6 +460,10 @@ var Gather = React.createClass({
 });
 
 var Gatherers = React.createClass({
+	joinGather: function (e) {
+		e.preventDefault();
+		socket.emit("gather:join");
+	},
 	render: function () {
 		var self = this;
 		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
@@ -529,12 +525,49 @@ var Gatherers = React.createClass({
 		} else {
 			return (
 				<div className="panel-body text-center join-hero">
-					<JoinGatherButton buttonClass="btn-lg" buttonName="Start a Gather" />
+					<button 
+						onClick={this.joinGather} 
+						className="btn btn-success btn-lg">Start a Gather</button>
 				</div>
 			);
 		}
 	}
 });
 
+var CompletedGather = React.createClass({
+	votedMaps: function () {
+		var maps = this.props.maps;
+		var mapVotes = this.props.gather.gatherers.map(function (gatherer) {
+			return gatherer.mapVote;
+		}).filter(function (elem) {
+			return elem !== null;
+		}).map(function (mapId) {
+			var result;
+			maps.forEach(function (map) {
+				if (map.id === mapId) result = map;
+			});
+			return result;
+		});
+	},
+	votedServer: function () {
+
+	},
+	render: function () {
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					<strong>Gather Completed</strong>
+				</div>
+				<div className="panel-body">
+					<h3>Join Up:</h3>
+					<p>{this.votedMaps()
+									.map(function (map) {return map.name})
+									.join(",")}</p>
+				</div>
+				<GatherTeams gather={this.props.gather} />
+			</div>
+		);
+	}
+});
 
 

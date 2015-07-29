@@ -123,20 +123,13 @@ describe("Gather Model:", function () {
 					}
 				});
 			});
-			it ("transitions to 'done' when players selected and leaders confirm", function () {
-				assert.equal(gather.current, "selection");
-				gather.confirmSelection(leaderA);
-				assert.equal(gather.current, "selection");
-				gather.confirmSelection(leaderB);
+			it ("transitions to 'done' when players selected", function () {
+				gather.confirmSelection();
 				assert.equal(gather.current, "done");
 			});
 			it ("does not transition to 'done' unless all players selected", function () {
 				var lobbyPlayer = gather.gatherers[11];
 				gather.moveToLobby(lobbyPlayer);
-				assert.equal(gather.current, "selection");
-				gather.confirmSelection(leaderA);
-				assert.equal(gather.current, "selection");
-				gather.confirmSelection(leaderB);
 				assert.equal(gather.current, "selection");
 			});
 			it ("transitions to picking if a player leaves", function () {
@@ -386,35 +379,6 @@ describe("Gather Model:", function () {
 			gather.voteForServer(user, serverId);
 			var gatherer = gather.getGatherer(user);
 			assert.equal(gatherer.serverVote, serverId);
-		});
-	});
-
-	describe("confirmTeam", function () {
-		var leader;
-		beforeEach(function () {
-			gatherers.forEach(function (gatherer) {
-				gather.addGatherer(gatherer);
-			});
-			leader = gather.gatherers[0];
-			gather.assignMarineLeader(leader.id);
-		});
-		it ("marks leader as confirmed", function () {
-			gather.confirmTeam(leader);
-			gather.gatherers.forEach(function (gatherer) {
-				if (gatherer.leader) {
-					assert.isTrue(gatherer.confirm);
-				} else {
-					assert.isFalse(gatherer.confirm);
-				}
-			});
-		});
-		it ("does nothing if user is not leader", function () {
-			var player = gather.gatherers[1];
-			assert.isFalse(player.leader);
-			gather.confirmTeam(player);
-			gather.gatherers.forEach(function (gatherer) {
-				assert.isFalse(gatherer.confirm);
-			});
 		});
 	});
 });

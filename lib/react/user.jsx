@@ -89,6 +89,28 @@ var UserMenu = React.createClass({
 	}
 });
 
+var AdminPanel = React.createClass({
+	handleGatherReset: function () {
+		socket.emit("gather:reset");
+	},
+	render: function () {
+		return (
+			<ul className="nav" id="admin-menu">
+				<li>
+					<div className="admin-panel">
+						<h5>Admin</h5>
+						<button
+							className="btn btn-danger"
+							onClick={this.handleGatherReset}>
+							Reset Gather</button>
+						<p className="text-center"><small>Only responds for admins on staging.ensl.org</small></p>
+					</div>
+				</li>
+			</ul>
+		)
+	}
+});
+
 var CurrentUser = React.createClass({
 	componentDidMount: function () {
 		var self = this;

@@ -47,4 +47,5 @@ function initialiseComponents () {
 	React.render(<Chatroom />, document.getElementById('chatroom'));
 	React.render(<Gather />, document.getElementById('gathers'));
 	React.render(<CurrentUser />, document.getElementById('currentuser'));
+	React.render(<AdminPanel />, document.getElementById('admin-menu'));
 };

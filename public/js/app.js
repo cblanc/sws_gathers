@@ -39,23 +39,6 @@ var VoteButton = React.createClass({displayName: "VoteButton",
 	}
 });
 
-var JoinGatherButton = React.createClass({displayName: "JoinGatherButton",
-	joinGather: function (e) {
-		e.preventDefault();
-		socket.emit("gather:join", {});
-	},
-	render: function () {
-		var message = this.props.buttonName || "Join Gather";
-		var buttonClass = "btn btn-success";
-		if (this.props.buttonClass) {
-			buttonClass += " " + this.props.buttonClass;
-		}
-		return (React.createElement("button", {
-							onClick: this.joinGather, 
-							className: buttonClass}, message))
-	}
-});
-
 var SelectPlayerButton = React.createClass({displayName: "SelectPlayerButton",
 	selectPlayer: function (e) {
 		e.preventDefault();
@@ -231,6 +214,10 @@ var GatherProgress = React.createClass({displayName: "GatherProgress",
 });
 
 var GatherActions = React.createClass({displayName: "GatherActions",
+	joinGather: function (e) {
+		e.preventDefault();
+		socket.emit("gather:join");
+	},
 	leaveGather: function (e) {
 		e.preventDefault();
 		socket.emit("gather:leave");
@@ -241,6 +228,7 @@ var GatherActions = React.createClass({displayName: "GatherActions",
 	},
 	inviteToGather: function (e) {
 		e.preventDefault();
+		alert("Boop!");
 	},
 	render: function () {
 		var joinButton;
@@ -248,8 +236,12 @@ var GatherActions = React.createClass({displayName: "GatherActions",
 			joinButton = (React.createElement("li", null, React.createElement("button", {
 							onClick: this.leaveGather, 
 							className: "btn btn-danger"}, "Leave Gather")));
-		} else {
-			joinButton = (React.createElement("li", null, React.createElement(JoinGatherButton, null)));
+		} else if (this.props.gather.state === 'gathering') {
+			joinButton = (
+				React.createElement("button", {
+					onClick: this.joinGather, 
+					className: "btn btn-success"}, "Join Gather")
+			);
 		}
 
 		var confirmTeam;
@@ -428,7 +420,7 @@ var Gather = React.createClass({displayName: "Gather",
 	
 	render: function () {
 		if (this.props.gather.state === 'done') {
-			return (React.createElement("h1", null, "Gather Completed! Now restart the app"));
+			return (React.createElement(CompletedGather, React.__spread({},  this.props)));
 		}
 
 		var voting;
@@ -459,8 +451,8 @@ var Gather = React.createClass({displayName: "Gather",
 				), 
 				React.createElement(GatherProgress, {gather: this.props.gather}), 
 				React.createElement(Gatherers, {gather: this.props.gather, currentGatherer: this.props.currentGatherer}), 
-				voting, 
 				gatherTeams, 
+				voting, 
 				React.createElement(GatherActions, React.__spread({},  this.props))
 			)
 		);
@@ -468,6 +460,10 @@ var Gather = React.createClass({displayName: "Gather",
 });
 
 var Gatherers = React.createClass({displayName: "Gatherers",
+	joinGather: function (e) {
+		e.preventDefault();
+		socket.emit("gather:join");
+	},
 	render: function () {
 		var self = this;
 		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
@@ -529,13 +525,50 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 		} else {
 			return (
 				React.createElement("div", {className: "panel-body text-center join-hero"}, 
-					React.createElement(JoinGatherButton, {buttonClass: "btn-lg", buttonName: "Start a Gather"})
+					React.createElement("button", {
+						onClick: this.joinGather, 
+						className: "btn btn-success btn-lg"}, "Start a Gather")
 				)
 			);
 		}
 	}
 });
 
+var CompletedGather = React.createClass({displayName: "CompletedGather",
+	votedMaps: function () {
+		var maps = this.props.maps;
+		var mapVotes = this.props.gather.gatherers.map(function (gatherer) {
+			return gatherer.mapVote;
+		}).filter(function (elem) {
+			return elem !== null;
+		}).map(function (mapId) {
+			var result;
+			maps.forEach(function (map) {
+				if (map.id === mapId) result = map;
+			});
+			return result;
+		});
+	},
+	votedServer: function () {
+
+	},
+	render: function () {
+		return (
+			React.createElement("div", {className: "panel panel-default"}, 
+				React.createElement("div", {className: "panel-heading"}, 
+					React.createElement("strong", null, "Gather Completed")
+				), 
+				React.createElement("div", {className: "panel-body"}, 
+					React.createElement("h3", null, "Join Up:"), 
+					React.createElement("p", null, this.votedMaps()
+									.map(function (map) {return map.name})
+									.join(","))
+				), 
+				React.createElement(GatherTeams, {gather: this.props.gather})
+			)
+		);
+	}
+});
 
 
 
@@ -588,6 +621,7 @@ function initialiseComponents () {
 	React.render(React.createElement(Chatroom, null), document.getElementById('chatroom'));
 	React.render(React.createElement(Gather, null), document.getElementById('gathers'));
 	React.render(React.createElement(CurrentUser, null), document.getElementById('currentuser'));
+	React.render(React.createElement(AdminPanel, null), document.getElementById('admin-menu'));
 };
 
 "use strict";
@@ -825,6 +859,28 @@ var UserMenu = React.createClass({displayName: "UserMenu",
 				React.createElement("li", null, React.createElement("br", null), React.createElement(UserLogin, null), React.createElement("br", null))
 			)
 		);
+	}
+});
+
+var AdminPanel = React.createClass({displayName: "AdminPanel",
+	handleGatherReset: function () {
+		socket.emit("gather:reset");
+	},
+	render: function () {
+		return (
+			React.createElement("ul", {className: "nav", id: "admin-menu"}, 
+				React.createElement("li", null, 
+					React.createElement("div", {className: "admin-panel"}, 
+						React.createElement("h5", null, "Admin"), 
+						React.createElement("button", {
+							className: "btn btn-danger", 
+							onClick: this.handleGatherReset}, 
+							"Reset Gather"), 
+						React.createElement("p", {className: "text-center"}, React.createElement("small", null, "Only responds for admins on staging.ensl.org"))
+					)
+				)
+			)
+		)
 	}
 });
 

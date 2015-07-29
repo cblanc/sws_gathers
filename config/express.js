@@ -6,13 +6,14 @@ var morgan = require("morgan");
 var express = require("express");
 var winston = require("winston");
 var config = require("./config.js");
-var exphbs = require('express-handlebars');
+var favicon = require("serve-favicon");
+var exphbs = require("express-handlebars");
 var env = process.env.NODE_ENV || "development";
 var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
 
 module.exports = function (app) {
-
-	app.use(express.static(path.join(__dirname, '../public')));
+  app.use(express.static(path.join(__dirname, '../public')));
+  app.use(favicon(path.join(__dirname, '../public/images/favicon.ico')));
 
 	// Use winston on production
   var log;
@@ -37,5 +38,4 @@ module.exports = function (app) {
 
 	app.engine('.hbs', hbs);
 	app.set('view engine', '.hbs');
-
 };

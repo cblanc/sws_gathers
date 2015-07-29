@@ -46,7 +46,7 @@ var JoinGatherButton = React.createClass({
 	},
 	render: function () {
 		var message = this.props.buttonName || "Join Gather";
-		var buttonClass = "btn btn-primary";
+		var buttonClass = "btn btn-success";
 		if (this.props.buttonClass) {
 			buttonClass += " " + this.props.buttonClass;
 		}
@@ -211,7 +211,7 @@ var GatherProgress = React.createClass({
 				width: Math.round((progress.num / progress.den * 100)) + "%"
 			};
 			return (
-				<div className="panel-body">
+				<div className="panel-body no-bottom">
 					<p><strong>{this.stateDescription()}</strong> {progress.message}</p>
 					<div className="progress">
 					  <div className="progress-bar progress-bar-striped active" 
@@ -274,7 +274,7 @@ var GatherActions = React.createClass({
 				confirmTeam = (
 					<li>
 					<button
-						className="btn btn-primary"
+						className="btn btn-success"
 						onClick={this.confirmTeam}
 						>
 						Confirm Team
@@ -293,7 +293,7 @@ var GatherActions = React.createClass({
 
 		return (
 			<div className="panel-footer text-right">
-				<ul className="list-inline">
+				<ul className="list-inline no-bottom">
 					{confirmTeam}
 					{inviteButton}
 					{joinButton}
@@ -337,9 +337,9 @@ var Gather = React.createClass({
 					<strong>NS2 Gather </strong>
 					<span className="badge add-left">{this.props.gather.gatherers.length}</span>
 				</div>
+				<GatherProgress gather={this.props.gather} />
 				<Gatherers gather={this.props.gather} currentGatherer={this.props.currentGatherer} />
 				{gatherTeams}
-				<GatherProgress gather={this.props.gather} />
 				<GatherActions {...this.props} />
 			</div>
 		);
@@ -387,8 +387,7 @@ var Gatherers = React.createClass({
 
 			return (
 				<tr key={gatherer.user.id}>
-					<td className="col-md-2">{online}</td>
-					<td className="col-md-4">{gatherer.user.username}</td>
+					<td className="col-md-6">{online} {gatherer.user.username}</td>
 					<td className="col-md-3">{division}&nbsp;</td>
 					<td className="col-md-3 text-right">{action}&nbsp;</td>
 				</tr>
@@ -398,9 +397,6 @@ var Gatherers = React.createClass({
 			return (
 				<div className="panel-body">
 					<div className="panel panel-default">
-						<div className="panel-heading">
-							<h5 className="panel-title">Roster</h5>
-						</div>
 						<table className="table roster-table">
 							<tbody>
 								{gatherers}
@@ -410,7 +406,11 @@ var Gatherers = React.createClass({
 				</div>
 			);
 		} else {
-			return (<div className="panel-body text-center"><JoinGatherButton buttonClass="btn-lg" buttonName="Start a Gather" /></div>);
+			return (
+				<div className="panel-body text-center join-hero">
+					<JoinGatherButton buttonClass="btn-lg" buttonName="Start a Gather" />
+				</div>
+			);
 		}
 	}
 });

@@ -46,7 +46,7 @@ var JoinGatherButton = React.createClass({displayName: "JoinGatherButton",
 	},
 	render: function () {
 		var message = this.props.buttonName || "Join Gather";
-		var buttonClass = "btn btn-primary";
+		var buttonClass = "btn btn-success";
 		if (this.props.buttonClass) {
 			buttonClass += " " + this.props.buttonClass;
 		}
@@ -211,7 +211,7 @@ var GatherProgress = React.createClass({displayName: "GatherProgress",
 				width: Math.round((progress.num / progress.den * 100)) + "%"
 			};
 			return (
-				React.createElement("div", {className: "panel-body"}, 
+				React.createElement("div", {className: "panel-body no-bottom"}, 
 					React.createElement("p", null, React.createElement("strong", null, this.stateDescription()), " ", progress.message), 
 					React.createElement("div", {className: "progress"}, 
 					  React.createElement("div", {className: "progress-bar progress-bar-striped active", 
@@ -274,7 +274,7 @@ var GatherActions = React.createClass({displayName: "GatherActions",
 				confirmTeam = (
 					React.createElement("li", null, 
 					React.createElement("button", {
-						className: "btn btn-primary", 
+						className: "btn btn-success", 
 						onClick: this.confirmTeam
 						}, 
 						"Confirm Team"
@@ -293,7 +293,7 @@ var GatherActions = React.createClass({displayName: "GatherActions",
 
 		return (
 			React.createElement("div", {className: "panel-footer text-right"}, 
-				React.createElement("ul", {className: "list-inline"}, 
+				React.createElement("ul", {className: "list-inline no-bottom"}, 
 					confirmTeam, 
 					inviteButton, 
 					joinButton
@@ -337,9 +337,9 @@ var Gather = React.createClass({displayName: "Gather",
 					React.createElement("strong", null, "NS2 Gather "), 
 					React.createElement("span", {className: "badge add-left"}, this.props.gather.gatherers.length)
 				), 
+				React.createElement(GatherProgress, {gather: this.props.gather}), 
 				React.createElement(Gatherers, {gather: this.props.gather, currentGatherer: this.props.currentGatherer}), 
 				gatherTeams, 
-				React.createElement(GatherProgress, {gather: this.props.gather}), 
 				React.createElement(GatherActions, React.__spread({},  this.props))
 			)
 		);
@@ -387,8 +387,7 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 
 			return (
 				React.createElement("tr", {key: gatherer.user.id}, 
-					React.createElement("td", {className: "col-md-2"}, online), 
-					React.createElement("td", {className: "col-md-4"}, gatherer.user.username), 
+					React.createElement("td", {className: "col-md-6"}, online, " ", gatherer.user.username), 
 					React.createElement("td", {className: "col-md-3"}, division, " "), 
 					React.createElement("td", {className: "col-md-3 text-right"}, action, " ")
 				)
@@ -398,9 +397,6 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 			return (
 				React.createElement("div", {className: "panel-body"}, 
 					React.createElement("div", {className: "panel panel-default"}, 
-						React.createElement("div", {className: "panel-heading"}, 
-							React.createElement("h5", {className: "panel-title"}, "Roster")
-						), 
 						React.createElement("table", {className: "table roster-table"}, 
 							React.createElement("tbody", null, 
 								gatherers
@@ -410,7 +406,11 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 				)
 			);
 		} else {
-			return (React.createElement("div", {className: "panel-body text-center"}, React.createElement(JoinGatherButton, {buttonClass: "btn-lg", buttonName: "Start a Gather"})));
+			return (
+				React.createElement("div", {className: "panel-body text-center join-hero"}, 
+					React.createElement(JoinGatherButton, {buttonClass: "btn-lg", buttonName: "Start a Gather"})
+				)
+			);
 		}
 	}
 });
@@ -421,6 +421,31 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 "use strict";
 
 var socket;
+
+function initialiseVisibilityMonitoring (socket) {
+	var hidden, visibilityChange; 
+	if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+	  hidden = "hidden";
+	  visibilityChange = "visibilitychange";
+	} else if (typeof document.mozHidden !== "undefined") {
+	  hidden = "mozHidden";
+	  visibilityChange = "mozvisibilitychange";
+	} else if (typeof document.msHidden !== "undefined") {
+	  hidden = "msHidden";
+	  visibilityChange = "msvisibilitychange";
+	} else if (typeof document.webkitHidden !== "undefined") {
+	  hidden = "webkitHidden";
+	  visibilityChange = "webkitvisibilitychange";
+	}
+
+	document.addEventListener(visibilityChange, function () {
+		if (document[hidden]) {
+			socket.emit("users:away");
+		} else {
+			socket.emit("users:online");
+		}
+	}, false);
+}
 
 function initialiseComponents () {
 	var socketUrl = window.location.protocol + "//" + window.location.host;
@@ -435,6 +460,9 @@ function initialiseComponents () {
 			console.log("Disconnected")
 		});
 
+	// 
+
+	// Render Page
 	React.render(React.createElement(UserMenu, null), document.getElementById('side-menu'));
 	React.render(React.createElement(Chatroom, null), document.getElementById('chatroom'));
 	React.render(React.createElement(Gather, null), document.getElementById('gathers'));

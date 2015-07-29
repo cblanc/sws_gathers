@@ -22,8 +22,8 @@
 }
 
 .dot {
-	width: 8px;
-	height: 8px;
+	width: 5px;
+	height: 5px;
 	border-radius: 50%;
 	vertical-align: middle;
 	position:relative;
@@ -31,5 +31,24 @@
 }
 
 .online {
-	background: #0f0;
+	background: #FF9900;
+}
+
+.afk {
+	background: #FF9900;
+}
+
+.offline {
+	background: #CCC;
+}
+
+
+
+.no-bottom {
+	margin-bottom: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+.join-hero {
+	padding: 80px 0px;
 }

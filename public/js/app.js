@@ -303,6 +303,114 @@ var GatherActions = React.createClass({displayName: "GatherActions",
 	}
 });
 
+var ServerVoting = React.createClass({displayName: "ServerVoting",
+	handleServerVote: function (e) {
+		e.preventDefault();
+		socket.emit("gather:vote", {
+			server: {
+				id: parseInt(e.target.value, 10)
+			}
+		});
+	},
+	votesForServer: function (server) {
+		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+			if (server.id === gatherer.serverVote) acc++;
+			return acc;
+		}, 0);
+	},
+	render: function () {
+		var self = this;
+		var servers = self.props.servers.map(function (server) {
+			var voteButton;
+			if (self.props.currentGatherer.serverVote === server.id) {
+				voteButton = (React.createElement("button", {
+											"data-disabled": "true", 
+											className: "btn btn-xs btn-success"}, 
+											"Voted"))
+			} else {
+				voteButton = (React.createElement("button", {
+											onClick: self.handleServerVote, 
+											value: server.id, 
+											className: "btn btn-xs btn-primary"}, 
+											"Vote"));
+			}
+			return (
+				React.createElement("tr", null, 
+					React.createElement("td", {className: "col-md-6"}, server.name), 
+					React.createElement("td", {className: "col-md-3"}, self.votesForServer(server), " Votes"), 
+					React.createElement("td", {className: "col-md-3 text-right"}, 
+						voteButton
+					)
+				)
+			);
+		});
+		return (
+			React.createElement("div", {className: "panel panel-default"}, 
+				React.createElement("div", {className: "panel-heading"}, 
+					"Server Voting"
+				), 
+				React.createElement("table", {id: "serverVoteTable", className: "table table-condensed table-hover voting-table"}, 
+					servers
+				)
+			)
+		);
+	}
+})
+
+var MapVoting = React.createClass({displayName: "MapVoting",
+	handleMapVote: function (e) {
+		e.preventDefault();
+		socket.emit("gather:vote", {
+			map: {
+				id: parseInt(e.target.value, 10)
+			}
+		});
+	},
+	votesForMap: function (map) {
+		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+			if (map.id === gatherer.mapVote) acc++;
+			return acc;
+		}, 0);
+	},
+	render: function () {
+		var self = this;
+		var maps = self.props.maps.map(function (map) {
+			var voteButton;
+			if (self.props.currentGatherer.mapVote === map.id) {
+				voteButton = (React.createElement("button", {
+											"data-disabled": "true", 
+											className: "btn btn-xs btn-success"}, 
+											"Voted"))
+			} else {
+				voteButton = (React.createElement("button", {
+											onClick: self.handleMapVote, 
+											value: map.id, 
+											className: "btn btn-xs btn-primary"}, 
+											"Vote"));
+			}
+			return (
+				React.createElement("tr", null, 
+					React.createElement("td", {className: "col-md-6"}, map.name), 
+					React.createElement("td", {className: "col-md-3"}, self.votesForMap(map), " Votes"), 
+					React.createElement("td", {className: "col-md-3 text-right"}, 
+						voteButton
+					)
+				)
+			);
+		});
+		return (
+			React.createElement("div", {className: "panel panel-default"}, 
+				React.createElement("div", {className: "panel-heading"}, 
+					"Map Voting"
+				), 
+				React.createElement("table", {className: "table table-condensed table-hover voting-table"}, 
+					maps
+				)
+			)
+		);
+	}
+})
+
 var Gather = React.createClass({displayName: "Gather",
 	getDefaultProps: function () {
 		return {
@@ -314,10 +422,7 @@ var Gather = React.createClass({displayName: "Gather",
 	componentDidMount: function () {
 		var self = this;
 		socket.on("gather:refresh", function (data) {
-			self.setProps({
-				gather: data.gather,
-				currentGatherer: data.currentGatherer
-			});
+			self.setProps(data);
 		});
 	},
 	
@@ -326,7 +431,22 @@ var Gather = React.createClass({displayName: "Gather",
 			return (React.createElement("h1", null, "Gather Completed! Now restart the app"));
 		}
 
-		
+		var voting;
+		if (this.props.currentGatherer) {
+			voting = (
+				React.createElement("div", {className: "panel-body"}, 
+					React.createElement("div", {className: "row"}, 
+						React.createElement("div", {className: "col-md-6"}, 
+							React.createElement(MapVoting, React.__spread({},  this.props))
+						), 
+						React.createElement("div", {className: "col-md-6"}, 
+							React.createElement(ServerVoting, React.__spread({},  this.props))
+						)
+					)
+				)
+			);
+		}
+
 		var gatherTeams;
 		if (this.props.gather.state === 'selection') {
 			gatherTeams = React.createElement(GatherTeams, {gather: this.props.gather})
@@ -339,6 +459,7 @@ var Gather = React.createClass({displayName: "Gather",
 				), 
 				React.createElement(GatherProgress, {gather: this.props.gather}), 
 				React.createElement(Gatherers, {gather: this.props.gather, currentGatherer: this.props.currentGatherer}), 
+				voting, 
 				gatherTeams, 
 				React.createElement(GatherActions, React.__spread({},  this.props))
 			)

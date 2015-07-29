@@ -303,6 +303,114 @@ var GatherActions = React.createClass({
 	}
 });
 
+var ServerVoting = React.createClass({
+	handleServerVote: function (e) {
+		e.preventDefault();
+		socket.emit("gather:vote", {
+			server: {
+				id: parseInt(e.target.value, 10)
+			}
+		});
+	},
+	votesForServer: function (server) {
+		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+			if (server.id === gatherer.serverVote) acc++;
+			return acc;
+		}, 0);
+	},
+	render: function () {
+		var self = this;
+		var servers = self.props.servers.map(function (server) {
+			var voteButton;
+			if (self.props.currentGatherer.serverVote === server.id) {
+				voteButton = (<button
+											data-disabled="true"
+											className="btn btn-xs btn-success">
+											Voted</button>)
+			} else {
+				voteButton = (<button
+											onClick={self.handleServerVote}
+											value={server.id}
+											className="btn btn-xs btn-primary">
+											Vote</button>);
+			}
+			return (
+				<tr>
+					<td className="col-md-6">{server.name}</td>
+					<td className="col-md-3">{self.votesForServer(server)} Votes</td>
+					<td className="col-md-3 text-right">
+						{voteButton}
+					</td>
+				</tr>
+			);
+		});
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					Server Voting
+				</div>
+				<table id="serverVoteTable" className="table table-condensed table-hover voting-table">
+					{servers}
+				</table>
+			</div>
+		);
+	}
+})
+
+var MapVoting = React.createClass({
+	handleMapVote: function (e) {
+		e.preventDefault();
+		socket.emit("gather:vote", {
+			map: {
+				id: parseInt(e.target.value, 10)
+			}
+		});
+	},
+	votesForMap: function (map) {
+		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+			if (map.id === gatherer.mapVote) acc++;
+			return acc;
+		}, 0);
+	},
+	render: function () {
+		var self = this;
+		var maps = self.props.maps.map(function (map) {
+			var voteButton;
+			if (self.props.currentGatherer.mapVote === map.id) {
+				voteButton = (<button
+											data-disabled="true"
+											className="btn btn-xs btn-success">
+											Voted</button>)
+			} else {
+				voteButton = (<button
+											onClick={self.handleMapVote}
+											value={map.id}
+											className="btn btn-xs btn-primary">
+											Vote</button>);
+			}
+			return (
+				<tr>
+					<td className="col-md-6">{map.name}</td>
+					<td className="col-md-3">{self.votesForMap(map)} Votes</td>
+					<td className="col-md-3 text-right">
+						{voteButton}
+					</td>
+				</tr>
+			);
+		});
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					Map Voting
+				</div>
+				<table className="table table-condensed table-hover voting-table">
+					{maps}
+				</table>
+			</div>
+		);
+	}
+})
+
 var Gather = React.createClass({
 	getDefaultProps: function () {
 		return {
@@ -314,10 +422,7 @@ var Gather = React.createClass({
 	componentDidMount: function () {
 		var self = this;
 		socket.on("gather:refresh", function (data) {
-			self.setProps({
-				gather: data.gather,
-				currentGatherer: data.currentGatherer
-			});
+			self.setProps(data);
 		});
 	},
 	
@@ -326,7 +431,22 @@ var Gather = React.createClass({
 			return (<h1>Gather Completed! Now restart the app</h1>);
 		}
 
-		
+		var voting;
+		if (this.props.currentGatherer) {
+			voting = (
+				<div className="panel-body">
+					<div className="row">
+						<div className="col-md-6">
+							<MapVoting {...this.props} />
+						</div>
+						<div className="col-md-6">
+							<ServerVoting {...this.props} />
+						</div>
+					</div>
+				</div>
+			);
+		}
+
 		var gatherTeams;
 		if (this.props.gather.state === 'selection') {
 			gatherTeams = <GatherTeams gather={this.props.gather} />
@@ -339,6 +459,7 @@ var Gather = React.createClass({
 				</div>
 				<GatherProgress gather={this.props.gather} />
 				<Gatherers gather={this.props.gather} currentGatherer={this.props.currentGatherer} />
+				{voting}
 				{gatherTeams}
 				<GatherActions {...this.props} />
 			</div>

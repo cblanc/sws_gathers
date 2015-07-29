@@ -1,0 +1,16 @@
+{
+	"maps": [
+		{"id": 1, "name" : "ns2_veil"},
+		{"id": 2, "name" : "ns2_tram"},
+		{"id": 3, "name" : "ns2_summit"},
+		{"id": 4, "name" : "ns2_prison"},
+		{"id": 5, "name" : "ns2_nexus"},
+		{"id": 6, "name" : "ns2_mineral"},
+		{"id": 7, "name" : "ns2_jambi"},
+		{"id": 8, "name" : "ns2_fracture"},
+		{"id": 9, "name" : "ns2_docking2"},
+		{"id": 10, "name" : "ns2_descent"},
+		{"id": 11, "name" : "ns2_caged"},
+		{"id": 12, "name" : "ns2_biodome"}
+	]
+}

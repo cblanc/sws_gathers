@@ -45,6 +45,13 @@ describe("Gather Model:", function () {
 
 		describe("Election Tmimeout", function () {
 			it ("starts a timer and transitions to next state when timer runs out", function (done) {
+				gather = new Gather({
+					onElectionTimeout: function () {
+						assert.equal(gather.current, "selection");
+						assert.isNull(gather.electionStartTime);
+						done();
+					}
+				});
 				gather.ELECTION_INTERVAL = 100; // 1 second
 				assert.isNull(gather.electionStartTime);
 				gatherers.forEach(function (gatherer) {
@@ -52,11 +59,6 @@ describe("Gather Model:", function () {
 				});	
 				assert.equal(gather.current, "election");
 				assert.isNotNull(gather.electionStartTime);
-				setTimeout(function () {
-					assert.equal(gather.current, "selection");
-					assert.isNull(gather.electionStartTime);
-					done();
-				}, 200);
 			});
 		});
 

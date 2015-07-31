@@ -43,6 +43,23 @@ describe("Gather Model:", function () {
 			});
 		});
 
+		describe("Election Tmimeout", function () {
+			it ("starts a timer and transitions to next state when timer runs out", function (done) {
+				gather.ELECTION_INTERVAL = 100; // 1 second
+				assert.isNull(gather.electionStartTime);
+				gatherers.forEach(function (gatherer) {
+					gather.addGatherer(gatherer);
+				});	
+				assert.equal(gather.current, "election");
+				assert.isNotNull(gather.electionStartTime);
+				setTimeout(function () {
+					assert.equal(gather.current, "selection");
+					assert.isNull(gather.electionStartTime);
+					done();
+				}, 200);
+			});
+		});
+
 		describe("Election", function () {
 			beforeEach(function () {
 				gatherers.forEach(function (gatherer) {
@@ -58,6 +75,7 @@ describe("Gather Model:", function () {
 					assert.equal(gather.leaderVotes().length, 1);
 					assert.equal(gather.leaderVotes()[0], candidate.id);
 				});
+				
 				it ("retains state of 'election' until all votes cast", function () {
 					var candidate = gatherers[0];
 					gatherers.forEach(function (voter, index) {
@@ -235,6 +253,8 @@ describe("Gather Model:", function () {
 			var output = gather.toJson();
 			assert.isArray(output.gatherers);
 			assert.isString(output.state);
+			assert.isNull(output.election.startTime);
+			assert.equal(output.election.interval, gather.ELECTION_INTERVAL);
 		});
 	});
 

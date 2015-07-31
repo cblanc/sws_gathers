@@ -327,7 +327,7 @@ var ServerVoting = React.createClass({displayName: "ServerVoting",
 											"Vote"));
 			}
 			return (
-				React.createElement("tr", null, 
+				React.createElement("tr", {key: server.id}, 
 					React.createElement("td", {className: "col-md-6"}, server.name), 
 					React.createElement("td", {className: "col-md-3"}, self.votesForServer(server), " Votes"), 
 					React.createElement("td", {className: "col-md-3 text-right"}, 
@@ -381,7 +381,7 @@ var MapVoting = React.createClass({displayName: "MapVoting",
 											"Vote"));
 			}
 			return (
-				React.createElement("tr", null, 
+				React.createElement("tr", {key: map.id}, 
 					React.createElement("td", {className: "col-md-6"}, map.name), 
 					React.createElement("td", {className: "col-md-3"}, self.votesForMap(map), " Votes"), 
 					React.createElement("td", {className: "col-md-3 text-right"}, 
@@ -476,7 +476,8 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 			if (self.props.gather.state === 'gathering') {
 				action = (
 					gatherer.user.ability.lifeforms.map(function (lifeform) {
-						return (React.createElement("span", {className: "label label-default"}, lifeform));
+						return (React.createElement("span", {className: "label label-default", 
+													key: [lifeform, gatherer.id].join("-")}, lifeform));
 					})
 				);
 			}
@@ -620,7 +621,7 @@ var Chatroom = React.createClass({displayName: "Chatroom",
 	},
 	componentDidMount: function () {
 		var self = this;
-		var TIMER_INTERVAL = 60000; // Every minute
+		var TIMER_INTERVAL = 5000; // Every minute
 
 		socket.on("message:new", function (data) {
 			var history = self.props.history;
@@ -642,7 +643,7 @@ var Chatroom = React.createClass({displayName: "Chatroom",
 		socket.emit("message:refresh", {});
 
 		self.timer = setInterval(function () {
-			if (self.refs.messages) self.refs.messages.refreshTime();
+			self.forceUpdate();
 		}, TIMER_INTERVAL);
 	},
 
@@ -660,11 +661,8 @@ var Chatroom = React.createClass({displayName: "Chatroom",
 		var messages = this.props.history.map(function (message) {
 			return (
 				React.createElement(ChatMessage, {
-					avatar: message.author.avatar, 
-					username: message.author.username, 
-					content: message.content, 
-					ref: "messages", 
-					createdAt: message.createdAt})
+					message: message, 
+					key: message.id})
 			);
 		});
 		return (
@@ -683,16 +681,19 @@ var Chatroom = React.createClass({displayName: "Chatroom",
 	}
 });
 
+var updateMessageCallbacks = [];
+
+var timer = setInterval(function () {
+	updateMessageCallbacks.forEach(function (callback) {
+		callback();
+	});
+}, 60000);
+
 var ChatMessage = React.createClass({displayName: "ChatMessage",
-	getInitialState: function () {
-		return {
-			timeAgo: $.timeago(this.props.createdAt)
-		}
-	},
-	refreshTime: function () {
+	componentDidMount: function () {
 		var self = this;
-		self.setState({
-			timeAgo: $.timeago(self.props.createdAt)
+		updateMessageCallbacks.push(function () {
+			self.forceUpdate();
 		});
 	},
 	render: function () {
@@ -700,7 +701,7 @@ var ChatMessage = React.createClass({displayName: "ChatMessage",
 			React.createElement("li", {className: "left clearfix"}, 
 				React.createElement("span", {className: "chat-img pull-left"}, 
 						React.createElement("img", {
-							src: this.props.avatar, 
+							src: this.props.message.author.avatar, 
 							alt: "User Avatar", 
 							height: "40", 
 							width: "40", 
@@ -708,12 +709,12 @@ var ChatMessage = React.createClass({displayName: "ChatMessage",
 				), 
 				React.createElement("div", {className: "chat-body clearfix"}, 
 					React.createElement("div", {className: "header"}, 
-						React.createElement("strong", {className: "primary-font"}, this.props.username), 
+						React.createElement("strong", {className: "primary-font"}, this.props.message.author.username), 
 						React.createElement("small", {className: "pull-right text-muted"}, 
-							React.createElement("i", {className: "fa fa-clock-o fa-fw"}), " ", this.state.timeAgo
+							React.createElement("i", {className: "fa fa-clock-o fa-fw"}), " ", $.timeago(this.props.message.createdAt)
 						)
 					), 
-					React.createElement("p", null, this.props.content)
+					React.createElement("p", null, this.props.message.content)
 				)
 			)
 		);
@@ -761,9 +762,8 @@ var MessageBar = React.createClass({displayName: "MessageBar",
 
 var UserLogin = React.createClass({displayName: "UserLogin",
 	authorizeId: function (id) {
-		id = parseInt(id, 10);
 		socket.emit("users:authorize", {
-			id: id
+			id: parseInt(id, 10)
 		});
 		setTimeout(function () {
 			socket.emit("gather:refresh");

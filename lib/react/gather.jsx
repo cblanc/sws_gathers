@@ -327,7 +327,7 @@ var ServerVoting = React.createClass({
 											Vote</button>);
 			}
 			return (
-				<tr>
+				<tr key={server.id}>
 					<td className="col-md-6">{server.name}</td>
 					<td className="col-md-3">{self.votesForServer(server)} Votes</td>
 					<td className="col-md-3 text-right">
@@ -381,7 +381,7 @@ var MapVoting = React.createClass({
 											Vote</button>);
 			}
 			return (
-				<tr>
+				<tr key={map.id}>
 					<td className="col-md-6">{map.name}</td>
 					<td className="col-md-3">{self.votesForMap(map)} Votes</td>
 					<td className="col-md-3 text-right">
@@ -476,7 +476,8 @@ var Gatherers = React.createClass({
 			if (self.props.gather.state === 'gathering') {
 				action = (
 					gatherer.user.ability.lifeforms.map(function (lifeform) {
-						return (<span className="label label-default">{lifeform}</span>);
+						return (<span className="label label-default" 
+													key={[lifeform, gatherer.id].join("-")}>{lifeform}</span>);
 					})
 				);
 			}

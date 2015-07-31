@@ -182,7 +182,7 @@ var GatherProgress = React.createClass({displayName: "GatherProgress",
 			case "election":
 				return "Currently voting for team leaders.";
 			case "selection":
-				return "Waiting for leaders to picking teams.";
+				return "Waiting for leaders to pick teams.";
 			case "done":
 				return "Gather completed.";
 			default:

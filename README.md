@@ -27,16 +27,18 @@ npm start
 ## Todo
 
 - ENSL.org: Authentication
-- ENSL.org: Pull user data and bans
-- ENSL.org: API to allow ENSL to pull current gather status
-- Hive Integration: Pull stats
-- Steam Integration: Outbound steam messaging
-- Admin tools - kick user/edit messages
-- Add a backend datastore to persist gather data and messages
-- Add sounds
-- WebRTC?
-- Add user lifeform + div information
-- Show online status
+- ENSL.org: Pull bans
+- ENSL.org: Pull teams
+- ENSL.org: Pull servers
+- ENSL.org: Pull bans
+- Hive.naturalselection2.com: Pull stats
+- Steam: Outbound steam messaging
+- Backend datastore for messages and gathers
+- Add sounds and configuration
+- Add user profile + backend store
+- Show online/away/offline status
+- Admin tools: Modify Messages
+- Admin tools: Remove gatherer
 
 ## License
 

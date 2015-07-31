@@ -143,7 +143,7 @@ var ElectionProgressBar = React.createClass({displayName: "ElectionProgressBar",
 		return {
 			num: msTranspired,
 			den: interval,
-			barMessage: Math.floor((interval - msTranspired) / 100) + "s remaining"
+			barMessage: Math.floor((interval - msTranspired) / 1000) + "s remaining"
 		}
 	},
 	componentWillUnmount: function () {
@@ -910,10 +910,32 @@ var CurrentUser = React.createClass({displayName: "CurrentUser",
 	render: function () {
 		if (this.props.user) {
 			return (
-				React.createElement("a", {href: "#"}, this.props.user.username, "  ", React.createElement("img", {src: this.props.user.avatar, 
-					alt: "User Avatar", 
-					height: "20", 
-					width: "20"}))
+				React.createElement("li", {class: "dropdown"}, 
+					React.createElement("a", {className: "dropdown-toggle", "data-toggle": "dropdown", href: "#"}, 
+						this.props.user.username, "  ", React.createElement("img", {src: this.props.user.avatar, 
+						alt: "User Avatar", 
+						height: "20", 
+						width: "20"}), " ", React.createElement("i", {className: "fa fa-caret-down"})
+					), 
+					React.createElement("ul", {className: "dropdown-menu dropdown-user"}, 
+						React.createElement("li", null, 
+							React.createElement("a", {href: "#"}, React.createElement("i", {className: "fa fa-gear fa-fw"}), " Profile")
+						), 
+						React.createElement("li", null, 
+							React.createElement("a", {href: "#"}, React.createElement("i", {className: "fa fa-flag fa-fw"}), " Notifications")
+						), 
+						React.createElement("li", null, 
+							React.createElement("a", {href: "#"}, React.createElement("i", {className: "fa fa-music fa-fw"}), " Sounds")
+						), 
+						React.createElement("li", null, 
+						 	React.createElement("a", {href: "#", "data-toggle": "modal", "data-target": "#designmodal"}, "Design Goals")
+						), 
+						React.createElement("li", {className: "divider"}), 
+							React.createElement("li", null, React.createElement("a", {href: "login.html"}, React.createElement("i", {className: "fa fa-sign-out fa-fw"}), " Logout")
+						)
+					)
+				)
+
 			);
 		} else {
 			return false;

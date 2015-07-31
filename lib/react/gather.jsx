@@ -143,7 +143,7 @@ var ElectionProgressBar = React.createClass({
 		return {
 			num: msTranspired,
 			den: interval,
-			barMessage: Math.floor((interval - msTranspired) / 100) + "s remaining"
+			barMessage: Math.floor((interval - msTranspired) / 1000) + "s remaining"
 		}
 	},
 	componentWillUnmount: function () {

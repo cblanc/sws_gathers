@@ -112,10 +112,32 @@ var CurrentUser = React.createClass({
 	render: function () {
 		if (this.props.user) {
 			return (
-				<a href="#">{this.props.user.username} &nbsp;<img src={this.props.user.avatar}
-					alt="User Avatar" 
-					height="20"
-					width="20" /></a>
+				<li class="dropdown">
+					<a className="dropdown-toggle" data-toggle="dropdown" href="#">
+						{this.props.user.username} &nbsp;<img src={this.props.user.avatar}
+						alt="User Avatar" 
+						height="20"
+						width="20" /> <i className="fa fa-caret-down"></i>
+					</a>
+					<ul className="dropdown-menu dropdown-user">
+						<li>
+							<a href="#"><i className="fa fa-gear fa-fw"></i> Profile</a>
+						</li>
+						<li>
+							<a href="#"><i className="fa fa-flag fa-fw"></i> Notifications</a>
+						</li>
+						<li>
+							<a href="#"><i className="fa fa-music fa-fw"></i> Sounds</a>
+						</li>
+						<li>
+						 	<a href="#" data-toggle="modal" data-target="#designmodal">Design Goals</a>
+						</li>
+						<li className="divider"></li>
+							<li><a href="login.html"><i className="fa fa-sign-out fa-fw"></i> Logout</a>
+						</li>
+					</ul>
+				</li>
+
 			);
 		} else {
 			return false;

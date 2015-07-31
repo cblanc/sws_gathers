@@ -128,6 +128,52 @@ var GatherTeams = React.createClass({displayName: "GatherTeams",
 	}
 })
 
+var ElectionProgressBar = React.createClass({displayName: "ElectionProgressBar",
+	componentDidMount: function () {
+		var self = this;
+		this.timer = setInterval(function () {
+			self.forceUpdate();
+		}, 900);
+	},
+	progress: function () {
+		var interval = this.props.gather.election.interval;
+		var startTime = (new Date(this.props.gather.election.startTime)).getTime();
+		var msTranspired = Math.floor((new Date()).getTime() - startTime);
+
+		return {
+			num: msTranspired,
+			den: interval,
+			barMessage: Math.floor((interval - msTranspired) / 100) + "s remaining"
+		}
+	},
+	componentWillUnmount: function () {
+		clearInterval(this.timer);
+	},
+	render: function () {
+		return (React.createElement(ProgressBar, {progress: this.progress()}));
+	}
+});
+
+var ProgressBar = React.createClass({displayName: "ProgressBar",
+	render: function () {
+		var style = {
+			width: Math.round((this.props.progress.num / this.props.progress.den * 100)) + "%"
+		};
+		var barMessage = this.props.progress.barMessage || "";
+		return (
+			React.createElement("div", {className: "progress"}, 
+			  React.createElement("div", {className: "progress-bar progress-bar-striped active", 
+			  	"data-role": "progressbar", 
+			  	"data-aria-valuenow": this.props.progress.num, 
+			  	"data-aria-valuemin": "0", 
+			  	"data-aria-valuemax": this.props.progress.den, 
+			  	style: style}, barMessage
+			  )
+		  )
+		);
+	}
+});
+
 var GatherProgress = React.createClass({displayName: "GatherProgress",
 	stateDescription: function () {
 		switch(this.props.gather.state) {
@@ -180,36 +226,27 @@ var GatherProgress = React.createClass({displayName: "GatherProgress",
 		};
 	},
 	render: function () {
-		var progress;
+		var progress, progressBar;
 		var gatherState = this.props.gather.state;
 		if (gatherState === 'gathering' && this.props.gather.gatherers.length) {
 			progress = this.gatheringProgress();
+			progressBar = (React.createElement(ProgressBar, {progress: progress}));
 		} else if (gatherState === 'election') {
 			progress = this.electionProgress();
+			progressBar = (React.createElement(ElectionProgressBar, React.__spread({},  this.props, {progress: progress})));
 		} else if (gatherState === 'selection') {
 			progress = this.selectionProgress();
+			progressBar = (React.createElement(ProgressBar, {progress: progress}));
 		}
-		if (progress) {
-			var style = {
-				width: Math.round((progress.num / progress.den * 100)) + "%"
-			};
-			return (
-				React.createElement("div", {className: "panel-body no-bottom"}, 
-					React.createElement("p", null, React.createElement("strong", null, this.stateDescription()), " ", progress.message), 
-					React.createElement("div", {className: "progress"}, 
-					  React.createElement("div", {className: "progress-bar progress-bar-striped active", 
-					  	"data-role": "progressbar", 
-					  	"data-aria-valuenow": progress.num, 
-					  	"data-aria-valuemin": "0", 
-					  	"data-aria-valuemax": progress.den, 
-					  	style: style}
-					  )
-				  )
-				)
-			);
-		} else {
-			return false;
-		}
+
+		if (!progress) return false;
+
+		return (
+			React.createElement("div", {className: "panel-body no-bottom"}, 
+				React.createElement("p", null, React.createElement("strong", null, this.stateDescription()), " ", progress.message), 
+				progressBar
+			)
+		);
 	}
 });
 
@@ -414,6 +451,7 @@ var Gather = React.createClass({displayName: "Gather",
 	componentDidMount: function () {
 		var self = this;
 		socket.on("gather:refresh", function (data) {
+			console.log(data);
 			self.setProps(data);
 		});
 	},
@@ -449,8 +487,8 @@ var Gather = React.createClass({displayName: "Gather",
 					React.createElement("strong", null, "NS2 Gather "), 
 					React.createElement("span", {className: "badge add-left"}, this.props.gather.gatherers.length)
 				), 
-				React.createElement(GatherProgress, {gather: this.props.gather}), 
-				React.createElement(Gatherers, {gather: this.props.gather, currentGatherer: this.props.currentGatherer}), 
+				React.createElement(GatherProgress, React.__spread({},  this.props)), 
+				React.createElement(Gatherers, React.__spread({},  this.props)), 
 				gatherTeams, 
 				voting, 
 				React.createElement(GatherActions, React.__spread({},  this.props))

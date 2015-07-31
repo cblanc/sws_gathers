@@ -52,7 +52,7 @@ describe("Gather Model:", function () {
 						done();
 					}
 				});
-				gather.ELECTION_INTERVAL = 100; // 1 second
+				gather.ELECTION_INTERVAL = 10; // 10ms
 				assert.isNull(gather.electionStartTime);
 				gatherers.forEach(function (gatherer) {
 					gather.addGatherer(gatherer);

@@ -128,6 +128,52 @@ var GatherTeams = React.createClass({
 	}
 })
 
+var ElectionProgressBar = React.createClass({
+	componentDidMount: function () {
+		var self = this;
+		this.timer = setInterval(function () {
+			self.forceUpdate();
+		}, 900);
+	},
+	progress: function () {
+		var interval = this.props.gather.election.interval;
+		var startTime = (new Date(this.props.gather.election.startTime)).getTime();
+		var msTranspired = Math.floor((new Date()).getTime() - startTime);
+
+		return {
+			num: msTranspired,
+			den: interval,
+			barMessage: Math.floor((interval - msTranspired) / 100) + "s remaining"
+		}
+	},
+	componentWillUnmount: function () {
+		clearInterval(this.timer);
+	},
+	render: function () {
+		return (<ProgressBar progress={this.progress()} />);
+	}
+});
+
+var ProgressBar = React.createClass({
+	render: function () {
+		var style = {
+			width: Math.round((this.props.progress.num / this.props.progress.den * 100)) + "%"
+		};
+		var barMessage = this.props.progress.barMessage || "";
+		return (
+			<div className="progress">
+			  <div className="progress-bar progress-bar-striped active" 
+			  	data-role="progressbar" 
+			  	data-aria-valuenow={this.props.progress.num} 
+			  	data-aria-valuemin="0" 
+			  	data-aria-valuemax={this.props.progress.den} 
+			  	style={style}>{barMessage}
+			  </div>
+		  </div>
+		);
+	}
+});
+
 var GatherProgress = React.createClass({
 	stateDescription: function () {
 		switch(this.props.gather.state) {
@@ -180,36 +226,27 @@ var GatherProgress = React.createClass({
 		};
 	},
 	render: function () {
-		var progress;
+		var progress, progressBar;
 		var gatherState = this.props.gather.state;
 		if (gatherState === 'gathering' && this.props.gather.gatherers.length) {
 			progress = this.gatheringProgress();
+			progressBar = (<ProgressBar progress={progress} />);
 		} else if (gatherState === 'election') {
 			progress = this.electionProgress();
+			progressBar = (<ElectionProgressBar {...this.props} progress={progress} />);
 		} else if (gatherState === 'selection') {
 			progress = this.selectionProgress();
+			progressBar = (<ProgressBar progress={progress} />);
 		}
-		if (progress) {
-			var style = {
-				width: Math.round((progress.num / progress.den * 100)) + "%"
-			};
-			return (
-				<div className="panel-body no-bottom">
-					<p><strong>{this.stateDescription()}</strong> {progress.message}</p>
-					<div className="progress">
-					  <div className="progress-bar progress-bar-striped active" 
-					  	data-role="progressbar" 
-					  	data-aria-valuenow={progress.num} 
-					  	data-aria-valuemin="0" 
-					  	data-aria-valuemax={progress.den} 
-					  	style={style}>
-					  </div>
-				  </div>
-				</div>
-			);
-		} else {
-			return false;
-		}
+
+		if (!progress) return false;
+
+		return (
+			<div className="panel-body no-bottom">
+				<p><strong>{this.stateDescription()}</strong> {progress.message}</p>
+				{progressBar}
+			</div>
+		);
 	}
 });
 
@@ -414,6 +451,7 @@ var Gather = React.createClass({
 	componentDidMount: function () {
 		var self = this;
 		socket.on("gather:refresh", function (data) {
+			console.log(data);
 			self.setProps(data);
 		});
 	},
@@ -449,8 +487,8 @@ var Gather = React.createClass({
 					<strong>NS2 Gather </strong>
 					<span className="badge add-left">{this.props.gather.gatherers.length}</span>
 				</div>
-				<GatherProgress gather={this.props.gather} />
-				<Gatherers gather={this.props.gather} currentGatherer={this.props.currentGatherer} />
+				<GatherProgress {...this.props} />
+				<Gatherers {...this.props} />
 				{gatherTeams}
 				{voting}
 				<GatherActions {...this.props} />

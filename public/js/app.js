@@ -775,7 +775,6 @@ var UserLogin = React.createClass({displayName: "UserLogin",
 		if (!id) return;
 		React.findDOMNode(this.refs.authorize_id).value = '';
 		this.authorizeId(id);
-		return;
 	},
 	render: function () {
 		return (
@@ -868,7 +867,7 @@ var CurrentUser = React.createClass({displayName: "CurrentUser",
 				user: data.currentUser
 			});
 		});
-		socket.emit("users:refresh", {});
+		socket.emit("users:refresh");
 	},
 	render: function () {
 		if (this.props.user) {

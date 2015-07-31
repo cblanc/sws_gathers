@@ -329,8 +329,8 @@ var ServerVoting = React.createClass({
 			return (
 				<tr key={server.id}>
 					<td className="col-md-6">{server.name}</td>
-					<td className="col-md-3">{self.votesForServer(server)} Votes</td>
-					<td className="col-md-3 text-right">
+					<td className="col-md-6 text-right">
+						{self.votesForServer(server)} Votes&nbsp;
 						{voteButton}
 					</td>
 				</tr>
@@ -383,8 +383,8 @@ var MapVoting = React.createClass({
 			return (
 				<tr key={map.id}>
 					<td className="col-md-6">{map.name}</td>
-					<td className="col-md-3">{self.votesForMap(map)} Votes</td>
-					<td className="col-md-3 text-right">
+					<td className="col-md-6 text-right">
+						{self.votesForMap(map)} Votes&nbsp;
 						{voteButton}
 					</td>
 				</tr>

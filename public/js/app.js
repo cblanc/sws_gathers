@@ -329,8 +329,8 @@ var ServerVoting = React.createClass({displayName: "ServerVoting",
 			return (
 				React.createElement("tr", {key: server.id}, 
 					React.createElement("td", {className: "col-md-6"}, server.name), 
-					React.createElement("td", {className: "col-md-3"}, self.votesForServer(server), " Votes"), 
-					React.createElement("td", {className: "col-md-3 text-right"}, 
+					React.createElement("td", {className: "col-md-6 text-right"}, 
+						self.votesForServer(server), " Votes ", 
 						voteButton
 					)
 				)
@@ -383,8 +383,8 @@ var MapVoting = React.createClass({displayName: "MapVoting",
 			return (
 				React.createElement("tr", {key: map.id}, 
 					React.createElement("td", {className: "col-md-6"}, map.name), 
-					React.createElement("td", {className: "col-md-3"}, self.votesForMap(map), " Votes"), 
-					React.createElement("td", {className: "col-md-3 text-right"}, 
+					React.createElement("td", {className: "col-md-6 text-right"}, 
+						self.votesForMap(map), " Votes ", 
 						voteButton
 					)
 				)

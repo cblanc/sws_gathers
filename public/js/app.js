@@ -759,19 +759,6 @@ var MessageBar = React.createClass({displayName: "MessageBar",
 
 "use strict";
 
-var UserCounter = React.createClass({displayName: "UserCounter",
-	render: function () {
-		return (
-			React.createElement("li", null, 
-				React.createElement("a", {href: "#"}, 
-					React.createElement("i", {className: "fa fa-users fa-fw"}), " Online",  
-					React.createElement("span", {className: "badge add-left"}, " ", this.props.count, " ")
-				)
-			)
-		);
-	}
-});
-
 var UserLogin = React.createClass({displayName: "UserLogin",
 	authorizeId: function (id) {
 		id = parseInt(id, 10);
@@ -819,17 +806,15 @@ var UserLogin = React.createClass({displayName: "UserLogin",
 var UserMenu = React.createClass({displayName: "UserMenu",
 	getDefaultProps: function () {
 		return {
-			count: 0,
 			users: []
 		};
 	},
 	componentDidMount: function () {
-		socket.on('users:update', this.updateUsers);
-	},
-	updateUsers: function (data) {
-		this.setProps({
-			count: data.count,
-			users: data.users
+		var self = this;
+		socket.on('users:update', function (data) {
+			self.setProps({
+				users: data.users
+			});
 		});
 	},
 	render: function () {
@@ -840,7 +825,12 @@ var UserMenu = React.createClass({displayName: "UserMenu",
 		});
 		return (
 			React.createElement("ul", {className: "nav", id: "side-menu"}, 
-				React.createElement(UserCounter, React.__spread({},  this.props)), 
+				React.createElement("li", null, 
+					React.createElement("a", {href: "#"}, 
+						React.createElement("i", {className: "fa fa-users fa-fw"}), " Online",  
+						React.createElement("span", {className: "badge add-left"}, " ", this.props.users.length, " ")
+					)
+				), 
 				users, 
 				React.createElement("li", null, React.createElement("br", null), React.createElement(UserLogin, null), React.createElement("br", null))
 			)

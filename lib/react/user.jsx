@@ -1,18 +1,5 @@
 "use strict";
 
-var UserCounter = React.createClass({
-	render: function () {
-		return (
-			<li>
-				<a href="#">
-					<i className="fa fa-users fa-fw"></i> Online 
-					<span className="badge add-left"> {this.props.count} </span>
-				</a>
-			</li>
-		);
-	}
-});
-
 var UserLogin = React.createClass({
 	authorizeId: function (id) {
 		id = parseInt(id, 10);
@@ -60,19 +47,18 @@ var UserLogin = React.createClass({
 var UserMenu = React.createClass({
 	getDefaultProps: function () {
 		return {
-			count: 0,
 			users: []
 		};
 	},
 	componentDidMount: function () {
-		socket.on('users:update', this.updateUsers);
-	},
-	updateUsers: function (data) {
-		this.setProps({
-			count: data.count,
-			users: data.users
+		var self = this;
+		socket.on('users:update', function (data) {
+			self.setProps({
+				users: data.users
+			});
 		});
 	},
+	updateUsers: ,
 	render: function () {
 		var users = this.props.users.map(function (user) {
 			return (
@@ -81,7 +67,12 @@ var UserMenu = React.createClass({
 		});
 		return (
 			<ul className="nav" id="side-menu">
-				<UserCounter {...this.props} />
+				<li>
+					<a href="#">
+						<i className="fa fa-users fa-fw"></i> Online 
+						<span className="badge add-left"> {this.props.users.length} </span>
+					</a>
+				</li>
 				{users}
 				<li><br /><UserLogin /><br /></li>
 			</ul>

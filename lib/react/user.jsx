@@ -2,9 +2,8 @@
 
 var UserLogin = React.createClass({
 	authorizeId: function (id) {
-		id = parseInt(id, 10);
 		socket.emit("users:authorize", {
-			id: id
+			id: parseInt(id, 10)
 		});
 		setTimeout(function () {
 			socket.emit("gather:refresh");

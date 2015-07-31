@@ -8,7 +8,7 @@ var Chatroom = React.createClass({
 	},
 	componentDidMount: function () {
 		var self = this;
-		var TIMER_INTERVAL = 60000; // Every minute
+		var TIMER_INTERVAL = 5000; // Every minute
 
 		socket.on("message:new", function (data) {
 			var history = self.props.history;
@@ -30,7 +30,7 @@ var Chatroom = React.createClass({
 		socket.emit("message:refresh", {});
 
 		self.timer = setInterval(function () {
-			if (self.refs.messages) self.refs.messages.refreshTime();
+			self.forceUpdate();
 		}, TIMER_INTERVAL);
 	},
 
@@ -48,11 +48,8 @@ var Chatroom = React.createClass({
 		var messages = this.props.history.map(function (message) {
 			return (
 				<ChatMessage 
-					avatar={message.author.avatar} 
-					username={message.author.username}
-					content={message.content}
-					ref="messages"
-					createdAt={message.createdAt} />
+					message={message}
+					key={message.id} />
 			);
 		});
 		return (
@@ -71,16 +68,19 @@ var Chatroom = React.createClass({
 	}
 });
 
+var updateMessageCallbacks = [];
+
+var timer = setInterval(function () {
+	updateMessageCallbacks.forEach(function (callback) {
+		callback();
+	});
+}, 60000);
+
 var ChatMessage = React.createClass({
-	getInitialState: function () {
-		return {
-			timeAgo: $.timeago(this.props.createdAt)
-		}
-	},
-	refreshTime: function () {
+	componentDidMount: function () {
 		var self = this;
-		self.setState({
-			timeAgo: $.timeago(self.props.createdAt)
+		updateMessageCallbacks.push(function () {
+			self.forceUpdate();
 		});
 	},
 	render: function () {
@@ -88,7 +88,7 @@ var ChatMessage = React.createClass({
 			<li className="left clearfix">
 				<span className="chat-img pull-left">
 						<img 
-							src={this.props.avatar} 
+							src={this.props.message.author.avatar} 
 							alt="User Avatar" 
 							height="40"
 							width="40"
@@ -96,12 +96,12 @@ var ChatMessage = React.createClass({
 				</span>
 				<div className="chat-body clearfix">
 					<div className="header">
-						<strong className="primary-font">{this.props.username}</strong>
+						<strong className="primary-font">{this.props.message.author.username}</strong>
 						<small className="pull-right text-muted">
-							<i className="fa fa-clock-o fa-fw"></i> {this.state.timeAgo}
+							<i className="fa fa-clock-o fa-fw"></i> {$.timeago(this.props.message.createdAt)}
 						</small>
 					</div>
-					<p>{this.props.content}</p>
+					<p>{this.props.message.content}</p>
 				</div>
 			</li>
 		);

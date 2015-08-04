@@ -484,7 +484,7 @@ var Gather = React.createClass({displayName: "Gather",
 		return (
 			React.createElement("div", {className: "panel panel-default"}, 
 				React.createElement("div", {className: "panel-heading"}, 
-					React.createElement("strong", null, "NS2 Gather "), 
+					React.createElement("strong", null, "Current Gather"), 
 					React.createElement("span", {className: "badge add-left"}, this.props.gather.gatherers.length)
 				), 
 				React.createElement(GatherProgress, React.__spread({},  this.props)), 
@@ -886,10 +886,10 @@ var AdminPanel = React.createClass({displayName: "AdminPanel",
 					React.createElement("div", {className: "admin-panel"}, 
 						React.createElement("h5", null, "Admin"), 
 						React.createElement("button", {
-							className: "btn btn-danger", 
+							className: "btn btn-danger max-width", 
 							onClick: this.handleGatherReset}, 
 							"Reset Gather"), 
-						React.createElement("p", {className: "text-center"}, React.createElement("small", null, "Only responds for admins on staging.ensl.org"))
+						React.createElement("p", {className: "text-center add-top"}, React.createElement("small", null, "Only responds for admins on staging.ensl.org"))
 					)
 				)
 			)

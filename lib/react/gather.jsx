@@ -484,7 +484,7 @@ var Gather = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<strong>NS2 Gather </strong>
+					<strong>Current Gather</strong>
 					<span className="badge add-left">{this.props.gather.gatherers.length}</span>
 				</div>
 				<GatherProgress {...this.props} />

@@ -88,10 +88,10 @@ var AdminPanel = React.createClass({
 					<div className="admin-panel">
 						<h5>Admin</h5>
 						<button
-							className="btn btn-danger"
+							className="btn btn-danger max-width"
 							onClick={this.handleGatherReset}>
 							Reset Gather</button>
-						<p className="text-center"><small>Only responds for admins on staging.ensl.org</small></p>
+						<p className="text-center add-top"><small>Only responds for admins on staging.ensl.org</small></p>
 					</div>
 				</li>
 			</ul>

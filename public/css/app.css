@@ -58,3 +58,11 @@
 .voting-table {
 	font-size: 90%;
 }
+
+.max-width {
+	width: 100%;
+}
+
+.add-top {
+	margin-top: 10px;
+}

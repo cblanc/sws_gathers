@@ -26,20 +26,27 @@ npm start
 
 ## Todo
 
+Required for Production:
 - ENSL.org: Authentication
+- Backend datastore for messages
+- Admin tools: Modify Messages
+- Admin tools: Remove gatherer
+- ENSL.org: Pull bans
+- 
+
+Nice to have:
+
 - ENSL.org: Pull bans
 - ENSL.org: Pull teams
 - ENSL.org: Pull servers
-- ENSL.org: Pull bans
 - Hive.naturalselection2.com: Pull stats
 - Steam: Outbound steam messaging
-- Backend datastore for messages and gathers
+- Backend store for gathers
 - Add sounds and configuration
 - Add user profile + backend store
 - Show online/away/offline status
-- Admin tools: Modify Messages
-- Admin tools: Remove gatherer
 
 ## License
 
 MIT Licensed
+picking order

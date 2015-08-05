@@ -16,6 +16,20 @@ var Gather = helpers.Gather = require(path.join(__dirname, "../../lib/gather/gat
 var Gatherer = helpers.Gatherer = require(path.join(__dirname, "../../lib/gather/gatherer"));
 
 
+// Mongo & Associated Models
+var db = require(path.join(__dirname, "../../db/index"));
+var mongoose = require("mongoose");
+var Message = helpers.Message = mongoose.model('message');
+
+var async = require("async");
+helpers.clearDb = function (callback) {
+	async.series([
+		function (cb) {
+			Message.remove({}, cb)
+		}
+	], callback);
+}
+
 // Create User Method 
 // Each user will have unique ID, username and steam attributes
 var createUser = helpers.createUser = (function () {

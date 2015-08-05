@@ -509,16 +509,15 @@ var Gatherers = React.createClass({
 			var online= (<div className="dot online"></div>);
 
 			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>);
-			var action;
+			var lifeform = (
+				gatherer.user.ability.lifeforms.map(function (lifeform) {
+					return (<span className="label label-default" 
+												key={[lifeform, gatherer.id].join("-")}>{lifeform}</span>);
+				})
+			);
+			var team = (<span className="label label-primary">{gatherer.user.team.name}</span>);
 
-			if (self.props.gather.state === 'gathering') {
-				action = (
-					gatherer.user.ability.lifeforms.map(function (lifeform) {
-						return (<span className="label label-default" 
-													key={[lifeform, gatherer.id].join("-")}>{lifeform}</span>);
-					})
-				);
-			}
+			var action;
 
 			if (self.props.gather.state === "election") {
 				var votes = self.props.gather.gatherers.reduce(function (acc, voter) {
@@ -543,8 +542,8 @@ var Gatherers = React.createClass({
 
 			return (
 				<tr key={gatherer.user.id}>
-					<td className="col-md-6">{online} {gatherer.user.username}</td>
-					<td className="col-md-3">{division}&nbsp;</td>
+					<td className="col-md-3">{online} {gatherer.user.username}</td>
+					<td className="col-md-6">{lifeform} {division} {team}</td>
 					<td className="col-md-3 text-right">{action}&nbsp;</td>
 				</tr>
 			);

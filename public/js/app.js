@@ -509,16 +509,15 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 			var online= (React.createElement("div", {className: "dot online"}));
 
 			var division = (React.createElement("span", {className: "label label-primary"}, gatherer.user.ability.division));
-			var action;
+			var lifeform = (
+				gatherer.user.ability.lifeforms.map(function (lifeform) {
+					return (React.createElement("span", {className: "label label-default", 
+												key: [lifeform, gatherer.id].join("-")}, lifeform));
+				})
+			);
+			var team = (React.createElement("span", {className: "label label-primary"}, gatherer.user.team.name));
 
-			if (self.props.gather.state === 'gathering') {
-				action = (
-					gatherer.user.ability.lifeforms.map(function (lifeform) {
-						return (React.createElement("span", {className: "label label-default", 
-													key: [lifeform, gatherer.id].join("-")}, lifeform));
-					})
-				);
-			}
+			var action;
 
 			if (self.props.gather.state === "election") {
 				var votes = self.props.gather.gatherers.reduce(function (acc, voter) {
@@ -543,8 +542,8 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 
 			return (
 				React.createElement("tr", {key: gatherer.user.id}, 
-					React.createElement("td", {className: "col-md-6"}, online, " ", gatherer.user.username), 
-					React.createElement("td", {className: "col-md-3"}, division, " "), 
+					React.createElement("td", {className: "col-md-3"}, online, " ", gatherer.user.username), 
+					React.createElement("td", {className: "col-md-6"}, lifeform, " ", division, " ", team), 
 					React.createElement("td", {className: "col-md-3 text-right"}, action, " ")
 				)
 			);

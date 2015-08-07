@@ -33,7 +33,6 @@ messageSchema.methods.toJson = function () {
 	};
 };
 
-
 messageSchema.statics.list = function (options, callback) {
 	return this.find({deleted: false}).sort({createdAt: -1}).limit(30).exec(callback);
 };

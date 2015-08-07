@@ -59,4 +59,16 @@ var random = helpers.random = function (n) {
 	return Math.floor(Math.random () * n);
 }
 
+helpers.createMessage = function (options, callback) {
+	var content = options.content || "Test content";
+	var user = options.user || createUser();
+	Message.create({
+		author: {
+			username: user.username,
+			avatar: user.avatar
+		},
+		content: content
+	}, callback);
+};
+
 module.exports = helpers;

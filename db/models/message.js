@@ -9,10 +9,12 @@ var messageSchema = new Schema({
 		avatar: String
 	},
 	content: { type: String, required: true },
-	createdAt: { type: Date, default: Date.now, required: true }
+	createdAt: { type: Date, default: Date.now, required: true },
+	deleted: { type: Boolean, default: false }
 });
 
-messageSchema.index({ createdAt: 1 });
+messageSchema.index({ createdAt: -1 });
+messageSchema.index({ deleted: 1, createdAt: -1 });
 
 // Class Methods
 
@@ -33,7 +35,7 @@ messageSchema.methods.toJson = function () {
 
 
 messageSchema.statics.list = function (options, callback) {
-	return this.find().sort({createdAt: 1}).limit(30).exec(callback);
+	return this.find({deleted: false}).sort({createdAt: -1}).limit(30).exec(callback);
 };
 
 module.exports = mongoose.model('message', messageSchema);

@@ -38,21 +38,14 @@ describe("Message Model", function () {
 	});
 
 	describe(".list", function () {
-		before(function (done) {
-			var instructions = [helper.clearDb.bind(null)];
-			var create = function (content) {
-				return function (callback) {
-					Message.create({
-						author: {
-							username: user.username,
-							avatar: user.avatar
-						},
-						content: content
-					}, callback);
-				}
-			};
+		beforeEach(function (done) {
+			var instructions = [];//[helper.clearDb.bind(null)];
 			for (var i = 0; i < 31; i++) {
-				instructions.push(create(i));
+				instructions.push(function (content) {
+					return function (callback) {
+						return helper.createMessage({content: content}, callback);
+					}
+				}(i));
 			}
 			async.series(instructions, done);
 		});
@@ -63,9 +56,30 @@ describe("Message Model", function () {
 				assert.isTrue(messages.reduce(function (acc, message, index, arr) {
 					if (index === 0) return true;
 					if (acc === false) return false;
-					return arr[index - 1].createdAt < message.createdAt; 
+					return arr[index - 1].createdAt > message.createdAt; 
+				}));
+				assert.isTrue(messages.some(function (message) {
+					return message.content === "30";
 				}));
 				done();
+			});
+		});
+		it ("does not list deleted messages", function (done) {
+			helper.createMessage({
+				content: "FOOBAR"
+			}, function(error, message) {
+				if (error) return done(error);
+				message.deleted = true;
+				message.save(function (error, message) {
+					if (error) return done(error);
+					assert.isTrue(message.deleted);
+					Message.list({}, function (error, messages) {
+						assert.isTrue(messages.every(function (elem) {
+							return elem.id !== message.id;
+						}));
+						done();
+					});
+				});
 			});
 		});
 	});

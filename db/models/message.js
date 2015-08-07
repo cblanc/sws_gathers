@@ -12,7 +12,15 @@ var messageSchema = new Schema({
 	createdAt: { type: Date, default: Date.now, required: true }
 });
 
-messageSchema.index({ createdAt: -1 });
+messageSchema.index({ createdAt: 1 });
+
+// Class Methods
+
+messageSchema.statics.list = function (options, callback) {
+
+}
+
+// Instance Methods
 
 messageSchema.methods.toJson = function () {
 	return {
@@ -21,6 +29,11 @@ messageSchema.methods.toJson = function () {
 		content: this.content,
 		createdAt: this.createdAt
 	};
+};
+
+
+messageSchema.statics.list = function (callback) {
+	return this.find().sort({createdAt: 1}).limit(30).exec(callback);
 };
 
 module.exports = mongoose.model('message', messageSchema);

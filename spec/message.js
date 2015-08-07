@@ -3,20 +3,18 @@
 var helper = require("./helpers/index.js");
 var Message = helper.Message;
 var assert = require("chai").assert;
+var async = require("async");
 
 describe("Message Model", function () {
 	var user;
 
 	before(function (done) {
-		helper.clearDb(done);
-	});
-
-	after(function (done) {
-		helper.clearDb(done);
-	});
-
-	beforeEach(function () {
 		user = helper.createUser();
+		helper.clearDb(done);
+	});
+
+	afterEach(function (done) {
+		helper.clearDb(done);
 	});
 
 	describe(".create", function () {
@@ -34,6 +32,39 @@ describe("Message Model", function () {
 				assert.equal(result.author.avatar, user.avatar);
 				assert.equal(result.content, content);
 				assert.isDefined(result.createdAt);
+				done();
+			});
+		});
+	});
+
+	describe(".list", function () {
+		before(function (done) {
+			var instructions = [helper.clearDb.bind(null)];
+			var create = function (content) {
+				return function (callback) {
+					Message.create({
+						author: {
+							username: user.username,
+							avatar: user.avatar
+						},
+						content: content
+					}, callback);
+				}
+			};
+			for (var i = 0; i < 31; i++) {
+				instructions.push(create(i));
+			}
+			async.series(instructions, done);
+		});
+		it ("lists last 30 messages with oldest first", function (done) {
+			Message.list(function (error, messages) {
+				if (error) return done(error);
+				assert.equal(messages.length, 30);
+				assert.isTrue(messages.reduce(function (acc, message, index, arr) {
+					if (index === 0) return true;
+					if (acc === false) return false;
+					return arr[index - 1].createdAt < message.createdAt; 
+				}));
 				done();
 			});
 		});

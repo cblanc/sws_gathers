@@ -8,6 +8,9 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var config = require(path.join(__dirname, "config/config.js"));
 
+// Load Models
+require(path.join(__dirname, "db/index"));
+
 // Configure express
 require(path.join(__dirname, "config/express"))(app);
 

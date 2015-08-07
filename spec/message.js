@@ -57,7 +57,7 @@ describe("Message Model", function () {
 			async.series(instructions, done);
 		});
 		it ("lists last 30 messages with oldest first", function (done) {
-			Message.list(function (error, messages) {
+			Message.list({}, function (error, messages) {
 				if (error) return done(error);
 				assert.equal(messages.length, 30);
 				assert.isTrue(messages.reduce(function (acc, message, index, arr) {

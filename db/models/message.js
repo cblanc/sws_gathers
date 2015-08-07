@@ -32,7 +32,7 @@ messageSchema.methods.toJson = function () {
 };
 
 
-messageSchema.statics.list = function (callback) {
+messageSchema.statics.list = function (options, callback) {
 	return this.find().sort({createdAt: 1}).limit(30).exec(callback);
 };
 

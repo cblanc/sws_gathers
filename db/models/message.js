@@ -34,7 +34,10 @@ messageSchema.methods.toJson = function () {
 };
 
 messageSchema.statics.list = function (options, callback) {
-	return this.find({deleted: false}).sort({createdAt: -1}).limit(30).exec(callback);
+	return this.find({deleted: false}).sort({createdAt: -1}).limit(30).exec(function (error, messages) {
+		if (error) return callback(error);
+		return callback(null, messages.reverse());
+	});
 };
 
 module.exports = mongoose.model('message', messageSchema);

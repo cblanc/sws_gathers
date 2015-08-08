@@ -69,17 +69,11 @@ var SelectPlayerButton = React.createClass({displayName: "SelectPlayerButton",
 	}
 });
 
-var GatherTeams = React.createClass({displayName: "GatherTeams",
-	alienGatherers: function () {
+var GathererList = React.createClass({displayName: "GathererList",
+	memberList: function () {
+		var self = this;
 		return this.props.gather.gatherers.filter(function (gatherer) {
-			return gatherer.team === "alien";
-		}).sort(function (gatherer) {
-			return (gatherer.leader) ? 1 : -1;
-		});
-	},
-	marineGatherers: function () {
-		return this.props.gather.gatherers.filter(function (gatherer) {
-			return gatherer.team === "marine";
+			return gatherer.team === self.props.team;
 		}).sort(function (gatherer) {
 			return (gatherer.leader) ? 1 : -1;
 		});
@@ -100,8 +94,19 @@ var GatherTeams = React.createClass({displayName: "GatherTeams",
 				)
 			);
 		}
-		var marines = this.marineGatherers().map(extractGatherer);
-		var aliens = this.alienGatherers().map(extractGatherer);
+		var members = this.memberList().map(extractGatherer);
+		return (
+			React.createElement("table", {className: "table"}, 
+				React.createElement("tbody", null, 
+					members
+				)
+			)
+		);
+	}
+});
+
+var GatherTeams = React.createClass({displayName: "GatherTeams",
+	render: function () {
 		return (
 			React.createElement("div", {className: "panel-body"}, 
 				React.createElement("div", {className: "row"}, 
@@ -110,11 +115,7 @@ var GatherTeams = React.createClass({displayName: "GatherTeams",
 							React.createElement("div", {className: "panel-heading"}, 
 								"Aliens"
 							), 
-							React.createElement("table", {className: "table"}, 
-								React.createElement("tbody", null, 
-									aliens
-								)
-							)
+							React.createElement(GathererList, {gather: this.props.gather, team: "alien"})
 						)
 					), 
 					React.createElement("div", {className: "col-md-6"}, 
@@ -122,18 +123,14 @@ var GatherTeams = React.createClass({displayName: "GatherTeams",
 							React.createElement("div", {className: "panel-heading"}, 
 								"Marines"
 							), 
-							React.createElement("table", {className: "table"}, 
-								React.createElement("tbody", null, 
-									marines
-								)
-							)
+							React.createElement(GathererList, {gather: this.props.gather, team: "marine"})
 						)
 					)
 				)
 			)
 		);
 	}
-})
+});
 
 var ElectionProgressBar = React.createClass({displayName: "ElectionProgressBar",
 	componentDidMount: function () {
@@ -458,7 +455,6 @@ var Gather = React.createClass({displayName: "Gather",
 	componentDidMount: function () {
 		var self = this;
 		socket.on("gather:refresh", function (data) {
-			console.log(data);
 			self.setProps(data);
 		});
 	},
@@ -566,7 +562,7 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 
 			return (
 				React.createElement("tr", {key: gatherer.user.id}, 
-					React.createElement("td", {className: "col-md-5"}, country, " ", gatherer.user.username, " "), 
+					React.createElement("td", {className: "col-md-5"}, country, " ", gatherer.user.username, "  (", gatherer.user.id, ")"), 
 					React.createElement("td", {className: "col-md-5"}, 
 						lifeform, " ", division, " ", team, " "
 					), 
@@ -599,24 +595,44 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 });
 
 var CompletedGather = React.createClass({displayName: "CompletedGather",
-	votedMaps: function () {
-		
+	countVotes: function (voteType) {
+		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+			if (gatherer[voteType] !== null) acc.push(gatherer[voteType]);
+			return acc;
+		}, []);
 	},
-	votedServer: function () {
-
+	selectedMaps: function () {
+		// console.log(this.countVotes('mapVote'))
+		return rankVotes(this.countVotes('mapVote'), this.props.maps).slice(0, 2)
+	},
+	selectedServer: function () {
+		return rankVotes(this.countVotes('serverVote'), this.props.servers).slice(0, 1);
 	},
 	render: function () {
+		var maps = this.selectedMaps();
+		var server = this.selectedServer().pop();
 		return (
 			React.createElement("div", {className: "panel panel-default"}, 
 				React.createElement("div", {className: "panel-heading"}, 
-					React.createElement("strong", null, "Gather Completed")
+					React.createElement("strong", null, "Gather Details")
 				), 
+				React.createElement(GatherTeams, {gather: this.props.gather}), 
 				React.createElement("div", {className: "panel-body"}, 
-					React.createElement("h3", null, "Join Up:"), 
-					React.createElement("p", null, "Map Voted: To be completed"), 
-					React.createElement("p", null, "Server Voted: To be completed")
-				), 
-				React.createElement(GatherTeams, {gather: this.props.gather})
+					React.createElement("dl", {className: "dl-horizontal"}, 
+					  React.createElement("dt", null, "Maps"), 
+					  React.createElement("dd", null, maps.map(function(map) { return map.name}).join(" & ")), 
+					  React.createElement("dt", null, "Server"), 
+					  React.createElement("dd", null, server.name), 
+					  React.createElement("dt", null, "Address"), 
+					 	React.createElement("dd", null, server.ip, ":", server.port), 
+					 	React.createElement("dt", null, "Password"), 
+					  React.createElement("dd", null, server.password), 
+					  React.createElement("br", null), 
+					  React.createElement("dt", null, " "), 
+						React.createElement("dd", null, React.createElement("a", {href: ["steam://run/4920/connect", server.ip +":"+server.port, server.password].join("/"), 
+								className: "btn btn-primary"}, "Click to Join"))
+					)
+				)
 			)
 		);
 	}
@@ -830,7 +846,7 @@ var UserLogin = React.createClass({displayName: "UserLogin",
 		});
 		setTimeout(function () {
 			socket.emit("gather:refresh");
-		}, 5000);
+		}, 1000);
 	},
 	handleSubmit: function (e) {
 		e.preventDefault();
@@ -935,7 +951,7 @@ var CurrentUser = React.createClass({displayName: "CurrentUser",
 	render: function () {
 		if (this.props.user) {
 			return (
-				React.createElement("li", {class: "dropdown"}, 
+				React.createElement("li", {className: "dropdown"}, 
 					React.createElement("a", {className: "dropdown-toggle", "data-toggle": "dropdown", href: "#"}, 
 						this.props.user.username, "  ", React.createElement("img", {src: this.props.user.avatar, 
 						alt: "User Avatar", 

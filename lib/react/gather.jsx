@@ -69,17 +69,11 @@ var SelectPlayerButton = React.createClass({
 	}
 });
 
-var GatherTeams = React.createClass({
-	alienGatherers: function () {
+var GathererList = React.createClass({
+	memberList: function () {
+		var self = this;
 		return this.props.gather.gatherers.filter(function (gatherer) {
-			return gatherer.team === "alien";
-		}).sort(function (gatherer) {
-			return (gatherer.leader) ? 1 : -1;
-		});
-	},
-	marineGatherers: function () {
-		return this.props.gather.gatherers.filter(function (gatherer) {
-			return gatherer.team === "marine";
+			return gatherer.team === self.props.team;
 		}).sort(function (gatherer) {
 			return (gatherer.leader) ? 1 : -1;
 		});
@@ -100,8 +94,19 @@ var GatherTeams = React.createClass({
 				</tr>
 			);
 		}
-		var marines = this.marineGatherers().map(extractGatherer);
-		var aliens = this.alienGatherers().map(extractGatherer);
+		var members = this.memberList().map(extractGatherer);
+		return (
+			<table className="table">
+				<tbody>
+					{members}
+				</tbody>
+			</table>
+		);
+	}
+});
+
+var GatherTeams = React.createClass({
+	render: function () {
 		return (
 			<div className="panel-body">
 				<div className="row">
@@ -110,11 +115,7 @@ var GatherTeams = React.createClass({
 							<div className="panel-heading">
 								Aliens
 							</div>
-							<table className="table">
-								<tbody>
-									{aliens}
-								</tbody>
-							</table>
+							<GathererList gather={this.props.gather} team="alien" />
 						</div>
 					</div>
 					<div className="col-md-6">
@@ -122,18 +123,14 @@ var GatherTeams = React.createClass({
 							<div className="panel-heading">
 								Marines
 							</div>
-							<table className="table">
-								<tbody>
-									{marines}
-								</tbody>
-							</table>
+							<GathererList gather={this.props.gather} team="marine" />
 						</div>
 					</div>
 				</div>
 			</div>
 		);
 	}
-})
+});
 
 var ElectionProgressBar = React.createClass({
 	componentDidMount: function () {
@@ -458,7 +455,6 @@ var Gather = React.createClass({
 	componentDidMount: function () {
 		var self = this;
 		socket.on("gather:refresh", function (data) {
-			console.log(data);
 			self.setProps(data);
 		});
 	},
@@ -566,7 +562,7 @@ var Gatherers = React.createClass({
 
 			return (
 				<tr key={gatherer.user.id}>
-					<td className="col-md-5">{country} {gatherer.user.username}&nbsp;</td>
+					<td className="col-md-5">{country} {gatherer.user.username}&nbsp; ({gatherer.user.id})</td>
 					<td className="col-md-5">
 						{lifeform} {division} {team}&nbsp;
 					</td>
@@ -599,24 +595,44 @@ var Gatherers = React.createClass({
 });
 
 var CompletedGather = React.createClass({
-	votedMaps: function () {
-		
+	countVotes: function (voteType) {
+		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+			if (gatherer[voteType] !== null) acc.push(gatherer[voteType]);
+			return acc;
+		}, []);
 	},
-	votedServer: function () {
-
+	selectedMaps: function () {
+		// console.log(this.countVotes('mapVote'))
+		return rankVotes(this.countVotes('mapVote'), this.props.maps).slice(0, 2)
+	},
+	selectedServer: function () {
+		return rankVotes(this.countVotes('serverVote'), this.props.servers).slice(0, 1);
 	},
 	render: function () {
+		var maps = this.selectedMaps();
+		var server = this.selectedServer().pop();
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<strong>Gather Completed</strong>
-				</div>
-				<div className="panel-body">
-					<h3>Join Up:</h3>
-					<p>Map Voted: To be completed</p>
-					<p>Server Voted: To be completed</p>
+					<strong>Gather Details</strong>
 				</div>
 				<GatherTeams gather={this.props.gather} />
+				<div className="panel-body">
+					<dl className="dl-horizontal">
+					  <dt>Maps</dt>
+					  <dd>{maps.map(function(map) { return map.name}).join(" & ")}</dd>
+					  <dt>Server</dt>
+					  <dd>{server.name}</dd>
+					  <dt>Address</dt>
+					 	<dd>{server.ip}:{server.port}</dd>
+					 	<dt>Password</dt>
+					  <dd>{server.password}</dd>
+					  <br />
+					  <dt>&nbsp;</dt>
+						<dd><a href={["steam://run/4920/connect", server.ip +":"+server.port, server.password].join("/")}
+								className="btn btn-primary">Click to Join</a></dd>
+					</dl>
+				</div>
 			</div>
 		);
 	}

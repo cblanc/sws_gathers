@@ -7,7 +7,7 @@ var UserLogin = React.createClass({
 		});
 		setTimeout(function () {
 			socket.emit("gather:refresh");
-		}, 5000);
+		}, 1000);
 	},
 	handleSubmit: function (e) {
 		e.preventDefault();
@@ -112,7 +112,7 @@ var CurrentUser = React.createClass({
 	render: function () {
 		if (this.props.user) {
 			return (
-				<li class="dropdown">
+				<li className="dropdown">
 					<a className="dropdown-toggle" data-toggle="dropdown" href="#">
 						{this.props.user.username} &nbsp;<img src={this.props.user.avatar}
 						alt="User Avatar" 

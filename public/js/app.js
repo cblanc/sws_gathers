@@ -51,6 +51,13 @@ var SelectPlayerButton = React.createClass({displayName: "SelectPlayerButton",
 			return (React.createElement("button", {
 				className: "btn btn-xs btn-default", 
 				"data-disabled": "true"}, "Leader"));
+		} else if (this.props.gatherer.team !== "lobby") {
+			return (React.createElement("button", {
+				onClick: this.selectPlayer, 
+				value: this.props.gatherer.id, 
+				className: "btn btn-xs btn-default"}, " Reselect"
+				)
+			);
 		} else {
 			return (React.createElement("button", {
 				onClick: this.selectPlayer, 
@@ -505,8 +512,15 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 	render: function () {
 		var self = this;
 		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
-			// Switch this to online status
-			var online= (React.createElement("div", {className: "dot online"}));
+			
+			// Country
+			var country;
+
+			if (gatherer.user.country) {
+				country = (React.createElement("img", {src: "images/blank.gif", 
+												className: "flag flag-" + gatherer.user.country.toLowerCase(), 
+												alt: gatherer.user.country}));
+			};
 
 			var division = (React.createElement("span", {className: "label label-primary"}, gatherer.user.ability.division));
 			var lifeform = (
@@ -537,18 +551,26 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 			}
 
 			if (self.props.gather.state === 'selection') {
-				action = (
-					React.createElement("span", null, 
-						React.createElement(SelectPlayerButton, {gatherer: gatherer})
-					)
-				);
+				if (self.props.currentGatherer && self.props.currentGatherer.leader) {
+					action = (
+						React.createElement("span", null, 
+							React.createElement(SelectPlayerButton, {gatherer: gatherer})
+						)
+					);
+				} else {
+					if (gatherer.team !== "lobby") {
+						action = (React.createElement("span", {className: "label label-success"}, gatherer.team));
+					}
+				}
 			}
 
 			return (
 				React.createElement("tr", {key: gatherer.user.id}, 
-					React.createElement("td", {className: "col-md-3"}, online, " ", gatherer.user.username), 
-					React.createElement("td", {className: "col-md-6"}, lifeform, " ", division, " ", team), 
-					React.createElement("td", {className: "col-md-3 text-right"}, action, " ")
+					React.createElement("td", {className: "col-md-5"}, country, " ", gatherer.user.username, " "), 
+					React.createElement("td", {className: "col-md-5"}, 
+						lifeform, " ", division, " ", team, " "
+					), 
+					React.createElement("td", {className: "col-md-2 text-right"}, action, " ")
 				)
 			);
 		})

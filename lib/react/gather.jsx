@@ -51,6 +51,13 @@ var SelectPlayerButton = React.createClass({
 			return (<button 
 				className="btn btn-xs btn-default"
 				data-disabled="true">Leader</button>);
+		} else if (this.props.gatherer.team !== "lobby") {
+			return (<button
+				onClick={this.selectPlayer}
+				value={this.props.gatherer.id}
+				className="btn btn-xs btn-default"> Reselect
+				</button>
+			);
 		} else {
 			return (<button
 				onClick={this.selectPlayer}
@@ -505,8 +512,15 @@ var Gatherers = React.createClass({
 	render: function () {
 		var self = this;
 		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
-			// Switch this to online status
-			var online= (<div className="dot online"></div>);
+			
+			// Country
+			var country;
+
+			if (gatherer.user.country) {
+				country = (<img src="images/blank.gif" 
+												className={"flag flag-" + gatherer.user.country.toLowerCase()} 
+												alt={gatherer.user.country} />);
+			};
 
 			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>);
 			var lifeform = (
@@ -537,18 +551,26 @@ var Gatherers = React.createClass({
 			}
 
 			if (self.props.gather.state === 'selection') {
-				action = (
-					<span>
-						<SelectPlayerButton gatherer={gatherer} />
-					</span>
-				);
+				if (self.props.currentGatherer && self.props.currentGatherer.leader) {
+					action = (
+						<span>
+							<SelectPlayerButton gatherer={gatherer} />
+						</span>
+					);
+				} else {
+					if (gatherer.team !== "lobby") {
+						action = (<span className="label label-success">{gatherer.team}</span>);
+					}
+				}
 			}
 
 			return (
 				<tr key={gatherer.user.id}>
-					<td className="col-md-3">{online} {gatherer.user.username}</td>
-					<td className="col-md-6">{lifeform} {division} {team}</td>
-					<td className="col-md-3 text-right">{action}&nbsp;</td>
+					<td className="col-md-5">{country} {gatherer.user.username}&nbsp;</td>
+					<td className="col-md-5">
+						{lifeform} {division} {team}&nbsp;
+					</td>
+					<td className="col-md-2 text-right">{action}&nbsp;</td>
 				</tr>
 			);
 		})

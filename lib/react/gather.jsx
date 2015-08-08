@@ -515,7 +515,11 @@ var Gatherers = React.createClass({
 												key={[lifeform, gatherer.id].join("-")}>{lifeform}</span>);
 				})
 			);
-			var team = (<span className="label label-primary">{gatherer.user.team.name}</span>);
+			var team; 
+
+			if (gatherer.user.team) {
+				team = (<span className="label label-primary">{gatherer.user.team.name}</span>);
+			}
 
 			var action;
 

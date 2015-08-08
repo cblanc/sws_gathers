@@ -515,7 +515,11 @@ var Gatherers = React.createClass({displayName: "Gatherers",
 												key: [lifeform, gatherer.id].join("-")}, lifeform));
 				})
 			);
-			var team = (React.createElement("span", {className: "label label-primary"}, gatherer.user.team.name));
+			var team; 
+
+			if (gatherer.user.team) {
+				team = (React.createElement("span", {className: "label label-primary"}, gatherer.user.team.name));
+			}
 
 			var action;
 

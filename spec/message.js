@@ -39,7 +39,7 @@ describe("Message Model", function () {
 
 	describe(".list", function () {
 		beforeEach(function (done) {
-			var instructions = [];//[helper.clearDb.bind(null)];
+			var instructions = [helper.clearDb.bind(null)];
 			for (var i = 0; i < 31; i++) {
 				instructions.push(function (content) {
 					return function (callback) {
@@ -56,7 +56,7 @@ describe("Message Model", function () {
 				assert.isTrue(messages.reduce(function (acc, message, index, arr) {
 					if (index === 0) return true;
 					if (acc === false) return false;
-					return arr[index - 1].createdAt > message.createdAt; 
+					return arr[index - 1].createdAt <= message.createdAt; 
 				}));
 				assert.isTrue(messages.some(function (message) {
 					return message.content === "30";

@@ -43,16 +43,17 @@ describe("Gather Model:", function () {
 			});
 		});
 
-		describe("Election Tmimeout", function () {
+		describe("Election Timeout", function () {
 			it ("starts a timer and transitions to next state when timer runs out", function (done) {
 				gather = new Gather({
-					onElectionTimeout: function () {
-						assert.equal(gather.current, "selection");
-						assert.isNull(gather.electionStartTime);
-						done();
+					onEvent: function () {
+						if (gather.current === "selection") {
+							assert.isNull(gather.electionStartTime);
+							done();
+						}
 					}
 				});
-				gather.ELECTION_INTERVAL = 10; // 10ms
+				gather.ELECTION_INTERVAL = 100; // 10ms
 				assert.isNull(gather.electionStartTime);
 				gatherers.forEach(function (gatherer) {
 					gather.addGatherer(gatherer);

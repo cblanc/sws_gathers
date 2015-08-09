@@ -484,7 +484,13 @@ var Gather = React.createClass({
 		if (this.props.gather.state === 'selection') {
 			gatherTeams = <GatherTeams gather={this.props.gather} />
 		}
+
+		var previousGather;
+		if (this.props.previousGather) {
+			previousGather = (<CompletedGather {...this.props} gather={this.props.previousGather} />);
+		}
 		return (
+			<div>
 			<div className="panel panel-default">
 				<div className="panel-heading">
 					<strong>Current Gather</strong>
@@ -495,7 +501,9 @@ var Gather = React.createClass({
 				{gatherTeams}
 				{voting}
 				<GatherActions {...this.props} />
-			</div>
+			</div>			
+			{previousGather}
+		</div>
 		);
 	}
 });
@@ -613,7 +621,7 @@ var CompletedGather = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<strong>Gather Details</strong>
+					<strong>Previous Gather</strong>
 				</div>
 				<GatherTeams gather={this.props.gather} />
 				<div className="panel-body">

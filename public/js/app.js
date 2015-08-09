@@ -616,28 +616,38 @@ var Gather = React.createClass({
 		if (this.props.gather.state === 'selection') {
 			gatherTeams = React.createElement(GatherTeams, { gather: this.props.gather });
 		}
+
+		var previousGather;
+		if (this.props.previousGather) {
+			previousGather = React.createElement(CompletedGather, _extends({}, this.props, { gather: this.props.previousGather }));
+		}
 		return React.createElement(
 			"div",
-			{ className: "panel panel-default" },
+			null,
 			React.createElement(
 				"div",
-				{ className: "panel-heading" },
+				{ className: "panel panel-default" },
 				React.createElement(
-					"strong",
-					null,
-					"Current Gather"
+					"div",
+					{ className: "panel-heading" },
+					React.createElement(
+						"strong",
+						null,
+						"Current Gather"
+					),
+					React.createElement(
+						"span",
+						{ className: "badge add-left" },
+						this.props.gather.gatherers.length
+					)
 				),
-				React.createElement(
-					"span",
-					{ className: "badge add-left" },
-					this.props.gather.gatherers.length
-				)
+				React.createElement(GatherProgress, this.props),
+				React.createElement(Gatherers, this.props),
+				gatherTeams,
+				voting,
+				React.createElement(GatherActions, this.props)
 			),
-			React.createElement(GatherProgress, this.props),
-			React.createElement(Gatherers, this.props),
-			gatherTeams,
-			voting,
-			React.createElement(GatherActions, this.props)
+			previousGather
 		);
 	}
 });
@@ -815,7 +825,7 @@ var CompletedGather = React.createClass({
 				React.createElement(
 					"strong",
 					null,
-					"Gather Details"
+					"Previous Gather"
 				)
 			),
 			React.createElement(GatherTeams, { gather: this.props.gather }),

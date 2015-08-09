@@ -602,7 +602,6 @@ var CompletedGather = React.createClass({displayName: "CompletedGather",
 		}, []);
 	},
 	selectedMaps: function () {
-		// console.log(this.countVotes('mapVote'))
 		return rankVotes(this.countVotes('mapVote'), this.props.maps).slice(0, 2)
 	},
 	selectedServer: function () {

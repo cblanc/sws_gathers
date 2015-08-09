@@ -8,11 +8,11 @@
     "Skulks with Shotguns"
   ],
   "scripts": {
-    "test": "NODE_ENV=test mocha spec/",
-    "start": "npm run compile && node index.js",
+    "test": "NODE_ENV=test mocha --harmony spec/",
+    "start": "npm run compile && node --harmony index.js",
     "watch": "node_modules/gulp/bin/gulp.js watch",
     "compile": "node_modules/gulp/bin/gulp.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon --harmony index.js"
   },
   "repository": {
     "type": "git",
@@ -50,5 +50,5 @@
     "nodemon": "~1.3.7",
     "supertest": "~1.0.1"
   },
-  "engine": "node >= 0.10.1"
+  "engine": "node >= 0.12.1"
 }

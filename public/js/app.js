@@ -467,7 +467,7 @@ var ServerVoting = React.createClass({
 				React.createElement(
 					"td",
 					{ className: "col-md-6" },
-					server.name
+					server.description || server.dns
 				),
 				React.createElement(
 					"td",

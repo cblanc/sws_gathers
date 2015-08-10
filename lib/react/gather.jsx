@@ -369,7 +369,7 @@ var ServerVoting = React.createClass({
 			}
 			return (
 				<tr key={server.id}>
-					<td className="col-md-6">{server.name}</td>
+					<td className="col-md-6">{server.description || server.dns}</td>
 					<td className="col-md-6 text-right">
 						{self.votesForServer(server)} Votes&nbsp;
 						{voteButton}

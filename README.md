@@ -28,25 +28,20 @@ npm start
 
 Required for Production:
 - ENSL.org: Authentication
-- Backend datastore for messages
 - Admin tools: Modify Messages
 - Admin tools: Remove gatherer
 - ENSL.org: Pull bans
-- 
 
 Nice to have:
 
-- ENSL.org: Pull bans
-- ENSL.org: Pull teams
-- ENSL.org: Pull servers
 - Hive.naturalselection2.com: Pull stats
 - Steam: Outbound steam messaging
 - Backend store for gathers
 - Add sounds and configuration
 - Add user profile + backend store
 - Show online/away/offline status
+- Picking order
 
 ## License
 
 MIT Licensed
-picking order

@@ -7,22 +7,22 @@ var chatController = require("../lib/chat/controller");
 var gatherController = require("../lib/gather/controller");
 var userController = require("../lib/user/controller");
 
-var getRandomUser = function (callback) {
+var getRandomUser = callback => {
 	var id = Math.floor(Math.random() * 5000) + 1;
 	client.getUserById({
 		id: id
-	}, function (error, response, body) {
+	}, (error, response, body) => {
 		if (response.statusCode !== 200) return getRandomUser(callback);
 		return callback(error, response, body);
 	});
 };
 
-module.exports = function (io) {
+module.exports = io => {
 	var rootNamespace = io.of('/')
 
 	// Authorisation
-	io.use(function (socket, next) {
-		getRandomUser(function (error, _, body) {
+	io.use((socket, next) => {
+		getRandomUser((error, _, body) => {
 			if (error) {
 				winston.error(error);
 				return next(error)

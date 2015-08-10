@@ -11,7 +11,7 @@ var exphbs = require("express-handlebars");
 var env = process.env.NODE_ENV || "development";
 var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
 
-module.exports = function (app) {
+module.exports = app => {
   app.use(express.static(path.join(__dirname, '../public')));
   app.use(favicon(path.join(__dirname, '../public/images/favicon.ico')));
 
@@ -20,7 +20,7 @@ module.exports = function (app) {
   if (env !== 'development') {
     log = {
       stream: {
-        write: function (message, encoding) {
+        write: (message, encoding) => {
           winston.info(message);
         }
       }

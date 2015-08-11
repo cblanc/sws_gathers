@@ -2,8 +2,8 @@
 
 var socket;
 
-function initialiseVisibilityMonitoring (socket) {
-	var hidden, visibilityChange; 
+var initialiseVisibilityMonitoring = (socket) => {
+	let hidden, visibilityChange; 
 	if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
 	  hidden = "hidden";
 	  visibilityChange = "visibilitychange";
@@ -18,7 +18,7 @@ function initialiseVisibilityMonitoring (socket) {
 	  visibilityChange = "webkitvisibilitychange";
 	}
 
-	document.addEventListener(visibilityChange, function () {
+	document.addEventListener(visibilityChange, () => {
 		if (document[hidden]) {
 			socket.emit("users:away");
 		} else {
@@ -27,16 +27,16 @@ function initialiseVisibilityMonitoring (socket) {
 	}, false);
 }
 
-function initialiseComponents () {
-	var socketUrl = window.location.protocol + "//" + window.location.host;
+var initialiseComponents = () => {
+	let socketUrl = window.location.protocol + "//" + window.location.host;
 	socket = io(socketUrl)
-		.on("connect", function () {
+		.on("connect", () => {
 			console.log("Connected");
 		})
-		.on("reconnect", function () {
+		.on("reconnect", () => {
 			console.log("Reconnected");
 		})
-		.on("disconnect", function () {
+		.on("disconnect", () => {
 			console.log("Disconnected")
 		});
 

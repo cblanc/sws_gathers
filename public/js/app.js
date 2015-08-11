@@ -929,8 +929,9 @@ var CompletedGather = React.createClass({
 
 var socket;
 
-function initialiseVisibilityMonitoring(socket) {
-	var hidden, visibilityChange;
+var initialiseVisibilityMonitoring = function initialiseVisibilityMonitoring(socket) {
+	var hidden = undefined,
+	    visibilityChange = undefined;
 	if (typeof document.hidden !== "undefined") {
 		// Opera 12.10 and Firefox 18 and later support
 		hidden = "hidden";
@@ -953,9 +954,9 @@ function initialiseVisibilityMonitoring(socket) {
 			socket.emit("users:online");
 		}
 	}, false);
-}
+};
 
-function initialiseComponents() {
+var initialiseComponents = function initialiseComponents() {
 	var socketUrl = window.location.protocol + "//" + window.location.host;
 	socket = io(socketUrl).on("connect", function () {
 		console.log("Connected");
@@ -985,9 +986,9 @@ var Chatroom = React.createClass({
 			history: []
 		};
 	},
+
 	componentDidMount: function componentDidMount() {
 		var self = this;
-		var TIMER_INTERVAL = 5000; // Every minute
 
 		socket.on("message:new", function (data) {
 			var history = self.props.history;
@@ -1007,27 +1008,20 @@ var Chatroom = React.createClass({
 		});
 
 		socket.emit("message:refresh", {});
-
-		self.timer = setInterval(function () {
-			self.forceUpdate();
-		}, TIMER_INTERVAL);
 	},
 
-	componentDidUnmount: function componentDidUnmount() {
-		clearInterval(this.timer);
-	},
 	sendMessage: function sendMessage(message) {
 		socket.emit("newMessage", { message: message });
 	},
+
 	scrollToBottom: function scrollToBottom() {
 		var node = React.findDOMNode(this.refs.messageContainer);
 		node.scrollTop = node.scrollHeight;
 	},
+
 	render: function render() {
 		var messages = this.props.history.map(function (message) {
-			return React.createElement(ChatMessage, {
-				message: message,
-				key: message.id });
+			return React.createElement(ChatMessage, { message: message, key: message.id });
 		});
 		return React.createElement(
 			"div",
@@ -1059,7 +1053,7 @@ var updateMessageCallbacks = [];
 
 var timer = setInterval(function () {
 	updateMessageCallbacks.forEach(function (callback) {
-		callback();
+		return callback();
 	});
 }, 60000);
 
@@ -1072,6 +1066,7 @@ var ChatMessage = React.createClass({
 			self.forceUpdate();
 		});
 	},
+
 	render: function render() {
 		return React.createElement(
 			"li",
@@ -1123,6 +1118,7 @@ var MessageBar = React.createClass({
 			content: content
 		});
 	},
+
 	handleSubmit: function handleSubmit(e) {
 		e.preventDefault();
 		var content = React.findDOMNode(this.refs.content).value.trim();
@@ -1131,6 +1127,7 @@ var MessageBar = React.createClass({
 		this.sendMessage(content);
 		return;
 	},
+
 	render: function render() {
 		return React.createElement(
 			"form",

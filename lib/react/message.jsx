@@ -32,18 +32,17 @@ var Chatroom = React.createClass({
 
 	sendMessage(message) {
 		socket.emit("newMessage", {message: message});
-	}
+	},
 
 	scrollToBottom() {
-		var node = React.findDOMNode(this.refs.messageContainer);
+		let node = React.findDOMNode(this.refs.messageContainer);
 	  node.scrollTop = node.scrollHeight;
 	},
 
 	render() {
-		var messages = this.props.history.map(message => {
-			return (<ChatMessage message={message} key={message.id} />);
-		});
-		}
+		let messages = this.props.history.map(message => 
+			<ChatMessage message={message} key={message.id} />
+		);
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">Gather Chat</div>
@@ -60,22 +59,21 @@ var Chatroom = React.createClass({
 	}
 });
 
-var updateMessageCallbacks = [];
+let updateMessageCallbacks = [];
 
-var timer = setInterval(function () {
-	updateMessageCallbacks.forEach(function (callback) {
-		callback();
-	});
+let timer = setInterval(() => {
+	updateMessageCallbacks.forEach(callback => callback())
 }, 60000);
 
 var ChatMessage = React.createClass({
-	componentDidMount: function () {
-		var self = this;
-		updateMessageCallbacks.push(function () {
+	componentDidMount() {
+		let self = this;
+		updateMessageCallbacks.push(() => {
 			self.forceUpdate();
 		});
 	},
-	render: function () {
+
+	render() {
 		return (
 			<li className="left clearfix">
 				<span className="chat-img pull-left">
@@ -101,20 +99,22 @@ var ChatMessage = React.createClass({
 });
 
 var MessageBar = React.createClass({
-	sendMessage: function (content) {
+	sendMessage(content) {
 		socket.emit("message:new", {
 			content: content
 		});
 	},
-	handleSubmit: function (e) {
+
+	handleSubmit(e) {
 		e.preventDefault();
-		var content = React.findDOMNode(this.refs.content).value.trim();
+		let content = React.findDOMNode(this.refs.content).value.trim();
 		if (!content) return;
 		React.findDOMNode(this.refs.content).value = '';
 		this.sendMessage(content);
 		return;
 	},
-	render: function () {
+
+	render() {
 		return (
 			<form onSubmit={this.handleSubmit} >
 				<div className="input-group">
@@ -136,3 +136,4 @@ var MessageBar = React.createClass({
 		);
 	}
 });
+

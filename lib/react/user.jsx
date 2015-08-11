@@ -12,7 +12,7 @@ var UserLogin = React.createClass({
 
 	handleSubmit(e) {
 		e.preventDefault();
-		var id = React.findDOMNode(this.refs.authorize_id).value.trim();
+		let id = React.findDOMNode(this.refs.authorize_id).value.trim();
 		if (!id) return;
 		React.findDOMNode(this.refs.authorize_id).value = '';
 		this.authorizeId(id);
@@ -52,12 +52,12 @@ var UserMenu = React.createClass({
 	},
 
 	componentDidMount() {
-		var self = this;
+		let self = this;
 		socket.on('users:update', data => self.setProps({users: data.users}));
 	},
 
 	render() {
-		var users = this.props.users.map(user => {
+		let users = this.props.users.map(user => {
 			return (
 				<li key={user.id}><a href="#">{user.username}</a></li>
 			);
@@ -102,7 +102,7 @@ var AdminPanel = React.createClass({
 
 var CurrentUser = React.createClass({
 	componentDidMount() {
-		var self = this;
+		let self = this;
 		socket.on("users:update", data => self.setProps({user: data.currentUser}));
 		socket.emit("users:refresh");
 	},

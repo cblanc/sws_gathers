@@ -1,17 +1,17 @@
 "use strict";
 
 var Chatroom = React.createClass({
-	getDefaultProps: function () {
+	getDefaultProps() {
 		return {
 			history: []
 		};
 	},
-	componentDidMount: function () {
-		var self = this;
-		var TIMER_INTERVAL = 5000; // Every minute
 
-		socket.on("message:new", function (data) {
-			var history = self.props.history;
+	componentDidMount() {
+		let self = this;
+
+		socket.on("message:new", data => {
+			let history = self.props.history;
 			history.push(data);
 			self.setProps({
 				history: history
@@ -20,7 +20,7 @@ var Chatroom = React.createClass({
 		});
 
 		// Message History Retrieved
-		socket.on("message:refresh", function (data) {
+		socket.on("message:refresh", data => {
 			self.setProps({
 				history: data.chatHistory
 			});
@@ -28,30 +28,22 @@ var Chatroom = React.createClass({
 		});
 
 		socket.emit("message:refresh", {});
-
-		self.timer = setInterval(function () {
-			self.forceUpdate();
-		}, TIMER_INTERVAL);
 	},
 
-	componentDidUnmount: function () {
-		clearInterval(this.timer);
-	},
-	sendMessage: function (message) {
+	sendMessage(message) {
 		socket.emit("newMessage", {message: message});
-	},
-	scrollToBottom: function () {
+	}
+
+	scrollToBottom() {
 		var node = React.findDOMNode(this.refs.messageContainer);
 	  node.scrollTop = node.scrollHeight;
 	},
-	render: function () {
-		var messages = this.props.history.map(function (message) {
-			return (
-				<ChatMessage 
-					message={message}
-					key={message.id} />
-			);
+
+	render() {
+		var messages = this.props.history.map(message => {
+			return (<ChatMessage message={message} key={message.id} />);
 		});
+		}
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">Gather Chat</div>

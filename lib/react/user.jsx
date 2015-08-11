@@ -1,7 +1,7 @@
 "use strict";
 
 var UserLogin = React.createClass({
-	authorizeId: function (id) {
+	authorizeId(id) {
 		socket.emit("users:authorize", {
 			id: parseInt(id, 10)
 		});
@@ -9,14 +9,16 @@ var UserLogin = React.createClass({
 			socket.emit("gather:refresh");
 		}, 1000);
 	},
-	handleSubmit: function (e) {
+
+	handleSubmit(e) {
 		e.preventDefault();
 		var id = React.findDOMNode(this.refs.authorize_id).value.trim();
 		if (!id) return;
 		React.findDOMNode(this.refs.authorize_id).value = '';
 		this.authorizeId(id);
 	},
-	render: function () {
+
+	render() {
 		return (
 			<form onSubmit={this.handleSubmit} >
 				<div className="input-group signin">
@@ -43,21 +45,19 @@ var UserLogin = React.createClass({
 })
 
 var UserMenu = React.createClass({
-	getDefaultProps: function () {
+	getDefaultProps() {
 		return {
 			users: []
 		};
 	},
-	componentDidMount: function () {
+
+	componentDidMount() {
 		var self = this;
-		socket.on('users:update', function (data) {
-			self.setProps({
-				users: data.users
-			});
-		});
+		socket.on('users:update', data => self.setProps({users: data.users}));
 	},
-	render: function () {
-		var users = this.props.users.map(function (user) {
+
+	render() {
+		var users = this.props.users.map(user => {
 			return (
 				<li key={user.id}><a href="#">{user.username}</a></li>
 			);
@@ -78,10 +78,11 @@ var UserMenu = React.createClass({
 });
 
 var AdminPanel = React.createClass({
-	handleGatherReset: function () {
+	handleGatherReset() {
 		socket.emit("gather:reset");
 	},
-	render: function () {
+
+	render() {
 		return (
 			<ul className="nav" id="admin-menu">
 				<li>
@@ -100,16 +101,13 @@ var AdminPanel = React.createClass({
 });
 
 var CurrentUser = React.createClass({
-	componentDidMount: function () {
+	componentDidMount() {
 		var self = this;
-		socket.on("users:update", function (data) {
-			self.setProps({
-				user: data.currentUser
-			});
-		});
+		socket.on("users:update", data => self.setProps({user: data.currentUser}));
 		socket.emit("users:refresh");
 	},
-	render: function () {
+
+	render() {
 		if (this.props.user) {
 			return (
 				<li className="dropdown">

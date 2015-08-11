@@ -1171,6 +1171,7 @@ var UserLogin = React.createClass({
 			socket.emit("gather:refresh");
 		}, 1000);
 	},
+
 	handleSubmit: function handleSubmit(e) {
 		e.preventDefault();
 		var id = React.findDOMNode(this.refs.authorize_id).value.trim();
@@ -1178,6 +1179,7 @@ var UserLogin = React.createClass({
 		React.findDOMNode(this.refs.authorize_id).value = '';
 		this.authorizeId(id);
 	},
+
 	render: function render() {
 		return React.createElement(
 			"form",
@@ -1226,14 +1228,14 @@ var UserMenu = React.createClass({
 			users: []
 		};
 	},
+
 	componentDidMount: function componentDidMount() {
 		var self = this;
 		socket.on('users:update', function (data) {
-			self.setProps({
-				users: data.users
-			});
+			return self.setProps({ users: data.users });
 		});
 	},
+
 	render: function render() {
 		var users = this.props.users.map(function (user) {
 			return React.createElement(
@@ -1284,6 +1286,7 @@ var AdminPanel = React.createClass({
 	handleGatherReset: function handleGatherReset() {
 		socket.emit("gather:reset");
 	},
+
 	render: function render() {
 		return React.createElement(
 			"ul",
@@ -1327,12 +1330,11 @@ var CurrentUser = React.createClass({
 	componentDidMount: function componentDidMount() {
 		var self = this;
 		socket.on("users:update", function (data) {
-			self.setProps({
-				user: data.currentUser
-			});
+			return self.setProps({ user: data.currentUser });
 		});
 		socket.emit("users:refresh");
 	},
+
 	render: function render() {
 		if (this.props.user) {
 			return React.createElement(

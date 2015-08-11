@@ -42,6 +42,12 @@ Nice to have:
 - Show online/away/offline status
 - Picking order
 
+## Node Version
+
+node 0.12 or greater
+
+Upgrade to io.js when arrow functions are no longer behind flag
+
 ## License
 
 MIT Licensed

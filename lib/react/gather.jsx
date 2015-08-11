@@ -1,14 +1,15 @@
 "use strict";
 
 var VoteButton = React.createClass({
-	cancelVote: function (e) {
+	cancelVote(e) {
 		socket.emit("gather:vote", {
 			leader: {
 				candidate: null
 			}
 		});
 	},
-	vote: function (e) {
+
+	vote(e) {
 		e.preventDefault();
 		socket.emit("gather:vote", {
 			leader: {
@@ -16,7 +17,8 @@ var VoteButton = React.createClass({
 			}
 		});
 	},
-	render: function () {
+
+	render() {
 		if (this.props.currentGatherer === null) {
 			return false;
 		}
@@ -40,13 +42,14 @@ var VoteButton = React.createClass({
 });
 
 var SelectPlayerButton = React.createClass({
-	selectPlayer: function (e) {
+	selectPlayer(e) {
 		e.preventDefault();
 		socket.emit("gather:select", {
 			player: parseInt(e.target.value, 10)
 		})
 	},
-	render: function () {
+
+	render() {
 		if (this.props.gatherer.leader) {
 			return (<button 
 				className="btn btn-xs btn-default"
@@ -70,16 +73,15 @@ var SelectPlayerButton = React.createClass({
 });
 
 var GathererList = React.createClass({
-	memberList: function () {
+	memberList() {
 		var self = this;
-		return this.props.gather.gatherers.filter(function (gatherer) {
-			return gatherer.team === self.props.team;
-		}).sort(function (gatherer) {
-			return (gatherer.leader) ? 1 : -1;
-		});
+		return this.props.gather.gatherers
+			.filter(gatherer => gatherer.team === self.props.team )
+			.sort(gatherer => gatherer.leader ? 1 : -1);
 	},
-	render: function () {
-		var extractGatherer = function (gatherer) {
+
+	render() {
+		var extractGatherer = gatherer => {
 			var image;
 			if (gatherer.leader) {
 				image = (<img src="/images/commander.png" 
@@ -106,7 +108,7 @@ var GathererList = React.createClass({
 });
 
 var GatherTeams = React.createClass({
-	render: function () {
+	render() {
 		return (
 			<div className="panel-body">
 				<div className="row">
@@ -133,13 +135,14 @@ var GatherTeams = React.createClass({
 });
 
 var ElectionProgressBar = React.createClass({
-	componentDidMount: function () {
+	componentDidMount() {
 		var self = this;
-		this.timer = setInterval(function () {
+		this.timer = setInterval(() => {
 			self.forceUpdate();
 		}, 900);
 	},
-	progress: function () {
+
+	progress() {
 		var interval = this.props.gather.election.interval;
 		var startTime = (new Date(this.props.gather.election.startTime)).getTime();
 		var msTranspired = Math.floor((new Date()).getTime() - startTime);
@@ -150,16 +153,18 @@ var ElectionProgressBar = React.createClass({
 			barMessage: Math.floor((interval - msTranspired) / 1000) + "s remaining"
 		}
 	},
-	componentWillUnmount: function () {
+
+	componentWillUnmount() {
 		clearInterval(this.timer);
 	},
-	render: function () {
+
+	render() {
 		return (<ProgressBar progress={this.progress()} />);
 	}
 });
 
 var ProgressBar = React.createClass({
-	render: function () {
+	render() {
 		var style = {
 			width: Math.round((this.props.progress.num / this.props.progress.den * 100)) + "%"
 		};
@@ -179,7 +184,7 @@ var ProgressBar = React.createClass({
 });
 
 var GatherProgress = React.createClass({
-	stateDescription: function () {
+	stateDescription() {
 		switch(this.props.gather.state) {
 			case "gathering":
 				return "Waiting for more gatherers.";
@@ -193,7 +198,8 @@ var GatherProgress = React.createClass({
 				return "Initialising gather.";
 		}
 	},
-	gatheringProgress: function () {
+
+	gatheringProgress() {
 		var num = this.props.gather.gatherers.length;
 		var den = 12;
 		var remaining = den - num;
@@ -204,8 +210,9 @@ var GatherProgress = React.createClass({
 			message: message
 		};
 	},
-	electionProgress: function () {
-		var num = this.props.gather.gatherers.reduce(function (acc, gatherer) {
+
+	electionProgress() {
+		var num = this.props.gather.gatherers.reduce((acc, gatherer) => {
 			if (gatherer.leaderVote) acc++;
 			return acc;
 		}, 0);
@@ -216,8 +223,9 @@ var GatherProgress = React.createClass({
 			message: den - num + " more votes required"
 		};
 	},
-	selectionProgress: function () {
-		var num = this.props.gather.gatherers.reduce(function (acc, gatherer) {
+
+	selectionProgress() {
+		var num = this.props.gather.gatherers.reduce((acc, gatherer) => {
 			if (gatherer.team !== "lobby") acc++;
 			return acc;
 		}, 0);
@@ -229,7 +237,8 @@ var GatherProgress = React.createClass({
 			message: num + " out of " + den + " players assigned"
 		};
 	},
-	render: function () {
+
+	render() {
 		var progress, progressBar;
 		var gatherState = this.props.gather.state;
 		if (gatherState === 'gathering' && this.props.gather.gatherers.length) {
@@ -255,23 +264,27 @@ var GatherProgress = React.createClass({
 });
 
 var GatherActions = React.createClass({
-	joinGather: function (e) {
+	joinGather(e) {
 		e.preventDefault();
 		socket.emit("gather:join");
 	},
-	leaveGather: function (e) {
+
+	leaveGather(e) {
 		e.preventDefault();
 		socket.emit("gather:leave");
 	},
-	confirmTeam: function (e) {
+
+	confirmTeam(e) {
 		e.preventDefault();
 		socket.emit("gather:select:confirm");
 	},
-	inviteToGather: function (e) {
+
+	inviteToGather(e) {
 		e.preventDefault();
 		alert("Boop!");
 	},
-	render: function () {
+
+	render() {
 		var joinButton;
 		if (this.props.currentGatherer) {
 			joinButton = (<li><button 
@@ -287,11 +300,9 @@ var GatherActions = React.createClass({
 
 		var confirmTeam;
 		if (this.props.currentGatherer &&
-					this.props.currentGatherer.leader &&
-					this.props.gather.state === 'selection' &&
-					this.props.gather.gatherers.every(function (gatherer) {
-						return gatherer.team !== 'lobby';
-					}) ) {
+				this.props.currentGatherer.leader &&
+				this.props.gather.state === 'selection' &&
+				this.props.gather.gatherers.every(gatherer => gatherer.team !== 'lobby')) {
 			if (this.props.currentGatherer.confirm) {
 				confirmTeam = (
 					<li>
@@ -337,7 +348,7 @@ var GatherActions = React.createClass({
 });
 
 var ServerVoting = React.createClass({
-	handleServerVote: function (e) {
+	handleServerVote(e) {
 		e.preventDefault();
 		socket.emit("gather:vote", {
 			server: {
@@ -345,15 +356,17 @@ var ServerVoting = React.createClass({
 			}
 		});
 	},
-	votesForServer: function (server) {
-		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+
+	votesForServer(server) {
+		return this.props.gather.gatherers.reduce((acc, gatherer) => {
 			if (server.id === gatherer.serverVote) acc++;
 			return acc;
 		}, 0);
 	},
-	render: function () {
+
+	render() {
 		var self = this;
-		var servers = self.props.servers.map(function (server) {
+		var servers = self.props.servers.map(server => {
 			var voteButton;
 			if (self.props.currentGatherer.serverVote === server.id) {
 				voteButton = (<button
@@ -391,7 +404,7 @@ var ServerVoting = React.createClass({
 })
 
 var MapVoting = React.createClass({
-	handleMapVote: function (e) {
+	handleMapVote(e) {
 		e.preventDefault();
 		socket.emit("gather:vote", {
 			map: {
@@ -399,15 +412,17 @@ var MapVoting = React.createClass({
 			}
 		});
 	},
-	votesForMap: function (map) {
-		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+
+	votesForMap(map) {
+		return this.props.gather.gatherers.reduce((acc, gatherer) => {
 			if (map.id === gatherer.mapVote) acc++;
 			return acc;
 		}, 0);
 	},
-	render: function () {
+
+	render() {
 		var self = this;
-		var maps = self.props.maps.map(function (map) {
+		var maps = self.props.maps.map(map => {
 			var voteButton;
 			if (self.props.currentGatherer.mapVote === map.id) {
 				voteButton = (<button
@@ -445,21 +460,20 @@ var MapVoting = React.createClass({
 })
 
 var Gather = React.createClass({
-	getDefaultProps: function () {
+	getDefaultProps() {
 		return {
 			gather: {
 				gatherers: []
 			}
 		}
 	},
-	componentDidMount: function () {
+
+	componentDidMount() {
 		var self = this;
-		socket.on("gather:refresh", function (data) {
-			self.setProps(data);
-		});
+		socket.on("gather:refresh", data => self.setProps(data));
 	},
 	
-	render: function () {
+	render() {
 		if (this.props.gather.state === 'done') {
 			return (<CompletedGather {...this.props} />);
 		}
@@ -509,13 +523,14 @@ var Gather = React.createClass({
 });
 
 var Gatherers = React.createClass({
-	joinGather: function (e) {
+	joinGather(e) {
 		e.preventDefault();
 		socket.emit("gather:join");
 	},
-	render: function () {
+
+	render() {
 		var self = this;
-		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
+		var gatherers = this.props.gather.gatherers.map(gatherer => {
 			
 			// Country
 			var country;
@@ -528,7 +543,7 @@ var Gatherers = React.createClass({
 
 			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>);
 			var lifeform = (
-				gatherer.user.ability.lifeforms.map(function (lifeform) {
+				gatherer.user.ability.lifeforms.map(lifeform => {
 					return (<span className="label label-default" 
 												key={[lifeform, gatherer.id].join("-")}>{lifeform}</span>);
 				})
@@ -542,7 +557,7 @@ var Gatherers = React.createClass({
 			var action;
 
 			if (self.props.gather.state === "election") {
-				var votes = self.props.gather.gatherers.reduce(function (acc, voter) {
+				var votes = self.props.gather.gatherers.reduce((acc, voter) => {
 					if (voter.leaderVote === gatherer.id) acc++;
 					return acc;
 				}, 0)
@@ -603,19 +618,22 @@ var Gatherers = React.createClass({
 });
 
 var CompletedGather = React.createClass({
-	countVotes: function (voteType) {
-		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
+	countVotes(voteType) {
+		return this.props.gather.gatherers.reduce((acc, gatherer) => {
 			if (gatherer[voteType] !== null) acc.push(gatherer[voteType]);
 			return acc;
 		}, []);
 	},
-	selectedMaps: function () {
+
+	selectedMaps() {
 		return rankVotes(this.countVotes('mapVote'), this.props.maps).slice(0, 2)
 	},
-	selectedServer: function () {
+
+	selectedServer() {
 		return rankVotes(this.countVotes('serverVote'), this.props.servers).slice(0, 1);
 	},
-	render: function () {
+
+	render() {
 		var maps = this.selectedMaps();
 		var server = this.selectedServer().pop();
 		return (
@@ -627,7 +645,7 @@ var CompletedGather = React.createClass({
 				<div className="panel-body">
 					<dl className="dl-horizontal">
 					  <dt>Maps</dt>
-					  <dd>{maps.map(function(map) { return map.name}).join(" & ")}</dd>
+					  <dd>{maps.map(map => map.name).join(" & ")}</dd>
 					  <dt>Server</dt>
 					  <dd>{server.name}</dd>
 					  <dt>Address</dt>

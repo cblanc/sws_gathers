@@ -12,6 +12,7 @@ var VoteButton = React.createClass({
 			}
 		});
 	},
+
 	vote: function vote(e) {
 		e.preventDefault();
 		socket.emit("gather:vote", {
@@ -20,6 +21,7 @@ var VoteButton = React.createClass({
 			}
 		});
 	},
+
 	render: function render() {
 		if (this.props.currentGatherer === null) {
 			return false;
@@ -54,6 +56,7 @@ var SelectPlayerButton = React.createClass({
 			player: parseInt(e.target.value, 10)
 		});
 	},
+
 	render: function render() {
 		if (this.props.gatherer.leader) {
 			return React.createElement(
@@ -96,6 +99,7 @@ var GathererList = React.createClass({
 			return gatherer.leader ? 1 : -1;
 		});
 	},
+
 	render: function render() {
 		var extractGatherer = function extractGatherer(gatherer) {
 			var image;
@@ -185,6 +189,7 @@ var ElectionProgressBar = React.createClass({
 			self.forceUpdate();
 		}, 900);
 	},
+
 	progress: function progress() {
 		var interval = this.props.gather.election.interval;
 		var startTime = new Date(this.props.gather.election.startTime).getTime();
@@ -196,9 +201,11 @@ var ElectionProgressBar = React.createClass({
 			barMessage: Math.floor((interval - msTranspired) / 1000) + "s remaining"
 		};
 	},
+
 	componentWillUnmount: function componentWillUnmount() {
 		clearInterval(this.timer);
 	},
+
 	render: function render() {
 		return React.createElement(ProgressBar, { progress: this.progress() });
 	}
@@ -246,6 +253,7 @@ var GatherProgress = React.createClass({
 				return "Initialising gather.";
 		}
 	},
+
 	gatheringProgress: function gatheringProgress() {
 		var num = this.props.gather.gatherers.length;
 		var den = 12;
@@ -257,6 +265,7 @@ var GatherProgress = React.createClass({
 			message: message
 		};
 	},
+
 	electionProgress: function electionProgress() {
 		var num = this.props.gather.gatherers.reduce(function (acc, gatherer) {
 			if (gatherer.leaderVote) acc++;
@@ -269,6 +278,7 @@ var GatherProgress = React.createClass({
 			message: den - num + " more votes required"
 		};
 	},
+
 	selectionProgress: function selectionProgress() {
 		var num = this.props.gather.gatherers.reduce(function (acc, gatherer) {
 			if (gatherer.team !== "lobby") acc++;
@@ -282,6 +292,7 @@ var GatherProgress = React.createClass({
 			message: num + " out of " + den + " players assigned"
 		};
 	},
+
 	render: function render() {
 		var progress, progressBar;
 		var gatherState = this.props.gather.state;
@@ -324,18 +335,22 @@ var GatherActions = React.createClass({
 		e.preventDefault();
 		socket.emit("gather:join");
 	},
+
 	leaveGather: function leaveGather(e) {
 		e.preventDefault();
 		socket.emit("gather:leave");
 	},
+
 	confirmTeam: function confirmTeam(e) {
 		e.preventDefault();
 		socket.emit("gather:select:confirm");
 	},
+
 	inviteToGather: function inviteToGather(e) {
 		e.preventDefault();
 		alert("Boop!");
 	},
+
 	render: function render() {
 		var joinButton;
 		if (this.props.currentGatherer) {
@@ -433,12 +448,14 @@ var ServerVoting = React.createClass({
 			}
 		});
 	},
+
 	votesForServer: function votesForServer(server) {
 		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
 			if (server.id === gatherer.serverVote) acc++;
 			return acc;
 		}, 0);
 	},
+
 	render: function render() {
 		var self = this;
 		var servers = self.props.servers.map(function (server) {
@@ -506,12 +523,14 @@ var MapVoting = React.createClass({
 			}
 		});
 	},
+
 	votesForMap: function votesForMap(map) {
 		return this.props.gather.gatherers.reduce(function (acc, gatherer) {
 			if (map.id === gatherer.mapVote) acc++;
 			return acc;
 		}, 0);
 	},
+
 	render: function render() {
 		var self = this;
 		var maps = self.props.maps.map(function (map) {
@@ -578,10 +597,11 @@ var Gather = React.createClass({
 			}
 		};
 	},
+
 	componentDidMount: function componentDidMount() {
 		var self = this;
 		socket.on("gather:refresh", function (data) {
-			self.setProps(data);
+			return self.setProps(data);
 		});
 	},
 
@@ -659,6 +679,7 @@ var Gatherers = React.createClass({
 		e.preventDefault();
 		socket.emit("gather:join");
 	},
+
 	render: function render() {
 		var self = this;
 		var gatherers = this.props.gather.gatherers.map(function (gatherer) {
@@ -807,12 +828,15 @@ var CompletedGather = React.createClass({
 			return acc;
 		}, []);
 	},
+
 	selectedMaps: function selectedMaps() {
 		return rankVotes(this.countVotes('mapVote'), this.props.maps).slice(0, 2);
 	},
+
 	selectedServer: function selectedServer() {
 		return rankVotes(this.countVotes('serverVote'), this.props.servers).slice(0, 1);
 	},
+
 	render: function render() {
 		var maps = this.selectedMaps();
 		var server = this.selectedServer().pop();

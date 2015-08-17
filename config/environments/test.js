@@ -5,7 +5,7 @@ var config = {
 	mongo: {
 		uri: "mongodb://localhost/swsgather_test"
 	},
-	secret_token: ""
+	secret_token: "SUPERSECRETFOO"
 };
 
 module.exports = config;

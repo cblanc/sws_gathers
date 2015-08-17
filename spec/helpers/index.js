@@ -15,6 +15,8 @@ var User = helpers.User = require(path.join(__dirname, "../../lib/user/user"));
 var Gather = helpers.Gather = require(path.join(__dirname, "../../lib/gather/gather"));
 var Gatherer = helpers.Gatherer = require(path.join(__dirname, "../../lib/gather/gatherer"));
 
+// ENSL Client
+var EnslClient = helpers.EnslClient = require(path.join(__dirname, "../../lib/ensl/client"));
 
 // Mongo & Associated Models
 var db = require(path.join(__dirname, "../../db/index"));

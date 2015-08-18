@@ -5,10 +5,10 @@ var request = require("supertest");
 var app = helper.app;
 
 describe("Basic Spec", function () {
-	it ("redirects if user is not authenticated", function (done) {
+	it ("serves main page", function (done) {
 		request(app)
 			.get("/")
-			.expect(302)
+			.expect(200)
 			.end(done);
 	});
 

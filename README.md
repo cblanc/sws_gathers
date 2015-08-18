@@ -26,7 +26,6 @@ npm start
 
 Required for Production:
 
-- ENSL.org: Authentication
 - Admin tools: Modify Messages
 - Admin tools: Remove gatherer
 - ENSL.org: Pull bans

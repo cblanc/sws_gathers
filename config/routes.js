@@ -6,7 +6,9 @@ var config = require("./config.js");
 
 module.exports = app => {
 	app.get("/", (request, response, next) => {
-		response.render("index.hbs");
+		response.render("index.hbs", {
+			redirect: config.ensl_url			
+		});
 	});
 
 	app.get("/redirect", (request, response, next) => {

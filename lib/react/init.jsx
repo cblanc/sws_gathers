@@ -27,11 +27,37 @@ var initialiseVisibilityMonitoring = (socket) => {
 	}, false);
 }
 
+var removeAuthWidget = () => {
+	$("#authenticating").remove();
+};
+
+var showAuthenticationNotice = () => {
+	$("#auth-required").show();
+};
+
+var renderPage = (socket) => {
+	initialiseVisibilityMonitoring(socket);
+	React.render(<UserMenu />, document.getElementById('side-menu'));
+	React.render(<Chatroom />, document.getElementById('chatroom'));
+	React.render(<Gather />, document.getElementById('gathers'));
+	React.render(<CurrentUser />, document.getElementById('currentuser'));
+	React.render(<AdminPanel />, document.getElementById('admin-menu'));
+};
+
 var initialiseComponents = () => {
 	let socketUrl = window.location.protocol + "//" + window.location.host;
 	socket = io(socketUrl)
 		.on("connect", () => {
 			console.log("Connected");
+			removeAuthWidget();
+			renderPage(socket);
+		})
+		.on("error", (error, foo) => {
+			console.log(error);
+			if (error === "Authentication Failed") {
+				removeAuthWidget();
+				showAuthenticationNotice();
+			}
 		})
 		.on("reconnect", () => {
 			console.log("Reconnected");
@@ -39,13 +65,4 @@ var initialiseComponents = () => {
 		.on("disconnect", () => {
 			console.log("Disconnected")
 		});
-
-	initialiseVisibilityMonitoring(socket);
-
-	// Render Page
-	React.render(<UserMenu />, document.getElementById('side-menu'));
-	React.render(<Chatroom />, document.getElementById('chatroom'));
-	React.render(<Gather />, document.getElementById('gathers'));
-	React.render(<CurrentUser />, document.getElementById('currentuser'));
-	React.render(<AdminPanel />, document.getElementById('admin-menu'));
 };

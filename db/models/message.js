@@ -37,4 +37,4 @@ messageSchema.statics.list = (options, callback) => {
 		});
 };
 
-module.exports = mongoose.model('message', messageSchema);
+module.exports = mongoose.model('Message', messageSchema);

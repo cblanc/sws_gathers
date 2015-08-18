@@ -21,7 +21,8 @@ var EnslClient = helpers.EnslClient = require(path.join(__dirname, "../../lib/en
 // Mongo & Associated Models
 var db = require(path.join(__dirname, "../../db/index"));
 var mongoose = require("mongoose");
-var Message = helpers.Message = mongoose.model('message');
+var Message = helpers.Message = mongoose.model("Message");
+var Session = helpers.Session = mongoose.model("Session");
 
 var async = require("async");
 helpers.clearDb = function (callback) {
@@ -50,7 +51,7 @@ var createUser = helpers.createUser = (function () {
 				nickname: "SteamUser" + counter
 			}
 		};
-		if (o && typeof o === 'object') {
+		if (o && typeof o === "object") {
 			defaultUser = extend(defaultUser, o);
 		}
 		return new User(defaultUser);

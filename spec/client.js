@@ -11,7 +11,8 @@ describe("ENSL Client", function () {
 	describe (".decodeSession", function () {
 		it ("decodes an ENSL session", function () {
 			var output = EnslClient.decodeSession(sessionString);
-			assert.isDefined(output.parsed);
+			assert.isNotNull(output);
+			assert.isDefined(output.session_id);
 		});
 		it ("returns null if invalid cookie format", function () {
 			assert.isNull(EnslClient.decodeSession("foo"));

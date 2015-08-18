@@ -66,3 +66,15 @@
 .add-top {
 	margin-top: 10px;
 }
+
+.jumbo-auth {
+	margin-top: 30px;
+}
+
+.jumbo-img {
+	max-height: 150px;
+}
+
+.spinner {
+	max-height: 30px !important;
+}

@@ -27,17 +27,14 @@ var UserLogin = React.createClass({
 						type="text" 
 						className="form-control" 
 						ref="authorize_id"
-						placeholder="Choose an ID..." />
+						placeholder="Change user" />
 					<span className="input-group-btn">
 						<input 
 							type="submit" 
 							className="btn btn-primary" 
 							id="btn-chat" 
-							value="Login" />
+							value="Assume ID" />
 					</span>
-				</div>
-				<div className="signin">
-				<p className="text-center"><small>Just a temporary measure until genuine authentication is implemented</small></p>
 				</div>
 			</form>
 		);
@@ -71,7 +68,6 @@ var UserMenu = React.createClass({
 					</a>
 				</li>
 				{users}
-				<li><br /><UserLogin /><br /></li>
 			</ul>
 		);
 	}
@@ -88,6 +84,7 @@ var AdminPanel = React.createClass({
 				<li>
 					<div className="admin-panel">
 						<h5>Admin</h5>
+						<UserLogin />
 						<button
 							className="btn btn-danger max-width"
 							onClick={this.handleGatherReset}>
@@ -129,9 +126,6 @@ var CurrentUser = React.createClass({
 						</li>
 						<li>
 						 	<a href="#" data-toggle="modal" data-target="#designmodal">Design Goals</a>
-						</li>
-						<li className="divider"></li>
-							<li><a href="login.html"><i className="fa fa-sign-out fa-fw"></i> Logout</a>
 						</li>
 					</ul>
 				</li>

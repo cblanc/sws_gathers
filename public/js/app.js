@@ -756,16 +756,14 @@ var Gatherers = React.createClass({
 
 			return React.createElement(
 				"tr",
-				{ key: gatherer.user.id },
+				{ key: gatherer.user.id, "data-userid": gatherer.user.id },
 				React.createElement(
 					"td",
 					{ className: "col-md-5" },
 					country,
 					" ",
 					gatherer.user.username,
-					"  (",
-					gatherer.user.id,
-					")"
+					" "
 				),
 				React.createElement(
 					"td",
@@ -956,24 +954,40 @@ var initialiseVisibilityMonitoring = function initialiseVisibilityMonitoring(soc
 	}, false);
 };
 
-var initialiseComponents = function initialiseComponents() {
-	var socketUrl = window.location.protocol + "//" + window.location.host;
-	socket = io(socketUrl).on("connect", function () {
-		console.log("Connected");
-	}).on("reconnect", function () {
-		console.log("Reconnected");
-	}).on("disconnect", function () {
-		console.log("Disconnected");
-	});
+var removeAuthWidget = function removeAuthWidget() {
+	$("#authenticating").remove();
+};
 
+var showAuthenticationNotice = function showAuthenticationNotice() {
+	$("#auth-required").show();
+};
+
+var renderPage = function renderPage(socket) {
 	initialiseVisibilityMonitoring(socket);
-
-	// Render Page
 	React.render(React.createElement(UserMenu, null), document.getElementById('side-menu'));
 	React.render(React.createElement(Chatroom, null), document.getElementById('chatroom'));
 	React.render(React.createElement(Gather, null), document.getElementById('gathers'));
 	React.render(React.createElement(CurrentUser, null), document.getElementById('currentuser'));
 	React.render(React.createElement(AdminPanel, null), document.getElementById('admin-menu'));
+};
+
+var initialiseComponents = function initialiseComponents() {
+	var socketUrl = window.location.protocol + "//" + window.location.host;
+	socket = io(socketUrl).on("connect", function () {
+		console.log("Connected");
+		removeAuthWidget();
+		renderPage(socket);
+	}).on("error", function (error, foo) {
+		console.log(error);
+		if (error === "Authentication Failed") {
+			removeAuthWidget();
+			showAuthenticationNotice();
+		}
+	}).on("reconnect", function () {
+		console.log("Reconnected");
+	}).on("disconnect", function () {
+		console.log("Disconnected");
+	});
 };
 
 "use strict";
@@ -1189,7 +1203,7 @@ var UserLogin = React.createClass({
 					type: "text",
 					className: "form-control",
 					ref: "authorize_id",
-					placeholder: "Choose an ID..." }),
+					placeholder: "Change user" }),
 				React.createElement(
 					"span",
 					{ className: "input-group-btn" },
@@ -1197,20 +1211,7 @@ var UserLogin = React.createClass({
 						type: "submit",
 						className: "btn btn-primary",
 						id: "btn-chat",
-						value: "Login" })
-				)
-			),
-			React.createElement(
-				"div",
-				{ className: "signin" },
-				React.createElement(
-					"p",
-					{ className: "text-center" },
-					React.createElement(
-						"small",
-						null,
-						"Just a temporary measure until genuine authentication is implemented"
-					)
+						value: "Assume ID" })
 				)
 			)
 		);
@@ -1265,14 +1266,7 @@ var UserMenu = React.createClass({
 					)
 				)
 			),
-			users,
-			React.createElement(
-				"li",
-				null,
-				React.createElement("br", null),
-				React.createElement(UserLogin, null),
-				React.createElement("br", null)
-			)
+			users
 		);
 	}
 });
@@ -1299,6 +1293,7 @@ var AdminPanel = React.createClass({
 						null,
 						"Admin"
 					),
+					React.createElement(UserLogin, null),
 					React.createElement(
 						"button",
 						{
@@ -1389,17 +1384,6 @@ var CurrentUser = React.createClass({
 							"a",
 							{ href: "#", "data-toggle": "modal", "data-target": "#designmodal" },
 							"Design Goals"
-						)
-					),
-					React.createElement("li", { className: "divider" }),
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: "login.html" },
-							React.createElement("i", { className: "fa fa-sign-out fa-fw" }),
-							" Logout"
 						)
 					)
 				)

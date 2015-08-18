@@ -8,11 +8,13 @@ var winston = require("winston");
 var config = require("./config.js");
 var favicon = require("serve-favicon");
 var exphbs = require("express-handlebars");
+var cookieParser = require("cookie-parser");
 var env = process.env.NODE_ENV || "development";
 var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
 
 module.exports = app => {
   app.use(express.static(path.join(__dirname, '../public')));
+  app.use(cookieParser());
   app.use(favicon(path.join(__dirname, '../public/images/favicon.ico')));
 
 	// Use winston on production

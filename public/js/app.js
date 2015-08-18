@@ -1280,36 +1280,28 @@ var AdminPanel = React.createClass({
 
 	render: function render() {
 		return React.createElement(
-			"ul",
-			{ className: "nav", id: "admin-menu" },
+			"div",
+			null,
 			React.createElement(
-				"li",
+				"h5",
+				null,
+				"Swap Into a Different Account"
+			),
+			React.createElement(UserLogin, null),
+			React.createElement(
+				"h5",
+				null,
+				"Gather Options"
+			),
+			React.createElement(
+				"div",
 				null,
 				React.createElement(
-					"div",
-					{ className: "admin-panel" },
-					React.createElement(
-						"h5",
-						null,
-						"Admin"
-					),
-					React.createElement(UserLogin, null),
-					React.createElement(
-						"button",
-						{
-							className: "btn btn-danger max-width",
-							onClick: this.handleGatherReset },
-						"Reset Gather"
-					),
-					React.createElement(
-						"p",
-						{ className: "text-center add-top" },
-						React.createElement(
-							"small",
-							null,
-							"Only responds for admins on staging.ensl.org"
-						)
-					)
+					"button",
+					{
+						className: "btn btn-danger max-width",
+						onClick: this.handleGatherReset },
+					"Reset Gather"
 				)
 			)
 		);
@@ -1329,6 +1321,18 @@ var CurrentUser = React.createClass({
 
 	render: function render() {
 		if (this.props.user) {
+			var adminOptions;
+			if (this.props.user.admin) {
+				adminOptions = React.createElement(
+					"li",
+					null,
+					React.createElement(
+						"a",
+						{ href: "#", "data-toggle": "modal", "data-target": "#adminmodal" },
+						"Administration"
+					)
+				);
+			}
 			return React.createElement(
 				"li",
 				{ className: "dropdown" },
@@ -1385,7 +1389,8 @@ var CurrentUser = React.createClass({
 							{ href: "#", "data-toggle": "modal", "data-target": "#designmodal" },
 							"Design Goals"
 						)
-					)
+					),
+					adminOptions
 				)
 			);
 		} else {

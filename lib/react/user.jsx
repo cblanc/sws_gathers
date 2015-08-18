@@ -80,20 +80,18 @@ var AdminPanel = React.createClass({
 
 	render() {
 		return (
-			<ul className="nav" id="admin-menu">
-				<li>
-					<div className="admin-panel">
-						<h5>Admin</h5>
-						<UserLogin />
-						<button
-							className="btn btn-danger max-width"
-							onClick={this.handleGatherReset}>
-							Reset Gather</button>
-						<p className="text-center add-top"><small>Only responds for admins on staging.ensl.org</small></p>
-					</div>
-				</li>
-			</ul>
-		)
+		<div>
+			<h5>Swap Into a Different Account</h5>
+			<UserLogin />
+			<h5>Gather Options</h5>
+			<div>
+				<button
+					className="btn btn-danger max-width"
+					onClick={this.handleGatherReset}>
+					Reset Gather</button>
+			</div>
+		</div>
+		);
 	}
 });
 
@@ -106,6 +104,14 @@ var CurrentUser = React.createClass({
 
 	render() {
 		if (this.props.user) {
+			var adminOptions;
+			if (this.props.user.admin) {
+				adminOptions = (
+					<li>
+					 	<a href="#" data-toggle="modal" data-target="#adminmodal">Administration</a>
+					</li>
+				)
+			}
 			return (
 				<li className="dropdown">
 					<a className="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -127,6 +133,7 @@ var CurrentUser = React.createClass({
 						<li>
 						 	<a href="#" data-toggle="modal" data-target="#designmodal">Design Goals</a>
 						</li>
+						{adminOptions}
 					</ul>
 				</li>
 

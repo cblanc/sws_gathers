@@ -46,7 +46,7 @@ module.exports = io => {
 		client.getUserById({
 			id: session.user
 		}, (error, response, body) => {
-			if (error) {
+			if (error || response.statusCode !== 200) {
 				winston.error(error);
 				return next(error)
 			};

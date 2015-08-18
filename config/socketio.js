@@ -48,7 +48,7 @@ module.exports = io => {
 		}, (error, response, body) => {
 			if (error || response.statusCode !== 200) {
 				winston.error(error);
-				return next(error)
+				return next(new Error("Authentication Failed"))
 			};
 			socket._user = new User(body);
 			winston.info("Logged in:", body.username, body.id);

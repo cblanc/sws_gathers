@@ -1,4 +1,4 @@
-# SWS Gather App
+# ENSL Gathers App
 
 ## Status
 
@@ -13,6 +13,12 @@ A realtime micro web service to organise gathers for ENSL.org
 3) Support the modern web and basic usability expectactions (e.g. realtime, phone and tablet friendly)
 
 That's it
+
+## Requirements
+
+- node.js 0.12
+
+- MongoDB
 
 ## Run
 
@@ -39,10 +45,6 @@ Nice to have:
 - Add user profile + backend store
 - Show online/away/offline status
 - Picking order
-
-## Node Version
-
-node 0.12 or greater
 
 ## License
 

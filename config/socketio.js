@@ -29,7 +29,12 @@ module.exports = io => {
 
 	// Authentication
 	io.use((socket, next) => {
-		let session = EnslClient.decodeSession(parseCookies(socket)[config.session_store_name]);
+		let cookies = parseCookies(socket);
+
+		let session;
+		if (cookies) {
+			session = EnslClient.decodeSession(cookies[config.session_store_name]);
+		}
 
 		if (!session || typeof session.user !== 'number') {
 			// return next(new Error("Authentication Failed"));

@@ -1212,7 +1212,7 @@ var Chatroom = React.createClass({
 		});
 		return React.createElement(
 			"div",
-			{ className: "panel panel-default" },
+			{ className: "panel panel-default chatbox" },
 			React.createElement(
 				"div",
 				{ className: "panel-heading" },

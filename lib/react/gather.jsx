@@ -545,12 +545,13 @@ var Gather = React.createClass({
 	},
 
 	checkForStateChange: function (data) {
-		if (this.props.gather.state === data.gather.state) return;
+		let previousState = this.props.gather.state;
 		let newState = data.gather.state;
+		if (newState === previousState) return;
 		console.log(newState)
 
 		// Callbacks for new states
-		if (newState === 'election') {
+		if (newState === "election" && previousState === "gathering") {
 			console.log(soundController);
 			soundController.playGatherMusic();
 		}

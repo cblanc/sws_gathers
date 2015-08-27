@@ -35,6 +35,10 @@ var showAuthenticationNotice = () => {
 	$("#auth-required").show();
 };
 
+var showGatherBanNotice = () => {
+	$("#gather-banned").show();
+};
+
 var renderPage = (socket) => {
 	initialiseVisibilityMonitoring(socket);
 	React.render(<UserMenu />, document.getElementById('side-menu'));
@@ -66,6 +70,9 @@ var initialiseComponents = () => {
 			if (error === "Authentication Failed") {
 				removeAuthWidget();
 				showAuthenticationNotice();
+			} else if (error === "Gather Banned") {
+				removeAuthWidget();
+				showGatherBanNotice();
 			}
 		})
 };

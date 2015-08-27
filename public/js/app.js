@@ -1124,6 +1124,10 @@ var showAuthenticationNotice = function showAuthenticationNotice() {
 	$("#auth-required").show();
 };
 
+var showGatherBanNotice = function showGatherBanNotice() {
+	$("#gather-banned").show();
+};
+
 var renderPage = function renderPage(socket) {
 	initialiseVisibilityMonitoring(socket);
 	React.render(React.createElement(UserMenu, null), document.getElementById('side-menu'));
@@ -1152,6 +1156,9 @@ var initialiseComponents = function initialiseComponents() {
 		if (error === "Authentication Failed") {
 			removeAuthWidget();
 			showAuthenticationNotice();
+		} else if (error === "Gather Banned") {
+			removeAuthWidget();
+			showGatherBanNotice();
 		}
 	});
 };

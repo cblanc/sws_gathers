@@ -328,6 +328,167 @@ var GatherProgress = React.createClass({
 	}
 });
 
+var TeamSpeakButton = React.createClass({
+	displayName: "TeamSpeakButton",
+
+	getDefaultProps: function getDefaultProps() {
+		var password = "ns2gather";
+		return {
+			url: "ts3server://ensl.org/",
+			password: password,
+			alien: {
+				channel: "NS2 Gather/Gather #1/Alien (Team Y)",
+				password: password
+			},
+			marine: {
+				channel: "NS2 Gather/Gather #1/Marine (Team X)",
+				password: password
+			}
+		};
+	},
+	marineUrl: function marineUrl() {
+		this.teamSpeakUrl(this.props.marine);
+	},
+	alienUrl: function alienUrl() {
+		this.teamSpeakUrl(this.props.alien);
+	},
+	teamSpeakUrl: function teamSpeakUrl(conn) {
+		var params = "channel=" + encodeURIComponent(conn.channel) + "&channelpassword=" + encodeURIComponent(conn.password);
+		return this.props.url + "?" + params;
+	},
+	render: function render() {
+		return React.createElement(
+			"div",
+			{ className: "btn-group dropup" },
+			React.createElement(
+				"button",
+				{ type: "button", className: "btn btn-primary dropdown-toggle", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false" },
+				"Teamspeak ",
+				React.createElement("span", { className: "caret" })
+			),
+			React.createElement(
+				"ul",
+				{ className: "dropdown-menu" },
+				React.createElement(
+					"li",
+					null,
+					React.createElement(
+						"a",
+						{ href: this.props.url },
+						"Join Teamspeak Lobby"
+					)
+				),
+				React.createElement(
+					"li",
+					null,
+					React.createElement(
+						"a",
+						{ href: this.marineUrl() },
+						"Join Marine Teamspeak"
+					)
+				),
+				React.createElement(
+					"li",
+					null,
+					React.createElement(
+						"a",
+						{ href: this.alienUrl() },
+						"Join Alien Teamspeak"
+					)
+				),
+				React.createElement("li", { role: "separator", className: "divider" }),
+				React.createElement(
+					"li",
+					null,
+					React.createElement(
+						"a",
+						{ href: "#", "data-toggle": "modal", "data-target": "#teamspeakmodal" },
+						"Get Teamspeak Info"
+					)
+				)
+			),
+			React.createElement(
+				"div",
+				{ className: "modal fade text-left", id: "teamspeakmodal" },
+				React.createElement(
+					"div",
+					{ className: "modal-dialog" },
+					React.createElement(
+						"div",
+						{ className: "modal-content" },
+						React.createElement(
+							"div",
+							{ className: "modal-header" },
+							React.createElement(
+								"button",
+								{ type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close" },
+								React.createElement(
+									"span",
+									{ "aria-hidden": "true" },
+									"×"
+								)
+							),
+							React.createElement(
+								"h4",
+								{ className: "modal-title" },
+								"Teamspeak Server Information"
+							)
+						),
+						React.createElement(
+							"div",
+							{ className: "modal-body" },
+							React.createElement(
+								"dl",
+								{ className: "dl-horizontal" },
+								React.createElement(
+									"dt",
+									null,
+									"Server"
+								),
+								React.createElement(
+									"dd",
+									null,
+									this.props.url
+								),
+								React.createElement(
+									"dt",
+									null,
+									"Password"
+								),
+								React.createElement(
+									"dd",
+									null,
+									this.props.password
+								),
+								React.createElement(
+									"dt",
+									null,
+									"Marine Channel"
+								),
+								React.createElement(
+									"dd",
+									null,
+									this.props.marine.channel
+								),
+								React.createElement(
+									"dt",
+									null,
+									"Alien Channel"
+								),
+								React.createElement(
+									"dd",
+									null,
+									this.props.alien.channel
+								)
+							)
+						)
+					)
+				)
+			)
+		);
+	}
+});
+
 var GatherActions = React.createClass({
 	displayName: "GatherActions",
 
@@ -429,6 +590,7 @@ var GatherActions = React.createClass({
 			React.createElement(
 				"ul",
 				{ className: "list-inline no-bottom" },
+				React.createElement(TeamSpeakButton, null),
 				confirmTeam,
 				inviteButton,
 				joinButton

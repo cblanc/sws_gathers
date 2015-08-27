@@ -263,6 +263,72 @@ var GatherProgress = React.createClass({
 	}
 });
 
+var TeamSpeakButton = React.createClass({
+	getDefaultProps() {
+		let password = "ns2gather";
+		return {
+			url: "ts3server://ensl.org/",
+			password: password,
+			alien: {
+				channel: "NS2 Gather/Gather #1/Alien (Team Y)",
+				password: password
+			},
+			marine: {
+				channel: "NS2 Gather/Gather #1/Marine (Team X)",
+				password: password
+			}
+		};
+	},
+	marineUrl() {
+		this.teamSpeakUrl(this.props.marine);
+	},
+	alienUrl() {
+		this.teamSpeakUrl(this.props.alien);
+	},
+	teamSpeakUrl(conn) {
+		let params = `channel=${encodeURIComponent(conn.channel)}&channelpassword=${encodeURIComponent(conn.password)}`;
+		return (`${this.props.url}?${params}`);
+	},
+	render() {
+		return (
+			<div className="btn-group dropup">
+			  <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			    Teamspeak <span className="caret"></span>
+			  </button>
+			  <ul className="dropdown-menu">
+			    <li><a href={this.props.url}>Join Teamspeak Lobby</a></li>
+			    <li><a href={this.marineUrl()}>Join Marine Teamspeak</a></li>
+			    <li><a href={this.alienUrl()}>Join Alien Teamspeak</a></li>
+			    <li role="separator" className="divider"></li>
+			    <li><a href="#" data-toggle="modal" data-target="#teamspeakmodal">Get Teamspeak Info</a></li>
+			  </ul>
+			  <div className="modal fade text-left" id="teamspeakmodal">
+				  <div className="modal-dialog">
+				    <div className="modal-content">
+					    <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 className="modal-title">Teamspeak Server Information</h4>
+				      </div>
+				      <div className="modal-body">
+				      	<dl className="dl-horizontal">
+								  <dt>Server</dt>
+								  <dd>{this.props.url}</dd>
+								  <dt>Password</dt>
+								  <dd>{this.props.password}</dd>
+								  <dt>Marine Channel</dt>
+								  <dd>{this.props.marine.channel}</dd>
+								  <dt>Alien Channel</dt>
+								  <dd>{this.props.alien.channel}</dd>
+								</dl>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+		);
+	}
+});
+
 var GatherActions = React.createClass({
 	joinGather(e) {
 		e.preventDefault();
@@ -338,6 +404,7 @@ var GatherActions = React.createClass({
 		return (
 			<div className="panel-footer text-right">
 				<ul className="list-inline no-bottom">
+					<TeamSpeakButton />
 					{confirmTeam}
 					{inviteButton}
 					{joinButton}

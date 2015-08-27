@@ -57,6 +57,9 @@ module.exports = io => {
 				return next(new Error("Authentication Failed"))
 			};
 			socket._user = new User(body);
+			if (socket._user.bans.gather) {
+				return next(new Error("Gather Banned"));
+			}
 			winston.info("Logged in:", body.username, body.id);
 			return next();
 		});

@@ -347,10 +347,10 @@ var TeamSpeakButton = React.createClass({
 		};
 	},
 	marineUrl: function marineUrl() {
-		this.teamSpeakUrl(this.props.marine);
+		return this.teamSpeakUrl(this.props.marine);
 	},
 	alienUrl: function alienUrl() {
-		this.teamSpeakUrl(this.props.alien);
+		return this.teamSpeakUrl(this.props.alien);
 	},
 	teamSpeakUrl: function teamSpeakUrl(conn) {
 		var params = "channel=" + encodeURIComponent(conn.channel) + "&channelpassword=" + encodeURIComponent(conn.password);
@@ -403,7 +403,7 @@ var TeamSpeakButton = React.createClass({
 					React.createElement(
 						"a",
 						{ href: "#", "data-toggle": "modal", "data-target": "#teamspeakmodal" },
-						"Get Teamspeak Info"
+						"Teamspeak Details"
 					)
 				)
 			),

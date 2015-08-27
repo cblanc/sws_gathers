@@ -57,7 +57,6 @@ module.exports = io => {
 				return next(new Error("Authentication Failed"))
 			};
 			socket._user = new User(body);
-			console.log(socket._user)
 			if (socket._user.bans.gather) {
 				return next(new Error("Gather Banned"));
 			}

@@ -280,10 +280,10 @@ var TeamSpeakButton = React.createClass({
 		};
 	},
 	marineUrl() {
-		this.teamSpeakUrl(this.props.marine);
+		return this.teamSpeakUrl(this.props.marine);
 	},
 	alienUrl() {
-		this.teamSpeakUrl(this.props.alien);
+		return this.teamSpeakUrl(this.props.alien);
 	},
 	teamSpeakUrl(conn) {
 		let params = `channel=${encodeURIComponent(conn.channel)}&channelpassword=${encodeURIComponent(conn.password)}`;
@@ -300,7 +300,7 @@ var TeamSpeakButton = React.createClass({
 			    <li><a href={this.marineUrl()}>Join Marine Teamspeak</a></li>
 			    <li><a href={this.alienUrl()}>Join Alien Teamspeak</a></li>
 			    <li role="separator" className="divider"></li>
-			    <li><a href="#" data-toggle="modal" data-target="#teamspeakmodal">Get Teamspeak Info</a></li>
+			    <li><a href="#" data-toggle="modal" data-target="#teamspeakmodal">Teamspeak Details</a></li>
 			  </ul>
 			  <div className="modal fade text-left" id="teamspeakmodal">
 				  <div className="modal-dialog">

@@ -436,7 +436,6 @@ var ServerVoting = React.createClass({
 	render() {
 		var self = this;
 		let servers = self.props.servers.map(server => {
-			let voteButton;
 			let votes = self.votesForServer(server);
 			if (self.props.currentGatherer.serverVote === server.id) {
 				return (
@@ -457,12 +456,12 @@ var ServerVoting = React.createClass({
 			}
 		});
 
-		let message = (self.props.currentGatherer.serverVote !== null) ? "Server Votes" : "Please Vote for a Server";
+		let voted = self.props.currentGatherer.serverVote !== null; 
 
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					{message}
+					{voted ? "Server Votes" : "Please Vote for a Server" }
 				</div>
 				<div className="list-group gather-voting">
 					{servers}
@@ -493,7 +492,7 @@ var MapVoting = React.createClass({
 
 	render() {
 		var self = this;
-		var maps = self.props.maps.map(map => {
+		let maps = self.props.maps.map(map => {
 			let votes = self.votesForMap(map);
 			if (self.props.currentGatherer.mapVote === map.id) {
 				return (
@@ -516,10 +515,13 @@ var MapVoting = React.createClass({
 				);
 			}
 		});
+
+		let voted = (self.props.currentGatherer.mapVote !== null);
+
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					Map Voting
+					{voted ? "Map Votes" : "Please Vote for a Map"}
 				</div>
 				<div className="list-group gather-voting">
 					{maps}

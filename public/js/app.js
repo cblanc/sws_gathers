@@ -623,7 +623,6 @@ var ServerVoting = React.createClass({
 	render: function render() {
 		var self = this;
 		var servers = self.props.servers.map(function (server) {
-			var voteButton = undefined;
 			var votes = self.votesForServer(server);
 			if (self.props.currentGatherer.serverVote === server.id) {
 				return React.createElement(
@@ -652,7 +651,7 @@ var ServerVoting = React.createClass({
 			}
 		});
 
-		var message = self.props.currentGatherer.serverVote !== null ? "Server Votes" : "Please Vote for a Server";
+		var voted = self.props.currentGatherer.serverVote !== null;
 
 		return React.createElement(
 			"div",
@@ -660,7 +659,7 @@ var ServerVoting = React.createClass({
 			React.createElement(
 				"div",
 				{ className: "panel-heading" },
-				message
+				voted ? "Server Votes" : "Please Vote for a Server"
 			),
 			React.createElement(
 				"div",
@@ -725,13 +724,16 @@ var MapVoting = React.createClass({
 				);
 			}
 		});
+
+		var voted = self.props.currentGatherer.mapVote !== null;
+
 		return React.createElement(
 			"div",
 			{ className: "panel panel-default" },
 			React.createElement(
 				"div",
 				{ className: "panel-heading" },
-				"Map Voting"
+				voted ? "Map Votes" : "Please Vote for a Map"
 			),
 			React.createElement(
 				"div",

@@ -977,16 +977,20 @@ var initialiseComponents = function initialiseComponents() {
 		console.log("Connected");
 		removeAuthWidget();
 		renderPage(socket);
+		socket.on("reconnect", function () {
+			socket.emit("message:refresh");
+			socket.emit("gather:refresh");
+			socket.emit("users:refresh");
+			console.log("Reconnected");
+		}).on("disconnect", function () {
+			console.log("Disconnected");
+		});
 	}).on("error", function (error, foo) {
 		console.log(error);
 		if (error === "Authentication Failed") {
 			removeAuthWidget();
 			showAuthenticationNotice();
 		}
-	}).on("reconnect", function () {
-		console.log("Reconnected");
-	}).on("disconnect", function () {
-		console.log("Disconnected");
 	});
 };
 

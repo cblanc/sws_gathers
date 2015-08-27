@@ -51,6 +51,15 @@ var initialiseComponents = () => {
 			console.log("Connected");
 			removeAuthWidget();
 			renderPage(socket);
+			socket.on("reconnect", () => {
+					socket.emit("message:refresh");
+					socket.emit("gather:refresh");
+					socket.emit("users:refresh");
+					console.log("Reconnected");
+				})
+				.on("disconnect", () => {
+					console.log("Disconnected")
+				});
 		})
 		.on("error", (error, foo) => {
 			console.log(error);
@@ -59,10 +68,4 @@ var initialiseComponents = () => {
 				showAuthenticationNotice();
 			}
 		})
-		.on("reconnect", () => {
-			console.log("Reconnected");
-		})
-		.on("disconnect", () => {
-			console.log("Disconnected")
-		});
 };

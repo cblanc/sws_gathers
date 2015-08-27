@@ -36,6 +36,7 @@ module.exports = io => {
 			session = EnslClient.decodeSession(cookies[config.session_store_name]);
 		}
 
+
 		if (!session || typeof session.user !== 'number') {
 			// return next(new Error("Authentication Failed"));
 

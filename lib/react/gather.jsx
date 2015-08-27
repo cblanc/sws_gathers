@@ -439,7 +439,10 @@ var ServerVoting = React.createClass({
 			let votes = self.votesForServer(server);
 			if (self.props.currentGatherer.serverVote === server.id) {
 				return (
-					<a href="#" className="list-group-item list-group-item-success" key={server.id}>
+					<a href="#" 
+						className="list-group-item list-group-item-success" 
+						onClick={ e => e.preventDefault() } 
+						key={server.id}>
 						<span className="badge">{votes}</span>
 						{server.description || server.dns}
 					</a>
@@ -498,6 +501,7 @@ var MapVoting = React.createClass({
 				return (
 					<a href="#" 
 						key={map.id} 
+						onClick={ e => e.preventDefault() } 
 						className="list-group-item list-group-item-success">
 							<span className="badge">{votes}</span>
 							{map.name}

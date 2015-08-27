@@ -551,8 +551,9 @@ var Gather = React.createClass({
 		console.log(newState)
 
 		// Callbacks for new states
-		if (newState === "election" && previousState === "gathering") {
-			console.log(soundController);
+		if (newState === "election" 
+				&& previousState === "gathering"
+				&& data.currentGatherer) {
 			soundController.playGatherMusic();
 		}
 	},

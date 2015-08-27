@@ -84,3 +84,7 @@ html, body {
 .gather-voting {
 	font-size: 90%;
 }
+
+.progress-bar {
+	min-width: 6em;
+}

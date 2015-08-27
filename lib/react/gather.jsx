@@ -548,7 +548,6 @@ var Gather = React.createClass({
 		let previousState = this.props.gather.state;
 		let newState = data.gather.state;
 		if (newState === previousState) return;
-		console.log(newState)
 
 		// Callbacks for new states
 		if (newState === "election" 

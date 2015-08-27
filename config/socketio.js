@@ -36,17 +36,12 @@ module.exports = io => {
 			session = EnslClient.decodeSession(cookies[config.session_store_name]);
 		}
 
-
 		if (!session || typeof session.user !== 'number') {
-			// return next(new Error("Authentication Failed"));
-
-			/* Temporarily Allow Random Users in staging*/
 			if (env === 'staging') {
 				return assignRandomUser(socket, next);
 			} else {
 				return next(new Error("Authentication Failed"));
 			}
-			/****************************/
 		}
 
 		client.getUserById({

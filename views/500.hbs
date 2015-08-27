@@ -1,10 +1,25 @@
 <div id="page-wrapper" style="min-height: 750px;">
 	<div class="container-fluid">
-		<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">Something went wrong )-:</h1>
-				<p>Find an ENSL admin and get them to fix it!</p>
+		<div class="row" id="authenticating">
+			<div class="col-lg-6 col-lg-offset-3">
+				<div class="jumbotron jumbo-auth text-center">
+					<div>
+						<img src="/images/ensl_logo.png" class="jumbo-img" alt="ENSL Logo" />
+					</div>
+					<br />
+					<h3>Something went wrong )-: (Server Error)</h3>
+					<br />
+					<h3>It's <span id="admin">Prommah</span>'s fault!</h3>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+var admins = ["Simple", "Yaluzan", "Lome", "Lambo", "Prommah", "Vindaloo"];
+$("#admin").html(function () {
+	var i = Math.floor(Math.random() * admins.length);
+	return admins[i];
+}());
+</script>

@@ -9,5 +9,6 @@ mongoose.connect(config.mongo.uri);
 // Load models
 require(path.join(__dirname, "/models/message"));
 require(path.join(__dirname, "/models/session"));
+require(path.join(__dirname, "/models/profile"));
 
 module.exports = mongoose;

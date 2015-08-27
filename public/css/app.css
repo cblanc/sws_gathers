@@ -61,10 +61,6 @@ html, body {
 	padding: 80px 0px;
 }
 
-.voting-table {
-	font-size: 90%;
-}
-
 .max-width {
 	width: 100%;
 }
@@ -83,4 +79,8 @@ html, body {
 
 .spinner {
 	max-height: 30px !important;
+}
+
+.gather-voting {
+	font-size: 90%;
 }

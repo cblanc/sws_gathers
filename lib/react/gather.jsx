@@ -1,46 +1,5 @@
 "use strict";
 
-var VoteButton = React.createClass({
-	cancelVote(e) {
-		socket.emit("gather:vote", {
-			leader: {
-				candidate: null
-			}
-		});
-	},
-
-	vote(e) {
-		e.preventDefault();
-		socket.emit("gather:vote", {
-			leader: {
-				candidate: parseInt(e.target.value, 10)
-			}
-		});
-	},
-
-	render() {
-		if (this.props.currentGatherer === null) {
-			return false;
-		}
-		if (this.props.currentGatherer.leaderVote === this.props.candidate.id) {
-			return (
-				<button 
-					onClick={this.cancelVote} 
-					className="btn btn-xs btn-success">Voted
-				</button>
-			);
-		} else {
-			return (
-				<button 
-					onClick={this.vote} 
-					className="btn btn-xs btn-default"
-					value={this.props.candidate.id}>Vote
-				</button>
-			);
-		}
-	}
-});
-
 var SelectPlayerButton = React.createClass({
 	selectPlayer(e) {
 		e.preventDefault();
@@ -414,14 +373,57 @@ var GatherActions = React.createClass({
 	}
 });
 
-var ServerVoting = React.createClass({
-	handleServerVote(e) {
-		e.preventDefault();
+var VoteButton = React.createClass({
+	cancelVote(e) {
 		socket.emit("gather:vote", {
-			server: {
-				id: parseInt(e.target.value, 10)
+			leader: {
+				candidate: null
 			}
 		});
+	},
+
+	vote(e) {
+		e.preventDefault();
+		socket.emit("gather:vote", {
+			leader: {
+				candidate: parseInt(e.target.value, 10)
+			}
+		});
+	},
+
+	render() {
+		if (this.props.currentGatherer === null) {
+			return false;
+		}
+		if (this.props.currentGatherer.leaderVote === this.props.candidate.id) {
+			return (
+				<button 
+					onClick={this.cancelVote} 
+					className="btn btn-xs btn-success">Voted
+				</button>
+			);
+		} else {
+			return (
+				<button 
+					onClick={this.vote} 
+					className="btn btn-xs btn-default"
+					value={this.props.candidate.id}>Vote
+				</button>
+			);
+		}
+	}
+});
+
+var ServerVoting = React.createClass({
+	voteHandler(serverId) {
+		return function (e) {
+			e.preventDefault();
+			socket.emit("gather:vote", {
+				server: {
+					id: serverId
+				}
+			});
+		}
 	},
 
 	votesForServer(server) {
@@ -433,51 +435,53 @@ var ServerVoting = React.createClass({
 
 	render() {
 		var self = this;
-		var servers = self.props.servers.map(server => {
-			var voteButton;
+		let servers = self.props.servers.map(server => {
+			let voteButton;
+			let votes = self.votesForServer(server);
 			if (self.props.currentGatherer.serverVote === server.id) {
-				voteButton = (<button
-											data-disabled="true"
-											className="btn btn-xs btn-success">
-											Voted</button>)
+				return (
+					<a href="#" className="list-group-item list-group-item-success" key={server.id}>
+						<span className="badge">{votes}</span>
+						{server.description || server.dns}
+					</a>
+				);				
 			} else {
-				voteButton = (<button
-											onClick={self.handleServerVote}
-											value={server.id}
-											className="btn btn-xs btn-primary">
-											Vote</button>);
+				return (
+					<a href="#" className="list-group-item" 
+						onClick={self.voteHandler(server.id)}
+						key={server.id}>
+						<span className="badge">{votes}</span>
+						{server.description || server.dns}
+					</a>
+				);
 			}
-			return (
-				<tr key={server.id}>
-					<td className="col-md-6">{server.description || server.dns}</td>
-					<td className="col-md-6 text-right">
-						{self.votesForServer(server)} Votes&nbsp;
-						{voteButton}
-					</td>
-				</tr>
-			);
 		});
+
+		let message = (self.props.currentGatherer.serverVote !== null) ? "Server Votes" : "Please Vote for a Server";
+
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					Server Voting
+					{message}
 				</div>
-				<table id="serverVoteTable" className="table table-condensed table-hover voting-table">
+				<div className="list-group gather-voting">
 					{servers}
-				</table>
+				</div>
 			</div>
 		);
 	}
 })
 
 var MapVoting = React.createClass({
-	handleMapVote(e) {
-		e.preventDefault();
-		socket.emit("gather:vote", {
-			map: {
-				id: parseInt(e.target.value, 10)
-			}
-		});
+	voteHandler(mapId) {
+		return function (e) {
+			e.preventDefault();
+			socket.emit("gather:vote", {
+				map: {
+					id: mapId
+				}
+			});
+		}
 	},
 
 	votesForMap(map) {
@@ -490,37 +494,36 @@ var MapVoting = React.createClass({
 	render() {
 		var self = this;
 		var maps = self.props.maps.map(map => {
-			var voteButton;
+			let votes = self.votesForMap(map);
 			if (self.props.currentGatherer.mapVote === map.id) {
-				voteButton = (<button
-											data-disabled="true"
-											className="btn btn-xs btn-success">
-											Voted</button>)
+				return (
+					<a href="#" 
+						key={map.id} 
+						className="list-group-item list-group-item-success">
+							<span className="badge">{votes}</span>
+							{map.name}
+					</a>
+				);
 			} else {
-				voteButton = (<button
-											onClick={self.handleMapVote}
-											value={map.id}
-											className="btn btn-xs btn-primary">
-											Vote</button>);
+				return (
+					<a href="#" 
+						key={map.id} 
+						onClick={self.voteHandler(map.id)}
+						className="list-group-item">
+							<span className="badge">{votes}</span>
+							{map.name}
+					</a>
+				);
 			}
-			return (
-				<tr key={map.id}>
-					<td className="col-md-6">{map.name}</td>
-					<td className="col-md-6 text-right">
-						{self.votesForMap(map)} Votes&nbsp;
-						{voteButton}
-					</td>
-				</tr>
-			);
 		});
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
 					Map Voting
 				</div>
-				<table className="table table-condensed table-hover voting-table">
+				<div className="list-group gather-voting">
 					{maps}
-				</table>
+				</div>
 			</div>
 		);
 	}

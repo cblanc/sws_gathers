@@ -74,5 +74,5 @@ var initialiseComponents = () => {
 				removeAuthWidget();
 				showGatherBanNotice();
 			}
-		})
+		});
 };

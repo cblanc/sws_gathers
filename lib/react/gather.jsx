@@ -521,7 +521,7 @@ var MapVoting = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					{voted ? "Map Votes" : "Please Vote for a Map"}
+					{ voted ? "Map Votes" : "Please Vote for a Map" }
 				</div>
 				<div className="list-group gather-voting">
 					{maps}
@@ -540,9 +540,24 @@ var Gather = React.createClass({
 		}
 	},
 
+	checkForStateChange: function (data) {
+		if (this.props.gather.state === data.gather.state) return;
+		let newState = data.gather.state;
+		console.log(newState)
+
+		// Callbacks for new states
+		if (newState === 'election') {
+			console.log(soundController);
+			soundController.playGatherMusic();
+		}
+	},
+
 	componentDidMount() {
 		var self = this;
-		socket.on("gather:refresh", data => self.setProps(data));
+		socket.on("gather:refresh", (data) => {
+			self.checkForStateChange(data);
+			self.setProps(data)
+		});
 	},
 	
 	render() {

@@ -6,7 +6,7 @@ var config = {
 		uri: "" // Set using MONGOLAB_URI
 	},
 	secret_token: "",
-	session_store_name: "_ENSL_session_key_staging",
+	session_store_name: "_ENSL_session_key",
 	ensl_url: "http://www.ensl.org/"
 };
 

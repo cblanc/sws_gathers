@@ -10,9 +10,9 @@ var profileSchema = new Schema({
 		fade: { type: Boolean, default: false },
 		gorge: { type: Boolean, default: false },
 		onos: { type: Boolean, default: false },
-		commander: { type: Boolean, default: false },
-		enslo: { type: Number, default: null }
+		commander: { type: Boolean, default: false }
 	},
+	enslo: { type: Number, default: null },
 	division: { type: String, default: null }
 });
 

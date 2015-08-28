@@ -633,15 +633,22 @@ var Gatherers = React.createClass({
 												alt={gatherer.user.country} />);
 			};
 
-			var division = (<span className="label label-primary">{gatherer.user.ability.division}</span>);
+			if (gatherer.user.profile.division) {
+				var division = (<span className="label label-primary">{gatherer.user.profile.division}</span>);
+			}
+
+			var abilities = [];
+			for (let attr in gatherer.user.profile.abilities) {
+				if (gatherer.user.profile.abilities[attr]) abilities.push(_.capitalize(attr));
+			}
 			var lifeform = (
-				gatherer.user.ability.lifeforms.map(lifeform => {
+				abilities.map(lifeform => {
 					return (<span className="label label-default" 
 												key={[lifeform, gatherer.id].join("-")}>{lifeform}</span>);
 				})
 			);
-			var team; 
 
+			var team; 
 			if (gatherer.user.team) {
 				team = (<span className="label label-primary">{gatherer.user.team.name}</span>);
 			}

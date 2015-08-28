@@ -23,7 +23,7 @@ describe("Profile model", () => {
 				assert.isFalse(result.abilities.fade);
 				assert.isFalse(result.abilities.onos);
 				assert.isFalse(result.abilities.commander);
-				assert.isNull(result.abilities.enslo);
+				assert.isNull(result.enslo);
 				assert.isNull(result.division);
 				done();
 			});

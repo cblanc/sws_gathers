@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 var profileSchema = new Schema({
 	userId: { type: Number, required: true },
 	abilities: {
+		skulk: { type: Boolean, default: true },
 		lerk: { type: Boolean, default: false },
 		fade: { type: Boolean, default: false },
 		gorge: { type: Boolean, default: false },

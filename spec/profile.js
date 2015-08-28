@@ -7,14 +7,13 @@ var async = require("async");
 var userCount = 0;
 
 describe("Profile model", () => {
+	var profile;
+	beforeEach(() => {
+		profile = {
+			userId: ++userCount + Math.floor(Math.random() * 10000)
+		};
+	});
 	describe(".create", () => {
-		var profile;
-
-		beforeEach(() => {
-			profile = {
-				userId: ++userCount + Math.floor(Math.random() * 10000)
-			};
-		});
 
 		it ("creates a new profile",  done => {
 			Profile.create(profile, (error, result) => {
@@ -49,6 +48,26 @@ describe("Profile model", () => {
 					assert.match(error.message, /E11000/);
 					done();
 				});
+			});
+		});
+	});
+	describe(".findOrCreate", () => {
+		it ("returns a profile if user exists", done => {
+			Profile.create(profile, (error, result) => {
+				if (error) return done(error);
+				assert.equal(result.userId, profile.userId);
+				Profile.findOrCreate({id: profile.userId}, (error, foundProfile) => {
+					if (error) return done(error);
+					assert.equal(foundProfile._id.toString(), result._id.toString());
+					done();
+				});
+			});
+		});
+		it ("creates a profile if user does not exist", done => {
+			Profile.findOrCreate({id: profile.userId}, (error, foundProfile) => {
+				if (error) return done(error);
+				assert.equal(profile.userId, foundProfile.userId);
+				done();
 			});
 		});
 	});

@@ -60,7 +60,7 @@ var SoundPanel = React.createClass({
 			return (
 				<li>
 					<a href="#" onClick={this.unMute}>
-						Unmute Sound&nbsp;<i className="fa fa-volume-up fa-fw"></i>
+						Unmute&nbsp;<i className="fa fa-volume-up fa-fw"></i>
 					</a>
 				</li>
 			);
@@ -68,7 +68,7 @@ var SoundPanel = React.createClass({
 			return (
 				<li>
 					<a href="#" onClick={this.mute}>
-						Mute Sound&nbsp;<i className="fa fa-volume-off fa-fw"></i>
+						Mute&nbsp;<i className="fa fa-volume-off fa-fw"></i>
 					</a>
 				</li>
 			);

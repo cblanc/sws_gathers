@@ -4,13 +4,11 @@ var winston = require("winston");
 var User = require("../lib/user/user");
 var config = require("./config");
 var EnslClient = require("../lib/ensl/client");
-var client = EnslClient();
 var chatController = require("../lib/chat/controller");
 var gatherController = require("../lib/gather/controller");
 var userController = require("../lib/user/controller");
 var usersHelper = require("../lib/user/helper");
 var env = process.env.NODE_ENV || "development";
-
 var parseCookies = EnslClient.parseCookies;
 
 var assignRandomUser = (socket, next) => {
@@ -44,18 +42,14 @@ module.exports = io => {
 			}
 		}
 
-		client.getUserById({
-			id: session.user
-		}, (error, response, body) => {
-			if (error || response.statusCode !== 200) {
+		User.find(session.user, (error, user) => {
+			if (error) {
 				winston.error(error);
-				return next(new Error("Authentication Failed"))
-			};
-			socket._user = new User(body);
-			if (socket._user.bans.gather) {
-				return next(new Error("Gather Banned"));
+				return next(new Error("Authentication failed"));
 			}
-			winston.info("Logged in:", body.username, body.id);
+			socket._user = user;
+			if (socket._user.bans.gather) return next(new Error("Gather Banned"));
+			winston.info("Logged in:", user.username, user.id);
 			return next();
 		});
 	});

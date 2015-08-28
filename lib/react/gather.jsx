@@ -684,8 +684,9 @@ var Gatherers = React.createClass({
 
 			return (
 				<tr key={gatherer.user.id} data-userid={gatherer.user.id}>
-					<td className="col-md-9">{gatherer.user.username} <br />
-						{country} {lifeform} {division} {team}&nbsp;
+					<td className="col-md-9">
+						<p className="gatherer">{gatherer.user.username}</p>
+						<p className="gatherer">{country} {lifeform} {division} {team}</p>
 					</td>
 					<td className="col-md-3 text-right">{action}&nbsp;</td>
 				</tr>

@@ -6,6 +6,11 @@ html, body {
 	margin-top: 20px;
 }
 
+.gatherer {
+	margin-bottom: 3px;
+	padding: 0px;
+}
+
 #chatroom {
 	margin-top: 20px;
 }

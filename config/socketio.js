@@ -12,12 +12,12 @@ var env = process.env.NODE_ENV || "development";
 var parseCookies = EnslClient.parseCookies;
 
 var assignRandomUser = (socket, next) => {
-	usersHelper.getRandomUser(function (error, _, body) {
+	usersHelper.getRandomUser(function (error, user) {
 		if (error) {
 			winston.error(error);
 			return next(new Error("Authentication Failed"))
 		}
-		socket._user = new User(body);
+		socket._user = user;
 		return next();
 	});
 };

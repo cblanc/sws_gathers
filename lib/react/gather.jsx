@@ -406,7 +406,7 @@ var VoteButton = React.createClass({
 			return (
 				<button 
 					onClick={this.vote} 
-					className="btn btn-xs btn-default"
+					className="btn btn-xs btn-primary"
 					value={this.props.candidate.id}>Vote
 				</button>
 			);
@@ -643,7 +643,7 @@ var Gatherers = React.createClass({
 			}
 			var lifeform = (
 				abilities.map(lifeform => {
-					return (<span className="label label-default" 
+					return (<span className="label label-default add-right" 
 												key={[lifeform, gatherer.id].join("-")}>{lifeform}</span>);
 				})
 			);
@@ -684,11 +684,10 @@ var Gatherers = React.createClass({
 
 			return (
 				<tr key={gatherer.user.id} data-userid={gatherer.user.id}>
-					<td className="col-md-5">{country} {gatherer.user.username}&nbsp;</td>
-					<td className="col-md-5">
-						{lifeform} {division} {team}&nbsp;
+					<td className="col-md-9">{gatherer.user.username} <br />
+						{country} {lifeform} {division} {team}&nbsp;
 					</td>
-					<td className="col-md-2 text-right">{action}&nbsp;</td>
+					<td className="col-md-3 text-right">{action}&nbsp;</td>
 				</tr>
 			);
 		})

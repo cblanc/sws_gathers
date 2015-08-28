@@ -95,9 +95,85 @@ var AdminPanel = React.createClass({
 	}
 });
 
+var ProfileModal = React.createClass({
+	componentDidMount() {
+		let self = this;
+		socket.on("users:update", data => self.setProps({user: data.currentUser}));
+	},
+	handleUserUpdate(e) {
+		e.preventDefault();
+		let abilities = {
+			skulk: React.findDOMNode(this.refs.skulk).checked,
+			lerk: React.findDOMNode(this.refs.lerk).checked,
+			fade: React.findDOMNode(this.refs.fade).checked,
+			onos: React.findDOMNode(this.refs.onos).checked,
+			commander: React.findDOMNode(this.refs.commander).checked
+		};
+		let division = React.findDOMNode(this.refs.playerskill).value;
+		socket.emit("users:update:profile", {
+			id: this.props.user.id,
+			profile: {
+				abilities: abilities,
+				division: division
+			}
+		});
+	},
+	render() {
+		if (!this.props.user) return false;
+		let abilities = this.props.user.profile.abilities;
+		let abilitiesForm = [];
+		for (let lifeform in abilities) {
+			abilitiesForm.push(
+				<div key={lifeform} className="checkbox">
+					<label className="checkbox-inline">
+						<input type="checkbox" 
+							ref={lifeform}
+							defaultChecked={abilities[lifeform]}/> {_.capitalize(lifeform)}
+					</label>
+				</div>
+			);
+		}
+
+		let division = this.props.user.profile.division;
+
+		let skillLevels = ["Div 1", "Div 2", "Div 3", "Div 4"].map(skill => {
+			if (skill === division) {
+				return <option defaultValue key={skill}>{skill}</option>
+			} else {
+				return <option key={skill}>{skill}</option>
+			}
+		});
+
+		return (
+			<form>
+			  <div className="form-group">
+			    <label>Player Skill</label><br />
+				  <select className="form-control" ref="playerskill">
+					  {skillLevels}
+					</select>
+			  </div>
+			  <div className="form-group">
+				  {abilitiesForm}
+			  </div>
+		  	<p className="small">You will need to rejoin the gather to see your updated profile</p>
+			  <div className="form-group">
+				  <button 
+				  	type="submit"
+				  	className="btn btn-primary"
+				  	data-dismiss="modal"
+				  	onClick={this.handleUserUpdate}>
+				  	Update &amp; Close</button>
+		  	</div>
+			</form>
+		);
+	}
+});
+
 var CurrentUser = React.createClass({
 	componentDidMount() {
 		let self = this;
+		React.render(<AdminPanel />, document.getElementById('admin-menu'));
+		React.render(<ProfileModal />, document.getElementById('profile-panel'));
 		socket.on("users:update", data => self.setProps({user: data.currentUser}));
 		socket.emit("users:refresh");
 	},
@@ -108,7 +184,9 @@ var CurrentUser = React.createClass({
 			if (this.props.user.admin) {
 				adminOptions = (
 					<li>
-					 	<a href="#" data-toggle="modal" data-target="#adminmodal">Administration</a>
+					 	<a href="#" data-toggle="modal" data-target="#adminmodal">
+					 		<i className="fa fa-magic fa-fw"></i> Administration
+					 	</a>
 					</li>
 				)
 			}
@@ -122,21 +200,16 @@ var CurrentUser = React.createClass({
 					</a>
 					<ul className="dropdown-menu dropdown-user">
 						<li>
-							<a href="#"><i className="fa fa-gear fa-fw"></i> Profile</a>
+							<a data-toggle="modal" 
+								data-target="#profilemodal" 
+								href="#"><i className="fa fa-gear fa-fw"></i> Profile</a>
 						</li>
 						<li>
 							<a href="#"><i className="fa fa-flag fa-fw"></i> Notifications</a>
 						</li>
-						<li>
-							<a href="#"><i className="fa fa-music fa-fw"></i> Sounds</a>
-						</li>
-						<li>
-						 	<a href="#" data-toggle="modal" data-target="#designmodal">Design Goals</a>
-						</li>
 						{adminOptions}
 					</ul>
 				</li>
-
 			);
 		} else {
 			return false;

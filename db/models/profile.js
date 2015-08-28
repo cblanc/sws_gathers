@@ -18,17 +18,28 @@ var profileSchema = new Schema({
 
 profileSchema.path('userId').index({ unique: true });
 
-profileSchema.static("findOrCreate", (user, callback) => {
-	if (!user || typeof user.id !== 'number') return callback(new Error("Invalid user"));
-	let self = this;
-	self.findOne({userId: user.id}, (error, profile) => {
-		if (error) return callback(error);
-		if (profile) return callback(null, profile);
-		self.create({userId: user.id}, (error, result) => {
+profileSchema.static({
+	findOrCreate: (user, callback) => {
+		if (!user || typeof user.id !== 'number') return callback(new Error("Invalid user"));
+		let self = this;
+		self.findOne({userId: user.id}, (error, profile) => {
 			if (error) return callback(error);
-			return callback(null, result);
+			if (profile) return callback(null, profile);
+			self.create({userId: user.id}, (error, result) => {
+				if (error) return callback(error);
+				return callback(null, result);
+			});
 		});
-	});
+	}
+});
+
+profileSchema.method({
+	toJson: () => {
+		let output = {};
+		output.abilities = this.abilities;
+		output.division = this.division;
+		return output;
+	}
 });
 
 module.exports = mongoose.model("Profile", profileSchema);

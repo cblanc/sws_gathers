@@ -88,3 +88,7 @@ html, body {
 .progress-bar {
 	min-width: 6em;
 }
+
+.add-right {
+	margin-right: 2px;
+}

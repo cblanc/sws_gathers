@@ -20,10 +20,12 @@ describe("Profile model", () => {
 			Profile.create(profile, (error, result) => {
 				if (error) return done(error);
 				assert.equal(result.userId, profile.userId);
-				assert.isFalse(result.skills.lerk);
-				assert.isFalse(result.skills.fade);
-				assert.isFalse(result.skills.onos);
-				assert.isFalse(result.skills.commander);
+				assert.isFalse(result.abilities.lerk);
+				assert.isFalse(result.abilities.fade);
+				assert.isFalse(result.abilities.onos);
+				assert.isFalse(result.abilities.commander);
+				assert.isNull(result.abilities.enslo);
+				assert.isNull(result.division);
 				done();
 			});
 		});

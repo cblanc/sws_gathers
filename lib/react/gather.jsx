@@ -633,8 +633,8 @@ var Gatherers = React.createClass({
 												alt={gatherer.user.country} />);
 			};
 
-			if (gatherer.user.profile.division) {
-				var division = (<span className="label label-primary">{gatherer.user.profile.division}</span>);
+			if (gatherer.user.profile.skill) {
+				var skill = (<span className="label label-primary">{gatherer.user.profile.skill}</span>);
 			}
 
 			var abilities = [];
@@ -686,7 +686,7 @@ var Gatherers = React.createClass({
 				<tr key={gatherer.user.id} data-userid={gatherer.user.id}>
 					<td className="col-md-9">
 						<p className="gatherer">{gatherer.user.username}</p>
-						<p className="gatherer">{country} {lifeform} {division} {team}</p>
+						<p className="gatherer">{country} {lifeform} {skill} {team}</p>
 					</td>
 					<td className="col-md-3 text-right">{action}&nbsp;</td>
 				</tr>

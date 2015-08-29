@@ -109,12 +109,12 @@ var ProfileModal = React.createClass({
 			onos: React.findDOMNode(this.refs.onos).checked,
 			commander: React.findDOMNode(this.refs.commander).checked
 		};
-		let division = React.findDOMNode(this.refs.playerskill).value;
+		let skill = React.findDOMNode(this.refs.playerskill).value;
 		socket.emit("users:update:profile", {
 			id: this.props.user.id,
 			profile: {
 				abilities: abilities,
-				division: division
+				skill: skill
 			}
 		});
 	},
@@ -134,10 +134,10 @@ var ProfileModal = React.createClass({
 			);
 		}
 
-		let division = this.props.user.profile.division;
+		let division = this.props.user.profile.skill;
 
-		let skillLevels = ["Div 1", "Div 2", "Div 3", "Div 4"].map(skill => {
-			if (skill === division) {
+		let skillLevels = ["Low Skill", "Medium Skill", "High Skill"].map(skill => {
+			if (skill === skill) {
 				return <option defaultValue key={skill}>{skill}</option>
 			} else {
 				return <option key={skill}>{skill}</option>
@@ -151,6 +151,7 @@ var ProfileModal = React.createClass({
 				  <select className="form-control" ref="playerskill">
 					  {skillLevels}
 					</select>
+					<p><small>Try to give an accurate representation of your skill to raise the quality of your gathers</small></p>
 			  </div>
 			  <div className="form-group">
 				  {abilitiesForm}

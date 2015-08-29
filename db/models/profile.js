@@ -14,7 +14,8 @@ var profileSchema = new Schema({
 		commander: { type: Boolean, default: false }
 	},
 	enslo: { type: Number, default: null },
-	division: { type: String, default: null }
+	division: { type: String, default: null },
+	skill: { type: String, default: null }
 });
 
 profileSchema.path('userId').index({ unique: true });
@@ -38,7 +39,7 @@ profileSchema.method({
 	toJson: () => {
 		let output = {};
 		output.abilities = this.abilities;
-		output.division = this.division;
+		output.skill = this.skill;
 		return output;
 	}
 });

@@ -444,7 +444,7 @@ var ServerVoting = React.createClass({
 						onClick={ e => e.preventDefault() } 
 						key={server.id}>
 						<span className="badge">{votes}</span>
-						{server.description || server.dns}
+						{server.name || server.description || server.dns}
 					</a>
 				);				
 			} else {

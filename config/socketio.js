@@ -35,7 +35,7 @@ module.exports = io => {
 		}
 
 		if (!session || typeof session.user !== 'number') {
-			if (env === 'staging') {
+			if (process.env.RANDOM_USER) {
 				return assignRandomUser(socket, next);
 			} else {
 				return next(new Error("Authentication Failed"));

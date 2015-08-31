@@ -28,24 +28,6 @@ npm install
 npm start
 ```
 
-## Todo
-
-Required for Production:
-
-- Admin tools: Modify Messages
-- Admin tools: Remove gatherer
-- ENSL.org: Pull bans
-- ENSL.org: Archive gather on ensl.org
-
-Nice to have:
-
-- Hive.naturalselection2.com: Pull stats
-- Steam: Outbound steam messaging
-- Add sounds and configuration
-- Add user profile + backend store
-- Show online/away/offline status
-- Picking order
-
 ## License
 
 MIT Licensed

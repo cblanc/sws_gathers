@@ -17,6 +17,7 @@ var Gatherer = helpers.Gatherer = require(path.join(__dirname, "../../lib/gather
 
 // ENSL Client
 var EnslClient = helpers.EnslClient = require(path.join(__dirname, "../../lib/ensl/client"));
+var HiveClient = helpers.HiveClient = require(path.join(__dirname, "../../lib/hive/client"));
 
 // Mongo & Associated Models
 var db = require(path.join(__dirname, "../../db/index"));

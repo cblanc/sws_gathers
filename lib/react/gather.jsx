@@ -634,13 +634,20 @@ var Gatherers = React.createClass({
 			};
 
 			if (gatherer.user.profile.skill) {
-				var skill = (<span className="label label-primary">{gatherer.user.profile.skill}</span>);
+				var skill = (<span className="label label-default">{gatherer.user.profile.skill}</span>);
 			}
 
 			var abilities = [];
 			for (let attr in gatherer.user.profile.abilities) {
 				if (gatherer.user.profile.abilities[attr]) abilities.push(_.capitalize(attr));
 			}
+
+			if (gatherer.user.hive.skill) abilities.push("ELO: " + gatherer.user.hive.skill);
+
+			if (gatherer.user.hive.playTime) {
+				abilities.push(Math.floor(gatherer.user.hive.playTime / 3600) + " Hours");
+			}
+
 			var lifeform = (
 				abilities.map(lifeform => {
 					return (<span className="label label-default add-right" 
@@ -650,7 +657,7 @@ var Gatherers = React.createClass({
 
 			var team; 
 			if (gatherer.user.team) {
-				team = (<span className="label label-primary">{gatherer.user.team.name}</span>);
+				team = (<span className="label label-default">{gatherer.user.team.name}</span>);
 			}
 
 			var action;
@@ -685,8 +692,8 @@ var Gatherers = React.createClass({
 			return (
 				<tr key={gatherer.user.id} data-userid={gatherer.user.id}>
 					<td className="col-md-9">
-						<p className="gatherer">{gatherer.user.username}</p>
-						<p className="gatherer">{country} {lifeform} {skill} {team}</p>
+						<p className="gatherer">{country} {gatherer.user.username}</p>
+						<p className="gatherer-ability">{lifeform} {skill} {team}</p>
 					</td>
 					<td className="col-md-3 text-right">{action}&nbsp;</td>
 				</tr>

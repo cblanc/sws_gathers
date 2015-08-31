@@ -7,6 +7,7 @@ var config = {
 	},
 	secret_token: "SUPERSECRETFOO",
 	session_store_name: "_ENSL_session_key_staging",
+	hive_url: "http://hive.naturalselection2.com/",
 	ensl_url: "http://staging.ensl.org/"
 };
 

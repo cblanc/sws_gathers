@@ -7,6 +7,7 @@ var config = {
 	},
 	secret_token: "",
 	session_store_name: "_ENSL_session_key",
+	hive_url: "http://hive.naturalselection2.com/",
 	ensl_url: "http://www.ensl.org/"
 };
 

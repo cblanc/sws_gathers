@@ -105,6 +105,7 @@ var ProfileModal = React.createClass({
 		let abilities = {
 			skulk: React.findDOMNode(this.refs.skulk).checked,
 			lerk: React.findDOMNode(this.refs.lerk).checked,
+			gorge: React.findDOMNode(this.refs.gorge).checked,
 			fade: React.findDOMNode(this.refs.fade).checked,
 			onos: React.findDOMNode(this.refs.onos).checked,
 			commander: React.findDOMNode(this.refs.commander).checked

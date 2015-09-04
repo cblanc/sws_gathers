@@ -46,13 +46,4 @@ describe("User", () => {
 			assert.isNull(user.getSteamId());
 		});
 	});
-
-	describe("#getHiveId", () => {
-		beforeEach(() => {
-			user = new User(userAttributes);
-		});
-		it ("returns hive id", () => {
-			console.log(user.getHiveId());
-		});
-	});
 });

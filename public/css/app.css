@@ -2,20 +2,25 @@ html, body {
 	height: 100%;
 }
 
+.gather-actions {
+	padding: 10px 0px;
+	border-top: 1px solid #CFCFCF;
+	margin-top: 1em;
+}
+
+.headline {
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #CFCFCF;
+	margin-bottom: 20px;
+}
+
 #gathers {
-	margin-top: 20px;
+	margin-top: 2em;
 }
 
 .gatherer {
 	margin-bottom: 5px;
 	padding: 0px;
-}
-
-.gatherer-ability {
-	font-size: 12px;
-	line-height: 25px;
-	padding: 0px;
-	margin: 0px;
 }
 
 #chatroom {
@@ -41,27 +46,6 @@ html, body {
 
 .admin-panel {
 	margin: 10px 10px;
-}
-
-.dot {
-	width: 5px;
-	height: 5px;
-	border-radius: 50%;
-	vertical-align: middle;
-	position:relative;
-	display: inline-block;
-}
-
-.online {
-	background: #0C0;
-}
-
-.afk {
-	background: #FF9900;
-}
-
-.offline {
-	background: #CCC;
 }
 
 .no-bottom {
@@ -103,4 +87,8 @@ html, body {
 
 .add-right {
 	margin-right: 2px;
+}
+
+#gatherers-panel > .panel {
+	margin-bottom: 1px;
 }

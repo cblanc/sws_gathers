@@ -69,23 +69,21 @@ var GathererList = React.createClass({
 var GatherTeams = React.createClass({
 	render() {
 		return (
-			<div className="panel-body">
-				<div className="row">
-					<div className="col-md-6">
-						<div className="panel panel-default">
-							<div className="panel-heading">
-								Aliens
-							</div>
-							<GathererList gather={this.props.gather} team="alien" />
+			<div className="row add-top">
+				<div className="col-md-6">
+					<div className="panel panel-default">
+						<div className="panel-heading">
+							Aliens
 						</div>
+						<GathererList gather={this.props.gather} team="alien" />
 					</div>
-					<div className="col-md-6">
-						<div className="panel panel-default">
-							<div className="panel-heading">
-								Marines
-							</div>
-							<GathererList gather={this.props.gather} team="marine" />
+				</div>
+				<div className="col-md-6">
+					<div className="panel panel-default">
+						<div className="panel-heading">
+							Marines
 						</div>
+						<GathererList gather={this.props.gather} team="marine" />
 					</div>
 				</div>
 			</div>
@@ -130,14 +128,14 @@ var ProgressBar = React.createClass({
 		var barMessage = this.props.progress.barMessage || "";
 		return (
 			<div className="progress">
-			  <div className="progress-bar progress-bar-striped active" 
-			  	data-role="progressbar" 
-			  	data-aria-valuenow={this.props.progress.num} 
-			  	data-aria-valuemin="0" 
-			  	data-aria-valuemax={this.props.progress.den} 
-			  	style={style}>{barMessage}
-			  </div>
-		  </div>
+				<div className="progress-bar progress-bar-striped active" 
+					data-role="progressbar" 
+					data-aria-valuenow={this.props.progress.num} 
+					data-aria-valuemin="0" 
+					data-aria-valuemax={this.props.progress.den} 
+					style={style}>{barMessage}
+				</div>
+			</div>
 		);
 	}
 });
@@ -214,7 +212,7 @@ var GatherProgress = React.createClass({
 		if (!progress) return false;
 
 		return (
-			<div className="panel-body no-bottom">
+			<div className="no-bottom">
 				<p><strong>{this.stateDescription()}</strong> {progress.message}</p>
 				{progressBar}
 			</div>
@@ -251,37 +249,37 @@ var TeamSpeakButton = React.createClass({
 	render() {
 		return (
 			<div className="btn-group dropup">
-			  <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    Teamspeak <span className="caret"></span>
-			  </button>
-			  <ul className="dropdown-menu">
-			    <li><a href={this.props.url}>Join Teamspeak Lobby</a></li>
-			    <li><a href={this.marineUrl()}>Join Marine Teamspeak</a></li>
-			    <li><a href={this.alienUrl()}>Join Alien Teamspeak</a></li>
-			    <li role="separator" className="divider"></li>
-			    <li><a href="#" data-toggle="modal" data-target="#teamspeakmodal">Teamspeak Details</a></li>
-			  </ul>
-			  <div className="modal fade text-left" id="teamspeakmodal">
-				  <div className="modal-dialog">
-				    <div className="modal-content">
-					    <div className="modal-header">
-				        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				        <h4 className="modal-title">Teamspeak Server Information</h4>
-				      </div>
-				      <div className="modal-body">
-				      	<dl className="dl-horizontal">
-								  <dt>Server</dt>
-								  <dd>{this.props.url}</dd>
-								  <dt>Password</dt>
-								  <dd>{this.props.password}</dd>
-								  <dt>Marine Channel</dt>
-								  <dd>{this.props.marine.channel}</dd>
-								  <dt>Alien Channel</dt>
-								  <dd>{this.props.alien.channel}</dd>
+				<button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Teamspeak <span className="caret"></span>
+				</button>
+				<ul className="dropdown-menu">
+					<li><a href={this.props.url}>Join Teamspeak Lobby</a></li>
+					<li><a href={this.marineUrl()}>Join Marine Teamspeak</a></li>
+					<li><a href={this.alienUrl()}>Join Alien Teamspeak</a></li>
+					<li role="separator" className="divider"></li>
+					<li><a href="#" data-toggle="modal" data-target="#teamspeakmodal">Teamspeak Details</a></li>
+				</ul>
+				<div className="modal fade text-left" id="teamspeakmodal">
+					<div className="modal-dialog">
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 className="modal-title">Teamspeak Server Information</h4>
+							</div>
+							<div className="modal-body">
+								<dl className="dl-horizontal">
+									<dt>Server</dt>
+									<dd>{this.props.url}</dd>
+									<dt>Password</dt>
+									<dd>{this.props.password}</dd>
+									<dt>Marine Channel</dt>
+									<dd>{this.props.marine.channel}</dd>
+									<dt>Alien Channel</dt>
+									<dd>{this.props.alien.channel}</dd>
 								</dl>
-				      </div>
-				    </div>
-				  </div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		);
@@ -361,7 +359,7 @@ var GatherActions = React.createClass({
 		}
 
 		return (
-			<div className="panel-footer text-right">
+			<div className="gather-actions text-right">
 				<ul className="list-inline no-bottom">
 					<TeamSpeakButton />
 					{confirmTeam}
@@ -573,14 +571,12 @@ var Gather = React.createClass({
 		var voting;
 		if (this.props.currentGatherer) {
 			voting = (
-				<div className="panel-body">
-					<div className="row">
-						<div className="col-md-6">
-							<MapVoting {...this.props} />
-						</div>
-						<div className="col-md-6">
-							<ServerVoting {...this.props} />
-						</div>
+				<div className="row add-top">
+					<div className="col-md-6">
+						<MapVoting {...this.props} />
+					</div>
+					<div className="col-md-6">
+						<ServerVoting {...this.props} />
 					</div>
 				</div>
 			);
@@ -597,19 +593,14 @@ var Gather = React.createClass({
 		}
 		return (
 			<div>
-			<div className="panel panel-default">
-				<div className="panel-heading">
-					<strong>Current Gather</strong>
-					<span className="badge add-left">{this.props.gather.gatherers.length}</span>
-				</div>
+				<h2 className="headline">Current Gather</h2>
 				<GatherProgress {...this.props} />
 				<Gatherers {...this.props} />
 				{gatherTeams}
 				{voting}
 				<GatherActions {...this.props} />
-			</div>			
-			{previousGather}
-		</div>
+				{previousGather}
+			</div>
 		);
 	}
 });
@@ -623,45 +614,33 @@ var Gatherers = React.createClass({
 	render() {
 		var self = this;
 		var gatherers = this.props.gather.gatherers.map(gatherer => {
-			
-			// Country
-			var country;
-
 			if (gatherer.user.country) {
-				country = (<img src="images/blank.gif" 
+				var country = (<img src="images/blank.gif" 
 												className={"flag flag-" + gatherer.user.country.toLowerCase()} 
 												alt={gatherer.user.country} />);
 			};
 
-			if (gatherer.user.profile.skill) {
-				var skill = (<span className="label label-default">{gatherer.user.profile.skill}</span>);
-			}
+			var skill = gatherer.user.profile.skill || "Not Available";
 
 			var abilities = [];
 			for (let attr in gatherer.user.profile.abilities) {
 				if (gatherer.user.profile.abilities[attr]) abilities.push(_.capitalize(attr));
 			}
 
-			if (gatherer.user.hive.skill) abilities.push("ELO: " + gatherer.user.hive.skill);
+			var lifeform = (abilities.length) ? abilities.join(", ") : "None Specified";
+
+			var hiveStats = [];
+			if (gatherer.user.hive.skill) hiveStats.push("ELO: " + gatherer.user.hive.skill);
 
 			if (gatherer.user.hive.playTime) {
-				abilities.push(Math.floor(gatherer.user.hive.playTime / 3600) + " Hours");
+				hiveStats.push(Math.floor(gatherer.user.hive.playTime / 3600) + " Hours");
 			}
 
-			var lifeform = (
-				abilities.map(lifeform => {
-					return (<span className="label label-default add-right" 
-												key={[lifeform, gatherer.id].join("-")}>{lifeform}</span>);
-				})
-			);
-
-			var team; 
-			if (gatherer.user.team) {
-				team = (<span className="label label-default">{gatherer.user.team.name}</span>);
-			}
+			var hive = (hiveStats.length) ? hiveStats.join(", ") : "Not Available";
+			
+			var team = (gatherer.user.team) ? gatherer.user.team.name : "None";
 
 			var action;
-
 			if (self.props.gather.state === "election") {
 				var votes = self.props.gather.gatherers.reduce((acc, voter) => {
 					if (voter.leaderVote === gatherer.id) acc++;
@@ -690,25 +669,42 @@ var Gatherers = React.createClass({
 			}
 
 			return (
-				<tr key={gatherer.user.id} data-userid={gatherer.user.id}>
-					<td className="col-md-9">
-						<p className="gatherer">{country} {gatherer.user.username}</p>
-						<p className="gatherer-ability">{lifeform} {skill} {team}</p>
-					</td>
-					<td className="col-md-3 text-right">{action}&nbsp;</td>
-				</tr>
+				<div className="panel panel-success" key={gatherer.user.id} data-userid={gatherer.user.id}>
+					<div className="panel-heading">
+						<h4 className="panel-title">
+							<a data-toggle="collapse"
+								href={"#"+gatherer.user.id.toString() + "-collapse"} 
+								aria-expanded="false" 
+								aria-controls={gatherer.user.id.toString() + "-collapse"}>
+								{country} {gatherer.user.username} <span className="caret"></span>
+							</a>
+							<span className="pull-right">
+								{action}
+							</span>
+						</h4>
+					</div>
+					<div id={gatherer.user.id.toString() + "-collapse"} 
+						className="panel-collapse collapse out" >
+						<div className="panel-body">
+							<dl className="dl-horizontal">
+								<dt>Lifeforms</dt>
+								<dd>{lifeform}</dd>
+								<dt>Skill Level</dt>
+								<dd>{skill}</dd>
+								<dt>Team</dt>
+								<dd>{team}</dd>
+								<dt>Hive Stats</dt>
+								<dd>{hive}</dd>
+							</dl>
+						</div>
+					</div>
+				</div>
 			);
 		})
 		if (this.props.gather.gatherers.length) {
 			return (
-				<div className="panel-body">
-					<div className="panel panel-default">
-						<table className="table roster-table">
-							<tbody>
-								{gatherers}
-							</tbody>
-						</table>
-					</div>
+				<div class="panel-group" role="tablist" aria-multiselectable="true" id="gatherers-panel">
+					{gatherers}
 				</div>
 			);
 		} else {
@@ -750,16 +746,16 @@ var CompletedGather = React.createClass({
 				<GatherTeams gather={this.props.gather} />
 				<div className="panel-body">
 					<dl className="dl-horizontal">
-					  <dt>Maps</dt>
-					  <dd>{maps.map(map => map.name).join(" & ")}</dd>
-					  <dt>Server</dt>
-					  <dd>{server.name}</dd>
-					  <dt>Address</dt>
-					 	<dd>{server.ip}:{server.port}</dd>
-					 	<dt>Password</dt>
-					  <dd>{server.password}</dd>
-					  <br />
-					  <dt>&nbsp;</dt>
+						<dt>Maps</dt>
+						<dd>{maps.map(map => map.name).join(" & ")}</dd>
+						<dt>Server</dt>
+						<dd>{server.name}</dd>
+						<dt>Address</dt>
+						<dd>{server.ip}:{server.port}</dd>
+						<dt>Password</dt>
+						<dd>{server.password}</dd>
+						<br />
+						<dt>&nbsp;</dt>
 						<dd><a href={["steam://run/4920/connect", server.ip +":"+server.port, server.password].join("/")}
 								className="btn btn-primary">Click to Join</a></dd>
 					</dl>

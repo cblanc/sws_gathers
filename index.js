@@ -8,6 +8,9 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var config = require(path.join(__dirname, "config/config.js"));
 
+// Initialise Steam Bot
+require(path.join(__dirname, "lib/steam/bot"))(config.steamBot);
+
 // Load Models
 require(path.join(__dirname, "db/index"));
 

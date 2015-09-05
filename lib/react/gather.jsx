@@ -570,16 +570,21 @@ var Gather = React.createClass({
 
 		var voting;
 		if (this.props.currentGatherer) {
-			voting = (
-				<div className="row add-top">
-					<div className="col-md-6">
-						<MapVoting {...this.props} />
+			let state = this.props.gather.state;
+			if (state === 'gathering' || state === 'election') {
+				voting = (
+					<div className="row add-top">
+						<div className="col-md-6">
+							<MapVoting {...this.props} />
+						</div>
+						<div className="col-md-6">
+							<ServerVoting {...this.props} />
+						</div>
 					</div>
-					<div className="col-md-6">
-						<ServerVoting {...this.props} />
-					</div>
-				</div>
-			);
+				);
+			} else {
+				voting = <GatherVotingResults gather={this.props.gather} servers={this.props.servers} maps={this.props.maps} />;
+			}
 		}
 
 		var gatherTeams;
@@ -663,7 +668,7 @@ var Gatherers = React.createClass({
 					);
 				} else {
 					if (gatherer.team !== "lobby") {
-						action = (<span className="label label-success">{gatherer.team}</span>);
+						action = (<span className="label label-primary">{gatherer.team}</span>);
 					}
 				}
 			}
@@ -720,6 +725,20 @@ var Gatherers = React.createClass({
 });
 
 var CompletedGather = React.createClass({
+	render() {
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					<strong>Previous Gather</strong>
+				</div>
+				<GatherTeams gather={this.props.gather} />
+				<GatherVotingResults gather={this.props.gather} maps={this.props.maps} servers={this.props.servers}/>
+			</div>
+		);
+	}
+});
+
+var GatherVotingResults = React.createClass({
 	countVotes(voteType) {
 		return this.props.gather.gatherers.reduce((acc, gatherer) => {
 			if (gatherer[voteType] !== null) acc.push(gatherer[voteType]);
@@ -739,27 +758,21 @@ var CompletedGather = React.createClass({
 		var maps = this.selectedMaps();
 		var server = this.selectedServer().pop();
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
-					<strong>Previous Gather</strong>
-				</div>
-				<GatherTeams gather={this.props.gather} />
-				<div className="panel-body">
-					<dl className="dl-horizontal">
-						<dt>Maps</dt>
-						<dd>{maps.map(map => map.name).join(" & ")}</dd>
-						<dt>Server</dt>
-						<dd>{server.name}</dd>
-						<dt>Address</dt>
-						<dd>{server.ip}:{server.port}</dd>
-						<dt>Password</dt>
-						<dd>{server.password}</dd>
-						<br />
-						<dt>&nbsp;</dt>
-						<dd><a href={["steam://run/4920/connect", server.ip +":"+server.port, server.password].join("/")}
-								className="btn btn-primary">Click to Join</a></dd>
-					</dl>
-				</div>
+			<div className="panel-body">
+				<dl className="dl-horizontal">
+					<dt>Maps</dt>
+					<dd>{maps.map(map => map.name).join(" & ")}</dd>
+					<dt>Server</dt>
+					<dd>{server.name}</dd>
+					<dt>Address</dt>
+					<dd>{server.ip}:{server.port}</dd>
+					<dt>Password</dt>
+					<dd>{server.password}</dd>
+					<br />
+					<dt>&nbsp;</dt>
+					<dd><a href={["steam://run/4920/connect", server.ip +":"+server.port, server.password].join("/")}
+							className="btn btn-primary">Click to Join</a></dd>
+				</dl>
 			</div>
 		);
 	}

@@ -21,6 +21,14 @@ html, body {
 	padding: 0px;
 }
 
+#side-menu {
+	margin-top: 1em;
+}
+
+#users-list {
+
+}
+
 #chatroom {
 	margin-top: 1em;
 }
@@ -30,7 +38,11 @@ html, body {
 }
 
 .add-left {
-	margin-left: 10px;
+	margin-left: 0.5em;
+}
+
+.add-right {
+	margin-left: 0.5em;
 }
 
 #chatmessages {
@@ -61,6 +73,10 @@ html, body {
 
 .add-top {
 	margin-top: 0.5em;
+}
+
+.add-bottom {
+	margin-bottom: 0.5em;
 }
 
 .previous-headline {

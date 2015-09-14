@@ -602,7 +602,7 @@ var Gather = React.createClass({
 		}
 		return (
 			<div>
-				<div className="panel panel-default">
+				<div className="panel panel-default add-bottom">
 					<div className="panel-heading">Current Gather</div>
 					<div className="panel-body">
 						<GatherProgress {...this.props} />

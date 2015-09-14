@@ -56,19 +56,24 @@ var UserMenu = React.createClass({
 	render() {
 		let users = this.props.users.map(user => {
 			return (
-				<li key={user.id}><a href="#">{user.username}</a></li>
+				<li key={user.id}
+					className="list-group-item">
+						<a href="#">{user.username}</a>
+				</li>
 			);
 		});
 		return (
-			<ul className="nav" id="side-menu">
-				<li>
-					<a href="#">
-						<i className="fa fa-users fa-fw"></i> Online 
-						<span className="badge add-left"> {this.props.users.length} </span>
-					</a>
-				</li>
-				{users}
-			</ul>
+			<div>
+				<div className="panel panel-default add-bottom">
+					<div className="panel-heading">
+						<span className="badge add-right">{this.props.users.length}</span>
+						<i className="fa fa-users fa-fw"></i>  
+					</div>
+				</div>
+				<ul className="list-group" id="users-list">
+					{users}
+				</ul>
+			</div>
 		);
 	}
 });

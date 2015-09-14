@@ -27,6 +27,12 @@ var Chatroom = React.createClass({
 			self.scrollToBottom();
 		});
 
+		socket.on("users:update", data => {
+			self.setProps({
+				currentUser: data.currentUser
+			});
+		});
+
 		socket.emit("message:refresh", {});
 	},
 
@@ -41,7 +47,9 @@ var Chatroom = React.createClass({
 
 	render() {
 		let messages = this.props.history.map(message => 
-			<ChatMessage message={message} key={message.id} />
+			<ChatMessage message={message} 
+				key={message.id} 
+				currentUser={this.props.currentUser} />
 		);
 		return (
 			<div className="panel panel-default chatbox">
@@ -74,6 +82,11 @@ var ChatMessage = React.createClass({
 	},
 
 	render() {
+		let deleteButton;
+		let currentUser = this.props.currentUser;
+		if (this.props.currentUser && this.props.currentUser.admin) {
+			deleteButton = <DeleteMessageButton messageId={this.props.message._id} />;
+		}
 		return (
 			<li className="left clearfix">
 				<span className="chat-img pull-left">
@@ -88,6 +101,7 @@ var ChatMessage = React.createClass({
 					<div className="header">
 						<strong className="primary-font">{this.props.message.author.username}</strong>
 						<small className="pull-right text-muted">
+							{deleteButton}
 							<i className="fa fa-clock-o fa-fw"></i> {$.timeago(this.props.message.createdAt)}
 						</small>
 					</div>
@@ -97,6 +111,23 @@ var ChatMessage = React.createClass({
 		);
 	}
 });
+
+var DeleteMessageButton = React.createClass({
+	handleClick (e) {
+		e.preventDefault();
+		socket.emit("message:delete", {
+			id: this.props.messageId
+		});
+	},
+
+	render() {
+		return (
+			<a href="#" onClick={this.handleClick}>
+				<i className="fa fa-trash-o"></i>
+			</a>
+		);
+	}
+})
 
 var MessageBar = React.createClass({
 	sendMessage(content) {

@@ -37,9 +37,9 @@ class SoundController {
 		var self = this;
 		if (!self.gather.playable) return;
 		self.gather.music.play();
-		self.gather.music.playable = false;
+		self.gather.playable = false;
 		setTimeout(function () {
-			self.gather.music.playable = true;
+			self.gather.playable = true;
 		}, self.minPlayInterval);
 	}
 }

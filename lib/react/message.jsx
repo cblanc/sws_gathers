@@ -15,7 +15,7 @@ var Chatroom = React.createClass({
 			history.push(data);
 			self.setProps({
 				history: history.sort((a, b) => {
-					return a.createdAt - b.createAt;
+					return new Date(a.createdAt) - new Date(b.createdAt);
 				})
 			});
 			self.scrollToBottom();

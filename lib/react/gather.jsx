@@ -451,7 +451,7 @@ var ServerVoting = React.createClass({
 						onClick={self.voteHandler(server.id)}
 						key={server.id}>
 						<span className="badge">{votes}</span>
-						{server.description || server.dns}
+						{server.name || server.description || server.dns}
 					</a>
 				);
 			}
@@ -598,7 +598,7 @@ var Gather = React.createClass({
 		}
 		return (
 			<div>
-				<h2 className="headline">Current Gather</h2>
+				<h3 className="headline">Current Gather</h3>
 				<GatherProgress {...this.props} />
 				<Gatherers {...this.props} />
 				{gatherTeams}
@@ -635,10 +635,10 @@ var Gatherers = React.createClass({
 			var lifeform = (abilities.length) ? abilities.join(", ") : "None Specified";
 
 			var hiveStats = [];
-			if (gatherer.user.hive.skill) hiveStats.push("ELO: " + gatherer.user.hive.skill);
+			if (gatherer.user.hive.skill) hiveStats.push(`${gatherer.user.hive.skill} ELO`);
 
 			if (gatherer.user.hive.playTime) {
-				hiveStats.push(Math.floor(gatherer.user.hive.playTime / 3600) + " Hours");
+				hiveStats.push(`${Math.floor(gatherer.user.hive.playTime / 3600)} Hours`);
 			}
 
 			var hive = (hiveStats.length) ? hiveStats.join(", ") : "Not Available";
@@ -727,10 +727,10 @@ var Gatherers = React.createClass({
 var CompletedGather = React.createClass({
 	render() {
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
+			<div>
+				<h4 className="headline previous-headline">
 					<strong>Previous Gather</strong>
-				</div>
+				</h4>
 				<GatherTeams gather={this.props.gather} />
 				<GatherVotingResults gather={this.props.gather} maps={this.props.maps} servers={this.props.servers}/>
 			</div>

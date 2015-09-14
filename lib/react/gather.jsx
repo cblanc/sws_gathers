@@ -682,7 +682,7 @@ var Gatherers = React.createClass({
 			}
 
 			return (
-				<div className="panel panel-success" key={gatherer.user.id} data-userid={gatherer.user.id}>
+				<div className="panel panel-success gatherer-panel" key={gatherer.user.id} data-userid={gatherer.user.id}>
 					<div className="panel-heading">
 						<h4 className="panel-title">
 							<a data-toggle="collapse"

@@ -14,11 +14,17 @@ html, body {
 
 #gathers {
 	margin-top: 1em;
+	border-left: 1px solid #FAFAFA;
 }
 
 .gatherer {
 	margin-bottom: 5px;
 	padding: 0px;
+}
+
+.gatherer-panel {
+	border: none;
+	box-shadow: none;
 }
 
 #side-menu {

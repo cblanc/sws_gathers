@@ -66,8 +66,8 @@ var UserMenu = React.createClass({
 			<div>
 				<div className="panel panel-default add-bottom">
 					<div className="panel-heading">
-						<span className="badge add-right">{this.props.users.length}</span>
-						<i className="fa fa-users fa-fw"></i>  
+						<i className="fa fa-users fa-fw"></i>  Online
+						<span className="badge pull-right">{this.props.users.length}</span>
 					</div>
 				</div>
 				<ul className="list-group" id="users-list">

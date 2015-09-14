@@ -7,7 +7,8 @@ var config = require("./config.js");
 module.exports = app => {
 	app.get("/", (request, response, next) => {
 		response.render("index.hbs", {
-			redirect: config.ensl_url			
+			redirect: config.ensl_url,
+			bot_url: config.steam_bot_link
 		});
 	});
 

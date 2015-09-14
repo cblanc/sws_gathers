@@ -755,24 +755,35 @@ var GatherVotingResults = React.createClass({
 	},
 
 	render() {
-		var maps = this.selectedMaps();
-		var server = this.selectedServer().pop();
+		let maps = this.selectedMaps();
+		let server = this.selectedServer().pop();
+		let password;
+		if (server.password) {
+			password = [
+				<dt>Password</dt>,
+				<dd>{server.password}</dd>
+			];
+		}
 		return (
-			<div className="panel-body">
-				<dl className="dl-horizontal">
-					<dt>Maps</dt>
-					<dd>{maps.map(map => map.name).join(" & ")}</dd>
-					<dt>Server</dt>
-					<dd>{server.name}</dd>
-					<dt>Address</dt>
-					<dd>{server.ip}:{server.port}</dd>
-					<dt>Password</dt>
-					<dd>{server.password}</dd>
-					<br />
-					<dt>&nbsp;</dt>
-					<dd><a href={["steam://run/4920/connect", server.ip +":"+server.port, server.password].join("/")}
-							className="btn btn-primary">Click to Join</a></dd>
-				</dl>
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					Server
+				</div>
+				<div className="panel-body">
+					<dl className="dl-horizontal">
+						<dt>Maps</dt>
+						<dd>{maps.map(map => map.name).join(" & ")}</dd>
+						<dt>Server</dt>
+						<dd>{server.name}</dd>
+						<dt>Address</dt>
+						<dd>{server.ip}:{server.port}</dd>
+						{password}
+					</dl>
+					<p>
+						<a href={["steam://run/4920/connect", server.ip +":"+server.port, server.password].join("/")}
+							className="btn btn-primary max-width">Click to Join</a>
+					</p>
+				</div>
 			</div>
 		);
 	}

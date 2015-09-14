@@ -2,20 +2,18 @@ html, body {
 	height: 100%;
 }
 
-.gather-actions {
-	padding: 10px 0px;
-	border-top: 1px solid #CFCFCF;
-	margin-top: 1em;
-}
-
 .headline {
 	padding-bottom: 0.5em;
 	border-bottom: 1px solid #CFCFCF;
 	margin-bottom: 20px;
 }
 
+.gather-actions {
+	margin-top: 0.5em;
+}
+
 #gathers {
-	margin-top: 2em;
+	margin-top: 1em;
 }
 
 .gatherer {
@@ -24,7 +22,7 @@ html, body {
 }
 
 #chatroom {
-	margin-top: 20px;
+	margin-top: 1em;
 }
 
 .chatbox {
@@ -62,7 +60,7 @@ html, body {
 }
 
 .add-top {
-	margin-top: 10px;
+	margin-top: 0.5em;
 }
 
 .previous-headline {

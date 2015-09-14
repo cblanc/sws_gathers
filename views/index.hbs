@@ -1,10 +1,10 @@
 <div id="wrapper">
 	{{>menu}}
-	<div id="page-wrapper" style="min-height: 750px;">
+	<div style="min-height: 750px;">
 		<div class="container-fluid">
 			<div class="row" id="authenticating">
 				<div class="col-lg-6 col-lg-offset-3">
-					<div class="jumbotron jumbo-auth text-center">
+					<div class="add-top jumbotron jumbo-auth text-center">
 						<div>
 							<img src="/images/ensl_logo.png" class="jumbo-img" alt="ENSL Logo" />
 						</div>
@@ -19,7 +19,7 @@
 			</div>
 			<div class="row" id="gather-banned" style="display:none;">
 				<div class="col-lg-6 col-lg-offset-3">
-					<div class="jumbotron jumbo-auth text-center">
+					<div class="add-top jumbotron jumbo-auth text-center">
 						<div>
 							<img src="/images/ensl_logo.png" alt="ENSL Logo" />
 						</div>
@@ -32,7 +32,7 @@
 			</div>
 			<div class="row" id="auth-required" style="display:none;">
 				<div class="col-lg-6 col-lg-offset-3">
-					<div class="jumbotron jumbo-auth text-center">
+					<div class="add-top jumbotron jumbo-auth text-center">
 						<div>
 							<img src="/images/ensl_logo.png" alt="ENSL Logo" />
 						</div>
@@ -44,12 +44,11 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-lg-3 col-md-6" id="gatherCounter">
+				<div class="col-lg-1">
+					<ul class="nav" id="side-menu"></ul>
 				</div>
-	    </div>
-			<div class="row">
+				<div class="col-lg-5" id="chatroom"></div>
 				<div class="col-lg-6" id="gathers"></div>	
-				<div class="col-lg-6" id="chatroom"></div>
 			</div>
 		</div>
 	</div>	

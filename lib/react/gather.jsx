@@ -359,13 +359,17 @@ var GatherActions = React.createClass({
 		}
 
 		return (
-			<div className="gather-actions text-right">
-				<ul className="list-inline no-bottom">
-					<TeamSpeakButton />
-					{confirmTeam}
-					{inviteButton}
-					{joinButton}
-				</ul>
+			<div className="panel panel-default gather-actions">
+				<div className="panel-body">
+					<div className="text-right">
+						<ul className="list-inline no-bottom">
+							<TeamSpeakButton />
+							{confirmTeam}
+							{inviteButton}
+							{joinButton}
+						</ul>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -598,8 +602,12 @@ var Gather = React.createClass({
 		}
 		return (
 			<div>
-				<h3 className="headline">Current Gather</h3>
-				<GatherProgress {...this.props} />
+				<div className="panel panel-default">
+					<div className="panel-heading">Current Gather</div>
+					<div className="panel-body">
+						<GatherProgress {...this.props} />
+					</div>
+				</div>
 				<Gatherers {...this.props} />
 				{gatherTeams}
 				{voting}

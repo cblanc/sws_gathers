@@ -722,10 +722,12 @@ var Gatherers = React.createClass({
 			);
 		} else {
 			return (
-				<div className="panel-body text-center join-hero">
-					<button 
-						onClick={this.joinGather} 
-						className="btn btn-success btn-lg">Start a Gather</button>
+				<div className="panel panel-default add-bottom">
+					<div className="panel-body text-center join-hero">
+						<button 
+							onClick={this.joinGather} 
+							className="btn btn-success btn-lg">Start a Gather</button>
+					</div>
 				</div>
 			);
 		}

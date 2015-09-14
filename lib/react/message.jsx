@@ -10,11 +10,13 @@ var Chatroom = React.createClass({
 	componentDidMount() {
 		let self = this;
 
-		socket.on("message:new", data => {
+		socket.on("message:append", data => {
 			let history = self.props.history;
 			history.push(data);
 			self.setProps({
-				history: history
+				history: history.sort((a, b) => {
+					return a.createdAt - b.createAt;
+				})
 			});
 			self.scrollToBottom();
 		});

@@ -85,10 +85,6 @@ html, body {
 	margin-bottom: 0.5em;
 }
 
-.previous-headline {
-	margin-top: 2em;
-};
-
 .jumbo-auth {
 	margin-top: 30px;
 }
@@ -115,4 +111,9 @@ html, body {
 
 #gatherers-panel > .panel {
 	margin-bottom: 1px;
+}
+
+#previous_gather {
+	margin-top: 2em;
+	border-top: 1px solid #FAFAFA;
 }

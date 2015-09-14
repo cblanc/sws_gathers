@@ -737,10 +737,10 @@ var Gatherers = React.createClass({
 var CompletedGather = React.createClass({
 	render() {
 		return (
-			<div>
-				<h4 className="headline previous-headline">
-					<strong>Previous Gather</strong>
-				</h4>
+			<div id="previous_gather">
+				<div className="panel panel-default add-bottom">
+					<div className="panel-heading">Previous Gather</div>
+				</div>
 				<GatherTeams gather={this.props.gather} />
 				<GatherVotingResults gather={this.props.gather} maps={this.props.maps} servers={this.props.servers}/>
 			</div>

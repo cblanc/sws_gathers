@@ -141,10 +141,9 @@ var ProfileModal = React.createClass({
 		}
 
 		let division = this.props.user.profile.skill;
-
 		let skillLevels = ["Low Skill", "Medium Skill", "High Skill"].map(skill => {
-			if (skill === skill) {
-				return <option defaultValue key={skill}>{skill}</option>
+			if (skill === division) {
+				return <option selected="selected" key={skill}>{skill}</option>
 			} else {
 				return <option key={skill}>{skill}</option>
 			}

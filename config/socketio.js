@@ -22,6 +22,14 @@ var assignRandomUser = (socket, next) => {
 	});
 };
 
+var handleFailedAuth = (socket, next) => {
+	if (process.env.RANDOM_USER) {
+		return assignRandomUser(socket, next);
+	} else {
+		return next(new Error("Authentication Failed"));
+	}
+};
+
 module.exports = io => {
 	var rootNamespace = io.of('/')
 
@@ -29,28 +37,28 @@ module.exports = io => {
 	io.use((socket, next) => {
 		let cookies = parseCookies(socket);
 
-		let session;
-		if (cookies) {
-			session = EnslClient.decodeSession(cookies[config.session_store_name]);
+		if (!cookies) {
+			return handleFailedAuth(socket, next);
 		}
 
-		if (!session || typeof session.user !== 'number') {
-			if (process.env.RANDOM_USER) {
-				return assignRandomUser(socket, next);
-			} else {
-				return next(new Error("Authentication Failed"));
-			}
+		let session = cookies[config.session_store_name];
+
+		if (!session) {
+			return handleFailedAuth(socket, next);	
 		}
 
-		User.find(session.user, (error, user) => {
-			if (error) {
-				winston.error(error);
-				return next(new Error("Authentication failed"));
-			}
-			socket._user = user;
-			if (socket._user.bans.gather) return next(new Error("Gather Banned"));
-			winston.info("Logged in:", user.username, user.id);
-			return next();
+		EnslClient.decodeSession(session, function (error, userId) {
+			if (error) return handleFailedAuth(socket, next);
+			User.find(userId, (error, user) => {
+				if (error) {
+					winston.error(error);
+					return next(new Error("Authentication failed"));
+				}
+				socket._user = user;
+				if (socket._user.bans.gather) return next(new Error("Gather Banned"));
+				winston.info("Logged in:", user.username, user.id);
+				return next();
+			});
 		});
 	});
 

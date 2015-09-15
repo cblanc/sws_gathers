@@ -9,14 +9,13 @@ var sessionString = (new Buffer(fs.readFileSync(path.join(__dirname, "helpers/da
 
 describe("ENSL Client", function () {
 	describe (".decodeSession", function () {
-		it ("decodes an ENSL session");
-		// it ("decodes an ENSL session", function (done) {
-		// 	EnslClient.decodeSession(sessionString, function (error, userId) {
-		// 		if (error) return done(error);
-		// 		assert.isNotNull(userId);
-		// 		done();
-		// 	});
-		// });
+		it ("decodes an ENSL session", function (done) {
+			EnslClient.decodeSession(sessionString, function (error, userId) {
+				if (error) return done(error);
+				assert.isNotNull(userId);
+				done();
+			});
+		});
 		it ("returns an error invalid cookie format", function (done) {
 			EnslClient.decodeSession("foo", function (error, userId) {
 				assert.isNull(userId);

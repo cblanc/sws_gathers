@@ -142,18 +142,17 @@ var ProfileModal = React.createClass({
 
 		let division = this.props.user.profile.skill;
 		let skillLevels = ["Low Skill", "Medium Skill", "High Skill"].map(skill => {
-			if (skill === division) {
-				return <option selected="selected" key={skill}>{skill}</option>
-			} else {
-				return <option key={skill}>{skill}</option>
-			}
+			return <option key={skill}>{skill}</option>
 		});
 
 		return (
 			<form>
 			  <div className="form-group">
 			    <label>Player Skill</label><br />
-				  <select className="form-control" ref="playerskill">
+				  <select 
+				  	defaultValue={division}
+				  	className="form-control" 
+				  	ref="playerskill">
 					  {skillLevels}
 					</select>
 					<p><small>Try to give an accurate representation of your skill to raise the quality of your gathers</small></p>

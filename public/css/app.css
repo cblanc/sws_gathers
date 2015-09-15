@@ -2,10 +2,67 @@ html, body {
 	height: 100%;
 }
 
-.headline {
-	padding-bottom: 0.5em;
-	border-bottom: 1px solid #CFCFCF;
-	margin-bottom: 20px;
+#side-menu {
+	margin-top: 1em;
+}
+
+/*Chat*/
+
+#chatroom {
+	margin-top: 1em;
+}
+
+#chatmessage-container {
+	height: 480px;
+}
+
+#chatmessages {
+
+}
+
+.signin {
+	margin: 0px 10px;
+}
+
+.admin-panel {
+	margin: 10px 10px;
+}
+
+/*Splash Page*/
+
+.join-hero {
+	padding: 80px 0px;
+}
+
+.jumbo-auth {
+	margin-top: 30px;
+}
+
+.jumbo-img {
+	max-height: 150px;
+}
+
+.spinner {
+	max-height: 30px !important;
+}
+
+/*Gather Styles*/
+
+.gather-voting {
+	font-size: 90%;
+}
+
+.progress-bar {
+	min-width: 6em;
+}
+
+#gatherers-panel > .panel {
+	margin-bottom: 1px;
+}
+
+#previous_gather {
+	margin-top: 2em;
+	border-top: 1px solid #FAFAFA;
 }
 
 .gather-actions {
@@ -27,21 +84,7 @@ html, body {
 	box-shadow: none;
 }
 
-#side-menu {
-	margin-top: 1em;
-}
-
-#users-list {
-
-}
-
-#chatroom {
-	margin-top: 1em;
-}
-
-.chatbox {
-
-}
+/*Utility Styles*/
 
 .add-left {
 	margin-left: 0.5em;
@@ -49,28 +92,6 @@ html, body {
 
 .add-right {
 	margin-left: 0.5em;
-}
-
-#chatmessages {
-	height: 480px;
-	overflow-y: scroll;
-}
-
-.signin {
-	margin: 0px 10px;
-}
-
-.admin-panel {
-	margin: 10px 10px;
-}
-
-.no-bottom {
-	margin-bottom: 0px !important;
-	padding-bottom: 0px !important;
-}
-
-.join-hero {
-	padding: 80px 0px;
 }
 
 .max-width {
@@ -85,35 +106,17 @@ html, body {
 	margin-bottom: 0.5em;
 }
 
-.jumbo-auth {
-	margin-top: 30px;
+.no-bottom {
+	margin-bottom: 0px !important;
+	padding-bottom: 0px !important;
 }
 
-.jumbo-img {
-	max-height: 150px;
+.headline {
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #CFCFCF;
+	margin-bottom: 20px;
 }
 
-.spinner {
-	max-height: 30px !important;
-}
-
-.gather-voting {
-	font-size: 90%;
-}
-
-.progress-bar {
-	min-width: 6em;
-}
-
-.add-right {
-	margin-right: 2px;
-}
-
-#gatherers-panel > .panel {
-	margin-bottom: 1px;
-}
-
-#previous_gather {
-	margin-top: 2em;
-	border-top: 1px solid #FAFAFA;
-}
+.nano .nano-content { padding: 0px 5px; }
+.nano .nano-pane   { background: #888; }
+.nano .nano-slider { background: #111; }

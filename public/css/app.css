@@ -13,11 +13,12 @@ html, body {
 }
 
 #chatmessage-container {
-	height: 480px;
 }
 
 #chatmessages {
-
+	height: 480px;
+	overflow-y: scroll;
+	padding-right: 20px;
 }
 
 .signin {

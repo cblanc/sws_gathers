@@ -9,6 +9,7 @@ var sessionString = (new Buffer(fs.readFileSync(path.join(__dirname, "helpers/da
 
 describe("ENSL Client", function () {
 	describe (".decodeSession", function () {
+		it ("decodes an ENSL session");
 		// it ("decodes an ENSL session", function (done) {
 		// 	EnslClient.decodeSession(sessionString, function (error, userId) {
 		// 		if (error) return done(error);

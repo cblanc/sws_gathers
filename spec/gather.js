@@ -217,6 +217,51 @@ describe("Gather Model:", function () {
 		});
 	});
 
+	describe("pickingTurn", function () {
+		var marineLeader, alienLeader;
+		beforeEach(function () {
+			gatherers.forEach(function (gatherer, index) {
+				gather.addGatherer(gatherer);
+			});
+			gatherers.forEach(function (gatherer, index) {
+				let candidate = gather.gatherers[index % 2];
+				gather.selectLeader(gatherer, candidate);
+			});
+			marineLeader = gather.marineLeader();
+			alienLeader = gather.alienLeader();
+			assert.isNotNull(marineLeader);
+			assert.isNotNull(alienLeader);
+			assert.equal(gather.current, "selection");
+		});
+		it ("returns null if current state is not selection", function () {
+			gather = Gather();
+			assert.isNull(gather.pickingTurn());
+		});
+		it ("gives first pick to aliens, then 2 for each side after", function () {
+			var gathererCursor = 2; // Picking i=2 gatherer next
+			var assertMarineNextMove = function () {
+				assert.equal(gather.pickingTurn(), "marine");
+				gather.moveToMarine(gather.gatherers[gathererCursor], marineLeader);
+				gathererCursor++;
+			};
+			var assertAlienNextMove = function () {
+				assert.equal(gather.pickingTurn(), "alien");
+				gather.moveToAlien(gather.gatherers[gathererCursor], alienLeader);	
+				gathererCursor++;
+			};
+			assertMarineNextMove();
+			assertAlienNextMove();
+			assertAlienNextMove();
+			assertMarineNextMove();
+			assertMarineNextMove();
+			assertAlienNextMove();
+			assertAlienNextMove();
+			assertMarineNextMove();
+			assertMarineNextMove();
+			assertAlienNextMove();
+		});
+	});
+
 	describe("moveToLobby", function () {
 		it ("moves a player to lobby", function () {
 			gather.addUser(user);

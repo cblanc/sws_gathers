@@ -302,11 +302,6 @@ var GatherActions = React.createClass({
 		socket.emit("gather:select:confirm");
 	},
 
-	inviteToGather(e) {
-		e.preventDefault();
-		alert("Boop!");
-	},
-
 	render() {
 		var joinButton;
 		if (this.props.currentGatherer) {
@@ -351,13 +346,6 @@ var GatherActions = React.createClass({
 			}
 		}
 
-		var inviteButton;
-		if (this.props.gather.state === 'gathering') {
-			inviteButton = (<li><button
-							onClick={this.inviteToGather}
-							className="btn btn-primary">Invite to Gather</button></li>);
-		}
-
 		return (
 			<div className="panel panel-default gather-actions">
 				<div className="panel-body">
@@ -365,7 +353,6 @@ var GatherActions = React.createClass({
 						<ul className="list-inline no-bottom">
 							<TeamSpeakButton />
 							{confirmTeam}
-							{inviteButton}
 							{joinButton}
 						</ul>
 					</div>

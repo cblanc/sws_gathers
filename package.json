@@ -38,7 +38,6 @@
     "gulp-watch": "~4.3.4",
     "javascript-state-machine": "~2.3.5",
     "lodash": "~3.10.0",
-    "marsha": "https://registry.npmjs.org/marsha/-/marsha-0.1.0.tgz",
     "mongoose": "~4.1.1",
     "morgan": "~1.6.1",
     "request": "~2.60.0",

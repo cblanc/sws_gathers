@@ -9,25 +9,24 @@ var SelectPlayerButton = React.createClass({
 	},
 
 	render() {
+		let button;
 		if (this.props.gatherer.leader) {
-			return (<button 
+			button = <button 
 				className="btn btn-xs btn-default"
-				data-disabled="true">Leader</button>);
+				data-disabled="true">Leader</button>;
 		} else if (this.props.gatherer.team !== "lobby") {
-			return (<button
-				onClick={this.selectPlayer}
-				value={this.props.gatherer.id}
-				className="btn btn-xs btn-default"> Reselect
-				</button>
-			);
+			button = <button
+				data-disabled="true"
+				className="btn btn-xs btn-default"> {this.props.gatherer.team}
+				</button>;
 		} else {
-			return (<button
+			button = <button
 				onClick={this.selectPlayer}
 				value={this.props.gatherer.id}
 				className="btn btn-xs btn-primary"> Select
-				</button>
-			);
+				</button>;
 		}
+		return button;
 	}
 });
 
@@ -70,7 +69,7 @@ var GatherTeams = React.createClass({
 	render() {
 		return (
 			<div className="row add-top">
-				<div className="col-md-6">
+				<div className="col-sm-6">
 					<div className="panel panel-default">
 						<div className="panel-heading">
 							Aliens
@@ -78,7 +77,7 @@ var GatherTeams = React.createClass({
 						<GathererList gather={this.props.gather} team="alien" />
 					</div>
 				</div>
-				<div className="col-md-6">
+				<div className="col-sm-6">
 					<div className="panel panel-default">
 						<div className="panel-heading">
 							Marines
@@ -191,7 +190,8 @@ var GatherProgress = React.createClass({
 		return {
 			num: num,
 			den: den,
-			message: num + " out of " + den + " players assigned"
+			message: `${num} out of ${den} players assigned. Waiting 
+				on ${_.capitalize(this.props.gather.pickingTurn)}s to pick next...`
 		};
 	},
 
@@ -578,10 +578,10 @@ var Gather = React.createClass({
 			if (state === 'gathering' || state === 'election') {
 				voting = (
 					<div className="row add-top">
-						<div className="col-md-6">
+						<div className="col-sm-6">
 							<MapVoting {...this.props} />
 						</div>
-						<div className="col-md-6">
+						<div className="col-sm-6">
 							<ServerVoting {...this.props} />
 						</div>
 					</div>
@@ -668,14 +668,18 @@ var Gatherers = React.createClass({
 			}
 
 			if (self.props.gather.state === 'selection') {
-				if (self.props.currentGatherer && self.props.currentGatherer.leader) {
+				if (self.props.currentGatherer && 
+						self.props.currentGatherer.leader &&
+						self.props.currentGatherer.team === self.props.gather.pickingTurn) {
 					action = (
 						<span>
 							<SelectPlayerButton gatherer={gatherer} />
 						</span>
 					);
 				} else {
-					if (gatherer.team !== "lobby") {
+					if (gatherer.leader) {
+						action = (<span className="label label-default">Leader</span>);
+					} else if (gatherer.team !== "lobby") {
 						action = (<span className="label label-primary">{gatherer.team}</span>);
 					}
 				}

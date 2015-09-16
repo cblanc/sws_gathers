@@ -199,6 +199,44 @@ describe("Gather Model:", function () {
 				assert.isTrue(gather.marines().length <= gather.TEAM_SIZE);
 			});
 		});
+		describe("with mover argument", function () {
+			var marineCount, gathererCursor, alienLeader, marineLeader;
+			beforeEach(function () {
+				helper.populateGatherAndVotes(gather, gatherers);
+				alienLeader = gather.gatherers[1];
+				assert.equal(alienLeader.team, "alien");
+				marineLeader = gather.gatherers[0];
+				assert.equal(marineLeader.team, "marine");
+				gathererCursor = 2;
+				marineCount = gather.marines().length;
+			});
+			it ("moves player if mover is captain & is marine & current turn", function () {
+				gather.moveToMarine(gather.gatherers[gathererCursor], marineLeader);
+				assert.equal(gather.marines().length, marineCount + 1);
+				assert.equal(gather.gatherers[gathererCursor].team, "marine");
+			});
+			it ("does not move player if mover is not in team", function () {
+				gather.moveToMarine(gather.gatherers[gathererCursor], alienLeader);
+				assert.equal(gather.marines().length, marineCount);
+				assert.equal(gather.gatherers[gathererCursor].team, "lobby");
+			});
+			it ("does not move player if not captain", function () {
+				gather.moveToMarine(gather.gatherers[gathererCursor], marineLeader);
+				assert.equal(gather.gatherers[gathererCursor].team, "marine");
+				gather.moveToAlien(gather.gatherers[gathererCursor + 1], alienLeader);
+				gather.moveToAlien(gather.gatherers[gathererCursor + 2], alienLeader);
+				assert.equal(gather.marines().length, 2);
+				assert.equal(gather.aliens().length, 3);
+				gather.moveToMarine(gather.gatherers[gathererCursor + 3], 
+						gather.gatherers[gathererCursor]);
+				assert.equal(gather.marines().length, marineCount + 1);
+				assert.equal(gather.gatherers[gathererCursor + 3].team, "lobby");
+			});
+			it ("does not move player if already assigned to team", function () {
+				gather.moveToMarine(alienLeader, marineLeader);
+				assert.equal(gather.gatherers[1].team, "alien");
+			});
+		});
 	});
 
 	describe("moveToAlien", function () {
@@ -215,18 +253,48 @@ describe("Gather Model:", function () {
 				assert.isTrue(gather.aliens().length <= gather.TEAM_SIZE);
 			});
 		});
+		describe("with mover argument", function () {
+			var alienCount, gathererCursor, alienLeader, marineLeader;
+			beforeEach(function () {
+				helper.populateGatherAndVotes(gather, gatherers);
+				gather.moveToMarine(gather.gatherers[2]);
+				alienLeader = gather.gatherers[1];
+				assert.equal(alienLeader.team, "alien");
+				marineLeader = gather.gatherers[0];
+				assert.equal(marineLeader.team, "marine");
+				gathererCursor = 3;
+				alienCount = gather.aliens().length;
+			});
+			it ("moves player if mover is captain & is alien & current turn", function () {
+				gather.moveToAlien(gather.gatherers[gathererCursor], alienLeader);
+				assert.equal(gather.aliens().length, alienCount + 1);
+				assert.equal(gather.gatherers[gathererCursor].team, "alien");
+			});
+			it ("does not move player if mover is not in team", function () {
+				gather.moveToAlien(gather.gatherers[gathererCursor], marineLeader);
+				assert.equal(gather.aliens().length, alienCount);
+				assert.equal(gather.gatherers[gathererCursor].team, "lobby");
+			});
+			it ("does not move player if not captain", function () {
+				gather.moveToAlien(gather.gatherers[gathererCursor], alienLeader);
+				assert.equal(gather.gatherers[gathererCursor].team, "alien");
+				alienCount++;
+				gather.moveToAlien(gather.gatherers[gathererCursor + 1], 
+						gather.gatherers[gathererCursor]);
+				assert.equal(gather.aliens().length, alienCount);
+				assert.equal(gather.gatherers[gathererCursor + 1].team, "lobby");
+			});
+			it ("does not move player if already assigned to team", function () {
+				gather.moveToMarine(alienLeader, marineLeader);
+				assert.equal(gather.gatherers[1].team, "alien");
+			});
+		});
 	});
 
 	describe("pickingTurn", function () {
 		var marineLeader, alienLeader;
 		beforeEach(function () {
-			gatherers.forEach(function (gatherer, index) {
-				gather.addGatherer(gatherer);
-			});
-			gatherers.forEach(function (gatherer, index) {
-				let candidate = gather.gatherers[index % 2];
-				gather.selectLeader(gatherer, candidate);
-			});
+			helper.populateGatherAndVotes(gather, gatherers);
 			marineLeader = gather.marineLeader();
 			alienLeader = gather.alienLeader();
 			assert.isNotNull(marineLeader);

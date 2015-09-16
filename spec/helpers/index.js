@@ -82,4 +82,14 @@ helpers.createMessage = function (options, callback) {
 	}, callback);
 };
 
+helpers.populateGatherAndVotes = function (gather, gatherers) {
+	gatherers.forEach(function (gatherer, index) {
+		gather.addGatherer(gatherer);
+	});
+	gatherers.forEach(function (gatherer, index) {
+		let candidate = gather.gatherers[index % 2];
+		gather.selectLeader(gatherer, candidate);
+	});
+};
+
 module.exports = helpers;

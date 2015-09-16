@@ -351,8 +351,8 @@ var GatherActions = React.createClass({
 				<div className="panel-body">
 					<div className="text-right">
 						<ul className="list-inline no-bottom">
-							<TeamSpeakButton />
-							{confirmTeam}
+							<TeamSpeakButton />&nbsp;
+							{confirmTeam}&nbsp;
 							{joinButton}
 						</ul>
 					</div>

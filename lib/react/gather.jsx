@@ -618,7 +618,11 @@ var Gatherers = React.createClass({
 
 	render() {
 		var self = this;
-		var gatherers = this.props.gather.gatherers.map(gatherer => {
+		var gatherers = this.props.gather.gatherers
+		.sort((a, b) => {
+				return (b.user.hive.skill || 1000) - (a.user.hive.skill || 1000);
+			})
+		.map(gatherer => {
 			if (gatherer.user.country) {
 				var country = (<img src="images/blank.gif" 
 												className={"flag flag-" + gatherer.user.country.toLowerCase()} 

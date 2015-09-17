@@ -73,17 +73,17 @@ var GatherTeams = React.createClass({
 				<div className="col-sm-6">
 					<div className="panel panel-default">
 						<div className="panel-heading">
-							Aliens
+							Marines
 						</div>
-						<GathererList gather={this.props.gather} team="alien" />
+						<GathererList gather={this.props.gather} team="marine" />
 					</div>
 				</div>
 				<div className="col-sm-6">
 					<div className="panel panel-default">
 						<div className="panel-heading">
-							Marines
+							Aliens
 						</div>
-						<GathererList gather={this.props.gather} team="marine" />
+						<GathererList gather={this.props.gather} team="alien" />
 					</div>
 				</div>
 			</div>

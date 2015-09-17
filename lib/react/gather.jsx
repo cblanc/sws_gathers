@@ -54,7 +54,8 @@ var GathererList = React.createClass({
 				</tr>
 			);
 		}
-		var members = this.memberList().map(extractGatherer);
+		var members = this.memberList()
+			.map(extractGatherer);
 		return (
 			<table className="table">
 				<tbody>
@@ -606,6 +607,10 @@ var Gather = React.createClass({
 });
 
 var Gatherers = React.createClass({
+	componentDidMount() {
+		$('[data-toggle="tooltip"]').tooltip()
+	},
+
 	joinGather(e) {
 		e.preventDefault();
 		socket.emit("gather:join");
@@ -672,6 +677,16 @@ var Gatherers = React.createClass({
 				}
 			}
 
+			var lifeformIcons;
+			if (abilities.length) {
+				lifeformIcons = abilities.map(function (ability) {
+					return <img 
+						className="lifeform-icon"
+						alt={ability}
+						src={`/images/${ability.toLowerCase()}.png`} />
+				})
+			}
+
 			return (
 				<div className="panel panel-success gatherer-panel" key={gatherer.user.id} data-userid={gatherer.user.id}>
 					<div className="panel-heading">
@@ -683,6 +698,7 @@ var Gatherers = React.createClass({
 								{country} {gatherer.user.username} <span className="caret"></span>
 							</a>
 							<span className="pull-right">
+								<span className="add-right">{lifeformIcons}</span>
 								{action}
 							</span>
 						</h4>

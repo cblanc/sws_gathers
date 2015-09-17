@@ -49,6 +49,10 @@ html, body {
 
 /*Gather Styles*/
 
+.lifeform-icon {
+	max-height: 25px;
+}
+
 .gather-voting {
 	font-size: 90%;
 }
@@ -92,7 +96,7 @@ html, body {
 }
 
 .add-right {
-	margin-left: 0.5em;
+	margin-right: 0.5em;
 }
 
 .max-width {

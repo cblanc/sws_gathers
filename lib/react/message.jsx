@@ -69,16 +69,13 @@ var Chatroom = React.createClass({
 	}
 });
 
-let timer = setInterval(() => {
-	$(document).trigger("updateMessages");
-}, 60000);
-
 var ChatMessage = React.createClass({
 	componentDidMount() {
-		let self = this;
-		$(document).on("updateMessages", function () {
-			self.forceUpdate();
-		});
+		this.interval = setInterval(this.forceUpdate.bind(this), 1000);
+	},
+
+	componentWillUnmount: function () {
+		clearInterval(this.interval);
 	},
 
 	render() {

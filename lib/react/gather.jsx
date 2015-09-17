@@ -298,14 +298,25 @@ var GatherActions = React.createClass({
 		socket.emit("gather:leave");
 	},
 
-	confirmTeam(e) {
-		e.preventDefault();
-		socket.emit("gather:select:confirm");
+	voteRegather(e) {
+		e.preventDefault(e);
+		socket.emit("gather:vote", {
+			regather: (e.target.value === "true")
+		});
+	},
+
+	regatherVotes() {
+		if (!this.props.gather) return 0;
+		return this.props.gather.gatherers.reduce((acc, gatherer) => {
+			if (gatherer.regatherVote) acc++;
+			return acc;
+		}, 0);
 	},
 
 	render() {
 		var joinButton;
-		if (this.props.currentGatherer) {
+		var currentGatherer = this.props.currentGatherer;
+		if (currentGatherer) {
 			joinButton = (<li><button 
 							onClick={this.leaveGather} 
 							className="btn btn-danger">Leave Gather</button></li>);
@@ -317,33 +328,21 @@ var GatherActions = React.createClass({
 			);
 		}
 
-		var confirmTeam;
-		if (this.props.currentGatherer &&
-				this.props.currentGatherer.leader &&
-				this.props.gather.state === 'selection' &&
-				this.props.gather.gatherers.every(gatherer => gatherer.team !== 'lobby')) {
-			if (this.props.currentGatherer.confirm) {
-				confirmTeam = (
-					<li>
-						<button
-							className="btn btn-default"
-							data-disabled="true"
-							>
-							Confirmed
-						</button>
-					</li>
-				);
+		var regatherButton;
+		if (currentGatherer) {
+			let regatherVotes = this.regatherVotes();
+			if (currentGatherer.regatherVote) {
+				regatherButton = (
+					<li><button 
+						value="false"
+						onClick={this.voteRegather} 
+						className="btn btn-danger">{`Voted Regather (${regatherVotes}/6)`}</button></li>);
 			} else {
-				confirmTeam = (
-					<li>
-					<button
-						className="btn btn-success"
-						onClick={this.confirmTeam}
-						>
-						Confirm Team
-					</button>
-					</li>
-				);
+				regatherButton = (
+					<li><button 
+						value="true"
+						onClick={this.voteRegather} 
+						className="btn btn-danger">{`Vote Regather (${regatherVotes}/6)`}</button></li>);
 			}
 		}
 
@@ -353,7 +352,7 @@ var GatherActions = React.createClass({
 					<div className="text-right">
 						<ul className="list-inline no-bottom">
 							<TeamSpeakButton />&nbsp;
-							{confirmTeam}&nbsp;
+							{regatherButton}&nbsp;
 							{joinButton}
 						</ul>
 					</div>

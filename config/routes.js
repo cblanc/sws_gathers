@@ -3,8 +3,12 @@
 var path = require("path");
 var winston = require("winston");
 var config = require("./config.js");
+var Gather = require("../lib/gather/gather_singleton");
+var cors = require("cors");
 
 module.exports = app => {
+	app.use(cors());
+
 	app.get("/", (request, response, next) => {
 		response.render("index.hbs", {
 			redirect: config.ensl_url,
@@ -16,6 +20,11 @@ module.exports = app => {
 		response.render("redirect.hbs", {
 			redirect: config.ensl_url
 		});
+	});
+
+	app.get("/gathers/current", (request, response) => {
+		let gather = Gather.current;
+		response.status(200).json(gather.toJson());
 	});
 
 	app.get("*", (request, response) => {

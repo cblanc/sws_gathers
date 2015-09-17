@@ -69,16 +69,14 @@ var Chatroom = React.createClass({
 	}
 });
 
-let updateMessageCallbacks = [];
-
 let timer = setInterval(() => {
-	updateMessageCallbacks.forEach(callback => callback())
+	$(document).trigger("updateMessages");
 }, 60000);
 
 var ChatMessage = React.createClass({
 	componentDidMount() {
 		let self = this;
-		updateMessageCallbacks.push(() => {
+		$(document).on("updateMessages", function () {
 			self.forceUpdate();
 		});
 	},
@@ -86,7 +84,7 @@ var ChatMessage = React.createClass({
 	render() {
 		let deleteButton;
 		let currentUser = this.props.currentUser;
-		if (this.props.currentUser && this.props.currentUser.admin) {
+		if (currentUser && currentUser.admin) {
 			deleteButton = <DeleteMessageButton messageId={this.props.message._id} />;
 		}
 		return (
@@ -101,10 +99,13 @@ var ChatMessage = React.createClass({
 				</span>
 				<div className="chat-body clearfix">
 					<div className="header">
-						<strong className="primary-font">{this.props.message.author.username}</strong>
+						<strong className="primary-font">
+							{this.props.message.author.username}
+							</strong>
 						<small className="pull-right text-muted">
 							{deleteButton}
-							<i className="fa fa-clock-o fa-fw"></i> {$.timeago(this.props.message.createdAt)}
+							<i className="fa fa-clock-o fa-fw"></i> 
+							{$.timeago(this.props.message.createdAt)}
 						</small>
 					</div>
 					<p>{this.props.message.content}</p>

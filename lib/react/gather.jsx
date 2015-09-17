@@ -715,14 +715,15 @@ var Gatherers = React.createClass({
 				<div className="panel panel-success gatherer-panel" key={gatherer.user.id} data-userid={gatherer.user.id}>
 					<div className="panel-heading">
 						<h4 className="panel-title">
-							<a data-toggle="collapse"
-								href={"#"+gatherer.user.id.toString() + "-collapse"} 
-								aria-expanded="false" 
-								aria-controls={gatherer.user.id.toString() + "-collapse"}>
-								{country} {gatherer.user.username} <span className="caret"></span>
-							</a>
+							{country} {gatherer.user.username}
 							<span className="pull-right">
 								<span className="add-right">{lifeformIcons}</span>
+								<a data-toggle="collapse"
+									href={"#"+gatherer.user.id.toString() + "-collapse"} 
+									aria-expanded="false" 
+									className="btn btn-xs btn-primary"
+									aria-controls={gatherer.user.id.toString() + "-collapse"}>
+									Info <span className="caret"></span></a>
 								{action}
 							</span>
 						</h4>

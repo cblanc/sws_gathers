@@ -121,6 +121,7 @@ html, body {
 	margin-bottom: 20px;
 }
 
-.nano .nano-content { padding: 0px 5px; }
-.nano .nano-pane   { background: #888; }
-.nano .nano-slider { background: #111; }
+.pointer {
+	cursor: pointer;
+}
+

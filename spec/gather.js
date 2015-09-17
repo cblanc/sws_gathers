@@ -42,7 +42,20 @@ describe("Gather Model:", function () {
 				});
 			});
 		});
-
+		it ("removes all gatherers when regathererd", function () {
+			gatherers.forEach((user, index) => {
+				if (index < 11) gather.addGatherer(user);
+			});
+			for (let i = 0; i < gather.REGATHER_THRESHOLD - 1; i++) {
+				gather.regather(gather.gatherers[i]);
+				assert.equal(gather.regatherVotes(), i + 1);
+				assert.equal(gather.current, 'gathering');
+			}
+			gather.regather(gatherers[gather.REGATHER_THRESHOLD]);
+			assert.equal(gather.gatherers.length, 0);
+			assert.equal(gather.regatherVotes(), 0);
+			assert.equal(gather.current, 'gathering');
+		});
 		describe("Election Timeout", function () {
 			it ("starts a timer and transitions to next state when timer runs out", function (done) {
 				gather = new Gather({
@@ -108,6 +121,17 @@ describe("Gather Model:", function () {
 					assert.isTrue(gather.marineLeader().id === candidateA.id 
 													|| gather.marineLeader().id === candidateB.id);
 				});
+				it ("transitions to gathering and removes all gatherers on regather", function () {
+					for (let i = 0; i < gather.REGATHER_THRESHOLD - 1; i++) {
+						gather.regather(gather.gatherers[i]);
+						assert.equal(gather.regatherVotes(), i + 1);
+						assert.equal(gather.current, 'election');
+					}
+					gather.regather(gather.gatherers[gather.REGATHER_THRESHOLD]);
+					assert.equal(gather.gatherers.length, 0);
+					assert.equal(gather.regatherVotes(), 0);
+					assert.equal(gather.current, 'gathering');
+				});
 				it ("returns to 'gathering' state if player leaves", function () {
 					assert.equal(gather.current, 'election');
 					var voter = gather.gatherers[helper.random(12)];
@@ -158,6 +182,17 @@ describe("Gather Model:", function () {
 				assert.equal(gather.current, "selection");
 				gather.removeGatherer(leaver);
 				assert.equal(gather.current, "gathering");
+			});
+			it ("transitions to gathering and removes all gatherers on regather", function () {
+				for (let i = 0; i < gather.REGATHER_THRESHOLD - 1; i++) {
+					gather.regather(gather.gatherers[i]);
+					assert.equal(gather.regatherVotes(), i + 1);
+					assert.equal(gather.current, 'selection');
+				}
+				gather.regather(gather.gatherers[gather.REGATHER_THRESHOLD]);
+				assert.equal(gather.gatherers.length, 0);
+				assert.equal(gather.regatherVotes(), 0);
+				assert.equal(gather.current, 'gathering');
 			});
 		});
 	});
@@ -515,6 +550,17 @@ describe("Gather Model:", function () {
 			gather.voteForServer(user, serverId);
 			var gatherer = gather.getGatherer(user);
 			assert.equal(gatherer.serverVote, serverId);
+		});
+	});
+
+	describe("regatherVotes", function () {
+		beforeEach(function() {
+			gather.addGatherer(user);
+		});
+		it ("counts the number of regather votes", function () {
+			assert.equal(gather.regatherVotes(), 0);
+			gather.gatherers[0].regatherVote = true;
+			assert.equal(gather.regatherVotes(), 1);
 		});
 	});
 });

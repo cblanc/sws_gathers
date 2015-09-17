@@ -549,6 +549,7 @@ var Gather = React.createClass({
 
 	componentDidMount() {
 		var self = this;
+		socket.on("users:update", data => self.setProps({user: data.currentUser}));
 		socket.on("gather:refresh", (data) => {
 			self.checkForStateChange(data);
 			self.setProps(data)
@@ -607,17 +608,22 @@ var Gather = React.createClass({
 });
 
 var Gatherers = React.createClass({
-	componentDidMount() {
-		$('[data-toggle="tooltip"]').tooltip()
-	},
-
 	joinGather(e) {
 		e.preventDefault();
 		socket.emit("gather:join");
 	},
 
+	bootGatherer(e) {
+		e.preventDefault();
+		socket.emit("gather:leave", {
+			gatherer: parseInt(e.target.value, 10) || null
+		});
+	},
+
 	render() {
 		var self = this;
+		var user = this.props.user;
+		var admin = (user && user.admin);
 		var gatherers = this.props.gather.gatherers
 		.sort((a, b) => {
 				return (b.user.hive.skill || 1000) - (a.user.hive.skill || 1000);
@@ -691,6 +697,21 @@ var Gatherers = React.createClass({
 				})
 			}
 
+			var adminOptions;
+			if (admin) {
+				adminOptions = [
+					<dt>Admin</dt>,
+					<dd>
+						<button
+							className="btn btn-xs btn-danger"
+							value={gatherer.user.id}
+							onClick={this.bootGatherer}>
+							Boot from Gather
+						</button>
+					</dd>
+				]
+			}
+
 			return (
 				<div className="panel panel-success gatherer-panel" key={gatherer.user.id} data-userid={gatherer.user.id}>
 					<div className="panel-heading">
@@ -719,6 +740,7 @@ var Gatherers = React.createClass({
 								<dd>{team}</dd>
 								<dt>Hive Stats</dt>
 								<dd>{hive}</dd>
+								{adminOptions}
 							</dl>
 						</div>
 					</div>

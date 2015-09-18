@@ -15,7 +15,8 @@ var profileSchema = new Schema({
 	},
 	enslo: { type: Number, default: null },
 	division: { type: String, default: null },
-	skill: { type: String, default: null }
+	skill: { type: String, default: null },
+	gatherMusic: { type: String, default: null }
 });
 
 profileSchema.path('userId').index({ unique: true });

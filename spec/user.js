@@ -68,13 +68,15 @@ describe("User", () => {
 			var attrs = {
 				enslo: 88,
 				division: "Foo",
-				skill: "Bar"
+				skill: "Bar",
+				gatherMusic: "Baz"
 			};
 			user.updateProfile(attrs, (error, profile) => {
 				if (error) return done(error);
 				assert.equal(profile.enslo, attrs.enslo);
 				assert.equal(profile.division, attrs.division);
-				assert.equal(profile.foo, attrs.foo);
+				assert.equal(profile.skill, attrs.skill);
+				assert.equal(profile.gatherMusic, attrs.gatherMusic);
 				done();
 			});
 		});

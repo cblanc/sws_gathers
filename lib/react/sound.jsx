@@ -38,6 +38,14 @@ class SoundController {
 		return Howler.unmute();
 	}
 
+	play(music) {
+		if (this.gather && this.gather.music) return this.gather.music.play();
+	}
+
+	stop(music) {
+		if (this.gather && this.gather.music) return this.gather.music.stop();
+	}
+
 	setupGatherMusic (musicName) {
 		let self = this;
 		let gatherMusic = this.tunes[musicName];
@@ -54,6 +62,7 @@ class SoundController {
 		self.gather = {
 			name: musicName,
 			description: tune.description,
+			url: tune.url,
 			music: new Howl({
 				urls: [tune.url]
 			}),

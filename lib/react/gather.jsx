@@ -717,7 +717,7 @@ var Gatherers = React.createClass({
 						<h4 className="panel-title">
 							{country} {gatherer.user.username}
 							<span className="pull-right">
-								<span className="add-right">{lifeformIcons}</span>
+								<span className="add-right hidden-xs">{lifeformIcons}</span>
 								<a data-toggle="collapse"
 									href={"#"+gatherer.user.id.toString() + "-collapse"} 
 									aria-expanded="false" 

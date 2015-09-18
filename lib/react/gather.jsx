@@ -721,7 +721,7 @@ var Gatherers = React.createClass({
 								<a data-toggle="collapse"
 									href={"#"+gatherer.user.id.toString() + "-collapse"} 
 									aria-expanded="false" 
-									className="btn btn-xs btn-primary"
+									className="btn btn-xs btn-primary add-right"
 									aria-controls={gatherer.user.id.toString() + "-collapse"}>
 									Info <span className="caret"></span></a>
 								{action}

@@ -5,15 +5,20 @@ class SoundController {
 		if (Howl === undefined) {
 			throw new Error("Howl.js required to created sound controller");
 		}
-		this.gather = {
-			music: new Howl({
-				urls: ['http://www.ensl.org/sounds/gather-1.mp3']
-			}),
-			playable: true
-		};
 		this.minPlayInterval = 300000; // 5 minutes
 		this.isMuted = Howler._muted;
 		this.volume = Howler._volume;
+		this.tunes = {
+			"classic": {
+				description: "Classic",
+				url: 'http://www.ensl.org/sounds/gather-1.mp3'
+			},
+			"eyeofthegorgie": {
+				description: "Eye of the Gorgie",
+				url: 'http://www.ensl.org/files/audio/eyeofthegorgie.mp3'
+			}
+		}
+		this.setupGatherMusic("classic");
 	}
 
 	volume(val) {
@@ -33,14 +38,40 @@ class SoundController {
 		return Howler.unmute();
 	}
 
-	playGatherMusic () {
+	setupGatherMusic (musicName) {
+		let self = this;
+		let gatherMusic = this.tunes[musicName];
+
+		if (!gatherMusic) return;
+		if (self.gather && self.gather.name === musicName) return;
+
+		// Stop if already playing
+		if (self.gather && self.gather.music) {
+			self.gather.music.stop();
+		}
+
+		let tune = self.tunes[musicName];
+		self.gather = {
+			name: musicName,
+			description: tune.description,
+			music: new Howl({
+				urls: [tune.url]
+			}),
+			playable: true
+		};
+	}
+
+	playGatherMusic (options) {
 		var self = this;
+		options = options || {};
 		if (!self.gather.playable) return;
 		self.gather.music.play();
 		self.gather.playable = false;
-		setTimeout(function () {
-			self.gather.playable = true;
-		}, self.minPlayInterval);
+		if (options.throttle === false) {
+			setTimeout(function () {
+				self.gather.playable = true;
+			}, self.minPlayInterval);
+		}
 	}
 }
 

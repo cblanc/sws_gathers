@@ -1,0 +1,126 @@
+html, body {
+  height: 100%;
+}
+
+#side-menu {
+  margin-top: 1em;
+}
+
+/*Chat*/
+
+#chatroom {
+  margin-top: 1em;
+}
+
+#chatmessage-container {
+}
+
+#chatmessages {
+  height: 480px;
+  overflow-y: scroll;
+  padding-right: 20px;
+}
+
+.signin {
+  margin: 0px 10px;
+}
+
+.admin-panel {
+  margin: 10px 10px;
+}
+
+/*Splash Page*/
+
+.join-hero {
+  padding: 80px 0px;
+}
+
+.jumbo-auth {
+  margin-top: 30px;
+}
+
+.jumbo-img {
+  max-height: 150px;
+}
+
+.spinner {
+  max-height: 30px !important;
+}
+
+/*Gather Styles*/
+
+.lifeform-icon {
+  max-height: 25px;
+}
+
+.gather-voting {
+  font-size: 90%;
+}
+
+.progress-bar {
+  min-width: 6em;
+}
+
+#gatherers-panel > .panel {
+  margin-bottom: 1px;
+}
+
+#previous_gather {
+  margin-top: 2em;
+  border-top: 1px solid #FAFAFA;
+}
+
+.gather-actions {
+  margin-top: 0.5em;
+}
+
+#gathers {
+  margin-top: 1em;
+  border-left: 1px solid #FAFAFA;
+}
+
+.gatherer {
+  margin-bottom: 5px;
+  padding: 0px;
+}
+
+.gatherer-panel {
+  box-shadow: none;
+}
+
+/*Utility Styles*/
+
+.add-left {
+  margin-left: 0.5em;
+}
+
+.add-right {
+  margin-right: 0.5em;
+}
+
+.max-width {
+  width: 100%;
+}
+
+.add-top {
+  margin-top: 0.5em;
+}
+
+.add-bottom {
+  margin-bottom: 0.5em;
+}
+
+.no-bottom {
+  margin-bottom: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.headline {
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #CFCFCF;
+  margin-bottom: 20px;
+}
+
+.pointer {
+  cursor: pointer;
+}

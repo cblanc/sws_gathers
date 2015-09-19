@@ -2,3 +2,4 @@ node_modules
 npm-debug.log
 .module-cache/
 public/js/app.js
+.sass-cache

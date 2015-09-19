@@ -336,13 +336,13 @@ var GatherActions = React.createClass({
 					<li><button 
 						value="false"
 						onClick={this.voteRegather} 
-						className="btn btn-danger">{`Voted Regather (${regatherVotes}/6)`}</button></li>);
+						className="btn btn-danger">{`Voted Regather (${regatherVotes}/8)`}</button></li>);
 			} else {
 				regatherButton = (
 					<li><button 
 						value="true"
 						onClick={this.voteRegather} 
-						className="btn btn-danger">{`Vote Regather (${regatherVotes}/6)`}</button></li>);
+						className="btn btn-danger">{`Vote Regather (${regatherVotes}/8)`}</button></li>);
 			}
 		}
 

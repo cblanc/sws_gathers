@@ -140,17 +140,17 @@ var ProfileModal = React.createClass({
 			);
 		}
 
-		let division = this.props.user.profile.skill;
-		let skillLevels = ["Low Skill", "Medium Skill", "High Skill"].map(skill => {
-			return <option key={skill}>{skill}</option>
-		});
+		let skillLevel = this.props.user.profile.skill;
+		let skillLevels = ["Low Skill", "Medium Skill", "High Skill", skillLevel]
+			.filter(skill => { return typeof skill === 'string' })
+			.map(skill => { return <option key={skill}>{skill}</option>});
 
 		return (
 			<form>
 			  <div className="form-group">
 			    <label>Player Skill</label><br />
 				  <select 
-				  	defaultValue={division}
+				  	defaultValue={skillLevel}
 				  	className="form-control" 
 				  	ref="playerskill">
 					  {skillLevels}

@@ -70,12 +70,23 @@ var Chatroom = React.createClass({
 });
 
 var ChatMessage = React.createClass({
+	mixins: [
+    ReactAutolink
+  ],
+
 	componentDidMount() {
 		this.interval = setInterval(this.forceUpdate.bind(this), 1000);
 	},
 
 	componentWillUnmount: function () {
 		clearInterval(this.interval);
+	},
+
+	messageContent: function () {
+		return this.autolink(this.props.message.content, { 
+			target: "_blank", 
+			rel: "nofollow" 
+		});
 	},
 
 	render() {
@@ -105,7 +116,7 @@ var ChatMessage = React.createClass({
 							{$.timeago(this.props.message.createdAt)}
 						</small>
 					</div>
-					<p>{this.props.message.content}</p>
+					<p>{this.messageContent()}</p>
 				</div>
 			</li>
 		);

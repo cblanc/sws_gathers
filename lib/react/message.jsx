@@ -12,13 +12,20 @@ var Chatroom = React.createClass({
 
 		socket.on("message:append", data => {
 			let history = self.props.history;
-			history.push(data);
+			let historicalUpdate = !!data.messages;
+			if (historicalUpdate) {
+				history = history.concat(data.messages);
+			} else {
+				history.push(data);
+			}
 			self.setProps({
 				history: history.sort((a, b) => {
 					return new Date(a.createdAt) - new Date(b.createdAt);
 				})
 			});
-			self.scrollToBottom();
+			if (!historicalUpdate) {
+				self.scrollToBottom();
+			}
 		});
 
 		// Message History Retrieved
@@ -39,8 +46,10 @@ var Chatroom = React.createClass({
 	},
 
 	loadMoreMessages() {
+		var earliestMessage = this.props.history[0];
+		if (earliestMessage === undefined) return;
 		socket.emit("message:refresh", {
-			// before: 
+			before: earliestMessage.createdAt
 		});
 	},
 
@@ -66,6 +75,7 @@ var Chatroom = React.createClass({
 					<ul className="chat" id="chatmessages" ref="messageContainer">
 						<li className="text-center">
 							<a href="#"
+								onClick={this.loadMoreMessages}
 								className="btn btn-primary btn-xs">
 								Load more messages
 							</a>

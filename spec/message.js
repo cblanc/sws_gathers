@@ -64,6 +64,7 @@ describe("Message Model", function () {
 				done();
 			});
 		});
+		it ("retrieves messages before a date if specified");
 		it ("does not list deleted messages", function (done) {
 			helper.createMessage({
 				content: "FOOBAR"

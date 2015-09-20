@@ -28,8 +28,17 @@ messageSchema.methods.toJson = () => {
 };
 
 messageSchema.statics.list = (options, callback) => {
-	return this.find({deleted: false})
-		.sort({createdAt: -1})
+	let query = this.find({deleted: false})
+
+	if (options.before) {
+		query.where({
+			createdAt: {
+				$lt: new Date(options.before)
+			}
+		});
+	}
+
+	return query.sort({createdAt: -1})
 		.limit(30)
 		.exec((error, messages) => {
 			if (error) return callback(error);

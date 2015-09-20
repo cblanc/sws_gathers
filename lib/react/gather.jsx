@@ -798,11 +798,16 @@ var Gatherers = React.createClass({
 });
 
 var CompletedGather = React.createClass({
+	completionDate() {
+		let d = new Date(this.props.gather.done.time);
+		return d.toLocaleTimeString();
+	},
+
 	render() {
 		return (
 			<div id="previous_gather">
 				<div className="panel panel-default add-bottom">
-					<div className="panel-heading">Previous Gather</div>
+					<div className="panel-heading">Previous Gather ({this.completionDate()})</div>
 				</div>
 				<GatherTeams gather={this.props.gather} />
 				<GatherVotingResults gather={this.props.gather} maps={this.props.maps} servers={this.props.servers}/>

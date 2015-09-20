@@ -38,6 +38,12 @@ var Chatroom = React.createClass({
 		socket.emit("message:refresh", {});
 	},
 
+	loadMoreMessages() {
+		socket.emit("message:refresh", {
+			// before: 
+		});
+	},
+
 	sendMessage(message) {
 		socket.emit("newMessage", {message: message});
 	},
@@ -58,6 +64,12 @@ var Chatroom = React.createClass({
 				<div className="panel-heading">Gather Chat</div>
 				<div className="panel-body">
 					<ul className="chat" id="chatmessages" ref="messageContainer">
+						<li className="text-center">
+							<a href="#"
+								className="btn btn-primary btn-xs">
+								Load more messages
+							</a>
+						</li>
 						{messages}
 					</ul>
 				</div>
@@ -132,7 +144,7 @@ var ChatMessage = React.createClass({
 							{this.state.createdAt}
 						</small>
 					</div>
-					<p>{this.messageContent()}</p>
+					<p className="wordwrap">{this.messageContent()}</p>
 				</div>
 			</li>
 		);

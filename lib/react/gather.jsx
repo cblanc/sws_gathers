@@ -662,7 +662,7 @@ var Gatherers = React.createClass({
 				}, 0)
 				action = (
 					<span>
-						<small>{votes + " votes"} &nbsp;</small>
+						<span className="badge add-right">{votes + " votes"}</span>
 						<VoteButton currentGatherer={self.props.currentGatherer} candidate={gatherer} />
 					</span>
 				);
@@ -712,7 +712,7 @@ var Gatherers = React.createClass({
 			}
 
 			return (
-				<div className="panel panel-success gatherer-panel" key={gatherer.user.id} data-userid={gatherer.user.id}>
+				<div className="panel panel-info gatherer-panel" key={gatherer.user.id} data-userid={gatherer.user.id}>
 					<div className="panel-heading">
 						<h4 className="panel-title">
 							{country} {gatherer.user.username}

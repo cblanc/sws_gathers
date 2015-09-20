@@ -389,14 +389,14 @@ var VoteButton = React.createClass({
 			return (
 				<button 
 					onClick={this.cancelVote} 
-					className="btn btn-xs btn-success">Voted
+					className="btn btn-xs btn-success vote-button">Voted
 				</button>
 			);
 		} else {
 			return (
 				<button 
 					onClick={this.vote} 
-					className="btn btn-xs btn-primary"
+					className="btn btn-xs btn-primary vote-button"
 					value={this.props.candidate.id}>Vote
 				</button>
 			);
@@ -671,27 +671,28 @@ var Gatherers = React.createClass({
 												alt={gatherer.user.country} />);
 			};
 
-			var skill = gatherer.user.profile.skill || "Not Available";
+			let skill = gatherer.user.profile.skill || "Not Available";
 
-			var abilities = [];
-			for (let attr in gatherer.user.profile.abilities) {
-				if (gatherer.user.profile.abilities[attr]) abilities.push(_.capitalize(attr));
+			let lifeform;
+			let abilities = gatherer.user.profile.abilities;
+			if (abilities.length) {
+				lifeform = abilities.map(ability => {return _.capitalize(ability)}).join(", ");
+			} else {
+				lifeform = "None Specified";
 			}
 
-			var lifeform = (abilities.length) ? abilities.join(", ") : "None Specified";
-
-			var hiveStats = [];
+			let hiveStats = [];
 			if (gatherer.user.hive.skill) hiveStats.push(`${gatherer.user.hive.skill} ELO`);
 
 			if (gatherer.user.hive.playTime) {
 				hiveStats.push(`${Math.floor(gatherer.user.hive.playTime / 3600)} Hours`);
 			}
 
-			var hive = (hiveStats.length) ? hiveStats.join(", ") : "Not Available";
+			let hive = (hiveStats.length) ? hiveStats.join(", ") : "Not Available";
 			
-			var team = (gatherer.user.team) ? gatherer.user.team.name : "None";
+			let team = (gatherer.user.team) ? gatherer.user.team.name : "None";
 
-			var action;
+			let action;
 			if (self.props.gather.state === "election") {
 				var votes = self.props.gather.gatherers.reduce((acc, voter) => {
 					if (voter.leaderVote === gatherer.id) acc++;
@@ -718,7 +719,7 @@ var Gatherers = React.createClass({
 					if (gatherer.leader) {
 						action = (<span className="label label-default">Leader</span>);
 					} else if (gatherer.team !== "lobby") {
-						action = (<span className="label label-primary">{gatherer.team}</span>);
+						action = (<span className="label label-primary">{_.capitalize(gatherer.team)}</span>);
 					}
 				}
 			}

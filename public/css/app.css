@@ -127,3 +127,7 @@ html, body {
 .panel-light-background {
 	background-color: #d9edf7;
 }
+
+.vote-button {
+	min-width: 60px;
+}

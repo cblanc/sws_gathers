@@ -673,14 +673,6 @@ var Gatherers = React.createClass({
 
 			let skill = gatherer.user.profile.skill || "Not Available";
 
-			let lifeform;
-			let abilities = gatherer.user.profile.abilities;
-			if (abilities.length) {
-				lifeform = abilities.map(ability => {return _.capitalize(ability)}).join(", ");
-			} else {
-				lifeform = "None Specified";
-			}
-
 			let hiveStats = [];
 			if (gatherer.user.hive.skill) hiveStats.push(`${gatherer.user.hive.skill} ELO`);
 
@@ -762,8 +754,6 @@ var Gatherers = React.createClass({
 						className="panel-collapse collapse out" >
 						<div className="panel-body">
 							<dl className="dl-horizontal">
-								<dt>Lifeforms</dt>
-								<dd>{lifeform}</dd>
 								<dt>Skill Level</dt>
 								<dd>{skill}</dd>
 								<dt>Team</dt>

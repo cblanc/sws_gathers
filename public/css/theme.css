@@ -221,7 +221,6 @@ table.dataTable thead .sorting:after {
     content: "\f0dc";
     float: right;
     font-family: fontawesome;
-    /*color: rgba(50,50,50,.5);*/
 }
 
 .btn-circle {
@@ -256,7 +255,6 @@ table.dataTable thead .sorting:after {
     padding-top: 10px;
     padding-bottom: 10px;
     border: 1px solid #ddd;
-    /*background-color: #eee!important;*/
 }
 
 .show-grid {

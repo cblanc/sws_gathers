@@ -12,7 +12,8 @@ module.exports = app => {
 	app.get("/", (request, response, next) => {
 		response.render("index.hbs", {
 			redirect: config.ensl_url,
-			bot_url: config.steam_bot_link
+			bot_url: config.steam_bot_link,
+			rules_url: config.ensl_rules_url
 		});
 	});
 

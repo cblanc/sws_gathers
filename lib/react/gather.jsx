@@ -12,18 +12,18 @@ var SelectPlayerButton = React.createClass({
 		let button;
 		if (this.props.gatherer.leader) {
 			button = <button 
-				className="btn btn-xs btn-default"
+				className="btn btn-xs btn-default team-label"
 				data-disabled="true">Leader</button>;
 		} else if (this.props.gatherer.team !== "lobby") {
 			button = <button
 				data-disabled="true"
-				className="btn btn-xs btn-default"> {this.props.gatherer.team}
+				className="btn btn-xs btn-default team-label"> {_.capitalize(this.props.gatherer.team)}
 				</button>;
 		} else {
 			button = <button
 				onClick={this.selectPlayer}
 				value={this.props.gatherer.id}
-				className="btn btn-xs btn-primary"> Select
+				className="btn btn-xs btn-primary team-label"> Select
 				</button>;
 		}
 		return button;
@@ -717,9 +717,11 @@ var Gatherers = React.createClass({
 					);
 				} else {
 					if (gatherer.leader) {
-						action = (<span className="label label-default">Leader</span>);
+						action = (<span className="label label-primary team-label">Leader</span>);
 					} else if (gatherer.team !== "lobby") {
-						action = (<span className="label label-primary">{_.capitalize(gatherer.team)}</span>);
+						action = (<span className="label label-primary team-label">{_.capitalize(gatherer.team)}</span>);
+					} else {
+						action = (<span className="label label-default team-label">Lobby</span>);
 					}
 				}
 			}

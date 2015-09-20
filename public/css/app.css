@@ -49,6 +49,16 @@ html, body {
 
 /*Gather Styles*/
 
+.vote-button {
+	min-width: 60px;
+}
+
+.team-label {
+	min-width: 70px;
+	display: inline-block;
+	padding: 5px;
+}
+
 .lifeform-icon {
 	width: 20px;
 	margin: 0 3px;
@@ -126,8 +136,4 @@ html, body {
 
 .panel-light-background {
 	background-color: #d9edf7;
-}
-
-.vote-button {
-	min-width: 60px;
 }

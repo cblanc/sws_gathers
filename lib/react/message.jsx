@@ -74,8 +74,24 @@ var ChatMessage = React.createClass({
     ReactAutolink
   ],
 
+  getInitialState() {
+  	return {
+  		createdAt: ""
+  	}
+  },
+
+  updateCreatedAt() {
+  	let self = this;
+  	if (this.props.message.createdAt) {
+  		self.setState({
+  			createdAt: $.timeago(self.props.message.createdAt)
+  		})
+  	}
+  },
+
 	componentDidMount() {
-		this.interval = setInterval(this.forceUpdate.bind(this), 1000);
+		this.updateCreatedAt();
+		this.interval = setInterval(this.updateCreatedAt.bind(this), 60000);
 	},
 
 	componentWillUnmount: function () {
@@ -113,7 +129,7 @@ var ChatMessage = React.createClass({
 						<small className="pull-right text-muted">
 							{deleteButton}
 							<i className="fa fa-clock-o fa-fw"></i> 
-							{$.timeago(this.props.message.createdAt)}
+							{this.state.createdAt}
 						</small>
 					</div>
 					<p>{this.messageContent()}</p>

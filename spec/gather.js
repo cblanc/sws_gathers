@@ -239,9 +239,9 @@ describe("Gather Model:", function () {
 			var marineCount, gathererCursor, alienLeader, marineLeader;
 			beforeEach(function () {
 				helper.populateGatherAndVotes(gather, gatherers);
-				alienLeader = gather.gatherers[1];
+				alienLeader = gather.gatherers[0];
 				assert.equal(alienLeader.team, "alien");
-				marineLeader = gather.gatherers[0];
+				marineLeader = gather.gatherers[1];
 				assert.equal(marineLeader.team, "marine");
 				gathererCursor = 2;
 				marineCount = gather.marines().length;
@@ -270,7 +270,7 @@ describe("Gather Model:", function () {
 			});
 			it ("does not move player if already assigned to team", function () {
 				gather.moveToMarine(alienLeader, marineLeader);
-				assert.equal(gather.gatherers[1].team, "alien");
+				assert.equal(gather.gatherers[0].team, "alien");
 			});
 		});
 	});
@@ -294,9 +294,9 @@ describe("Gather Model:", function () {
 			beforeEach(function () {
 				helper.populateGatherAndVotes(gather, gatherers);
 				gather.moveToMarine(gather.gatherers[2]);
-				alienLeader = gather.gatherers[1];
+				alienLeader = gather.gatherers[0];
 				assert.equal(alienLeader.team, "alien");
-				marineLeader = gather.gatherers[0];
+				marineLeader = gather.gatherers[1];
 				assert.equal(marineLeader.team, "marine");
 				gathererCursor = 3;
 				alienCount = gather.aliens().length;
@@ -322,7 +322,7 @@ describe("Gather Model:", function () {
 			});
 			it ("does not move player if already assigned to team", function () {
 				gather.moveToMarine(alienLeader, marineLeader);
-				assert.equal(gather.gatherers[1].team, "alien");
+				assert.equal(gather.gatherers[0].team, "alien");
 			});
 		});
 	});

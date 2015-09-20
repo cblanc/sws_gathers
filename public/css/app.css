@@ -50,7 +50,7 @@ html, body {
 /*Gather Styles*/
 
 .lifeform-icon {
-	max-height: 25px;
+	max-height: 20px;
 }
 
 .gather-voting {
@@ -67,7 +67,6 @@ html, body {
 
 #previous_gather {
 	margin-top: 2em;
-	border-top: 1px solid #FAFAFA;
 }
 
 .gather-actions {
@@ -76,7 +75,6 @@ html, body {
 
 #gathers {
 	margin-top: 1em;
-	border-left: 1px solid #FAFAFA;
 }
 
 .gatherer {

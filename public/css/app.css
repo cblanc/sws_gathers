@@ -50,7 +50,8 @@ html, body {
 /*Gather Styles*/
 
 .lifeform-icon {
-	max-height: 20px;
+	width: 20px;
+	margin: 0 3px;
 }
 
 .gather-voting {
@@ -123,3 +124,6 @@ html, body {
 	cursor: pointer;
 }
 
+.panel-light-background {
+	background-color: #d9edf7;
+}

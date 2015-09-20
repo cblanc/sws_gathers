@@ -34,23 +34,24 @@ var GathererList = React.createClass({
 	memberList() {
 		var self = this;
 		return this.props.gather.gatherers
-			.filter(gatherer => gatherer.team === self.props.team )
-			.sort(gatherer => gatherer.leader ? 1 : -1);
+			.filter(gatherer => gatherer.team === self.props.team)
+			.sort(gatherer => { return gatherer.leader ? 1 : -1 });
 	},
 
 	render() {
 		var extractGatherer = gatherer => {
-			var image;
+			let image;
 			if (gatherer.leader) {
-				image = (<img src="/images/commander.png" 
-					alt="Commander" 
-					height="20"
-					width="20" />);
+				image = <i className="fa fa-star add-right"></i>;
 			}
 			return (
 				<tr key={gatherer.id}>
-					<td className="col-md-1">{image}</td>
-					<td className="col-md-11">{gatherer.user.username}</td>
+					<td className="col-md-12">
+						{image}{gatherer.user.username}
+						<span className="pull-right">
+							<LifeformIcons gatherer={gatherer} />
+						</span>
+					</td>
 				</tr>
 			);
 		}
@@ -71,7 +72,7 @@ var GatherTeams = React.createClass({
 		return (
 			<div className="row add-top">
 				<div className="col-sm-6">
-					<div className="panel panel-default">
+					<div className="panel panel-primary panel-light-background">
 						<div className="panel-heading">
 							Marines
 						</div>
@@ -79,7 +80,7 @@ var GatherTeams = React.createClass({
 					</div>
 				</div>
 				<div className="col-sm-6">
-					<div className="panel panel-default">
+					<div className="panel panel-primary panel-light-background">
 						<div className="panel-heading">
 							Aliens
 						</div>
@@ -606,6 +607,42 @@ var Gather = React.createClass({
 	}
 });
 
+var LifeformIcons = React.createClass({
+	availableLifeforms() {
+		return ["skulk", "gorge", "lerk", "fade", "onos", "commander"];
+	},
+
+	gathererLifeforms() {
+		let lifeforms = [];
+		let gatherer = this.props.gatherer;
+		for (let attr in gatherer.user.profile.abilities) {
+			if (gatherer.user.profile.abilities[attr]) lifeforms.push(_.capitalize(attr));
+		}
+		return lifeforms;
+	},
+
+	render() {
+		let lifeforms = this.gathererLifeforms();	
+		let availableLifeforms = this.availableLifeforms();
+		let icons = availableLifeforms.map(lifeform => {
+			let containsAbility = lifeforms.some(gathererLifeform => {
+				return gathererLifeform.toLowerCase() === lifeform.toLowerCase()
+			});
+			if (containsAbility) {
+				return <img 
+					className="lifeform-icon"
+					alt={lifeform}
+					src={`/images/${lifeform.toLowerCase()}.png`} />
+			} else {
+				return <img 
+					className="lifeform-icon"
+					src={`/images/blank.gif`} />
+			}
+		});
+		return <span className="add-right hidden-xs">{icons}</span>
+	}
+});
+
 var Gatherers = React.createClass({
 	joinGather(e) {
 		e.preventDefault();
@@ -686,16 +723,6 @@ var Gatherers = React.createClass({
 				}
 			}
 
-			var lifeformIcons;
-			if (abilities.length) {
-				lifeformIcons = abilities.map(function (ability) {
-					return <img 
-						className="lifeform-icon"
-						alt={ability}
-						src={`/images/${ability.toLowerCase()}.png`} />
-				})
-			}
-
 			var adminOptions;
 			if (admin) {
 				adminOptions = [
@@ -723,7 +750,7 @@ var Gatherers = React.createClass({
 									className="btn btn-xs btn-primary add-right"
 									aria-controls={gatherer.user.id.toString() + "-collapse"}>
 									Info <span className="caret"></span></a>
-								<span className="add-right hidden-xs">{lifeformIcons}</span>
+								<LifeformIcons gatherer={gatherer} />
 								{action}
 							</span>
 						</h4>

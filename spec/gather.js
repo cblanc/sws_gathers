@@ -61,18 +61,19 @@ describe("Gather Model:", function () {
 				gather = new Gather({
 					onEvent: function () {
 						if (gather.current === "selection") {
-							assert.isNull(gather.electionStartTime);
+							assert.isNull(gather.election.startTime);
 							done();
 						}
 					}
 				});
-				gather.ELECTION_INTERVAL = 100; // 10ms
-				assert.isNull(gather.electionStartTime);
+				gather.election.INTERVAL = 100; // 10ms
+				assert.isNull(gather.election.startTime);
+				assert.isNull(gather.election.timer);
 				gatherers.forEach(function (gatherer) {
 					gather.addGatherer(gatherer);
 				});	
 				assert.equal(gather.current, "election");
-				assert.isNotNull(gather.electionStartTime);
+				assert.isNotNull(gather.election.startTime);
 			});
 		});
 
@@ -405,7 +406,7 @@ describe("Gather Model:", function () {
 			assert.isArray(output.gatherers);
 			assert.isString(output.state);
 			assert.isNull(output.election.startTime);
-			assert.equal(output.election.interval, gather.ELECTION_INTERVAL);
+			assert.equal(output.election.interval, gather.election.INTERVAL);
 		});
 	});
 

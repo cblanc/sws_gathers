@@ -808,7 +808,7 @@ var CompletedGather = React.createClass({
 	render() {
 		return (
 			<div id="previous_gather">
-				<div className="panel panel-default add-bottom">
+				<div className="panel panel-primary add-bottom">
 					<div className="panel-heading">Previous Gather ({this.completionDate()})</div>
 				</div>
 				<GatherTeams gather={this.props.gather} />
@@ -845,7 +845,7 @@ var GatherVotingResults = React.createClass({
 			];
 		}
 		return (
-			<div className="panel panel-default">
+			<div className="panel panel-primary">
 				<div className="panel-heading">
 					Server
 				</div>
@@ -860,8 +860,8 @@ var GatherVotingResults = React.createClass({
 						{password}
 					</dl>
 					<p>
-						<a href={["steam://run/4920/connect", server.ip +":"+server.port, server.password].join("/")}
-							className="btn btn-primary max-width">Click to Join</a>
+						<a href={["steam://connect", server.ip +":"+server.port, server.password].join("/")}
+							className="btn btn-primary max-width">Join Server</a>
 					</p>
 				</div>
 			</div>

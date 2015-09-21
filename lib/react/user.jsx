@@ -155,11 +155,15 @@ var ProfileModal = React.createClass({
 				  	ref="playerskill">
 					  {skillLevels}
 					</select>
-					<p><small>Try to give an accurate representation of your skill to raise the quality of your gathers</small></p>
+					<p className="add-top"><small>Try to give an accurate representation of your skill to raise the quality of your gathers</small></p>
 			  </div>
+			  <hr />
 			  <div className="form-group">
+			  	<label>Preferred Lifeforms</label><br />
 				  {abilitiesForm}
+				  <p><small>Specify which lifeforms you'd like to play in the gather</small></p>
 			  </div>
+			  <hr />
 		  	<p className="small">You will need to rejoin the gather to see your updated profile</p>
 			  <div className="form-group">
 				  <button 

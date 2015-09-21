@@ -425,7 +425,13 @@ var ServerVoting = React.createClass({
 
 	render() {
 		var self = this;
-		let servers = self.props.servers.map(server => {
+		let servers = self.props.servers
+		.sort((a, b) => {
+			var aVotes = self.votesForServer(a);
+			var bVotes = self.votesForServer(b);
+			return bVotes - aVotes;
+		})
+		.map(server => {
 			let votes = self.votesForServer(server);
 			if (self.props.currentGatherer.serverVote === server.id) {
 				return (
@@ -485,7 +491,13 @@ var MapVoting = React.createClass({
 
 	render() {
 		var self = this;
-		let maps = self.props.maps.map(map => {
+		let maps = self.props.maps
+		.sort((a, b) => {
+			var aVotes = self.votesForMap(a);
+			var bVotes = self.votesForMap(b);
+			return bVotes - aVotes;
+		})
+		.map(map => {
 			let votes = self.votesForMap(map);
 			if (self.props.currentGatherer.mapVote === map.id) {
 				return (

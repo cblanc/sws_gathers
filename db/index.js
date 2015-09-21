@@ -10,5 +10,6 @@ mongoose.connect(config.mongo.uri);
 require(path.join(__dirname, "/models/message"));
 require(path.join(__dirname, "/models/session"));
 require(path.join(__dirname, "/models/profile"));
+require(path.join(__dirname, "/models/archivedGather"));
 
 module.exports = mongoose;

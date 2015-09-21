@@ -25,6 +25,7 @@ var mongoose = require("mongoose");
 var Message = helpers.Message = mongoose.model("Message");
 var Session = helpers.Session = mongoose.model("Session");
 var Profile = helpers.Profile = mongoose.model("Profile");
+var ArchivedGather = helpers.ArchivedGather = mongoose.model("ArchivedGather");
 
 var async = require("async");
 helpers.clearDb = function (callback) {

@@ -69,7 +69,7 @@ var Chatroom = React.createClass({
 				currentUser={this.props.currentUser} />
 		);
 		return (
-			<div className="panel panel-default chatbox">
+			<div className="panel panel-primary chatbox">
 				<div className="panel-heading">Gather Chat</div>
 				<div className="panel-body">
 					<ul className="chat" id="chatmessages" ref="messageContainer">

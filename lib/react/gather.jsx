@@ -348,7 +348,7 @@ var GatherActions = React.createClass({
 		}
 
 		return (
-			<div className="panel panel-default gather-actions">
+			<div className="panel panel-primary gather-actions">
 				<div className="panel-body">
 					<div className="text-right">
 						<ul className="list-inline no-bottom">
@@ -452,7 +452,7 @@ var ServerVoting = React.createClass({
 		let voted = self.props.currentGatherer.serverVote !== null; 
 
 		return (
-			<div className="panel panel-default">
+			<div className="panel panel-primary">
 				<div className="panel-heading">
 					{voted ? "Server Votes" : "Please Vote for a Server" }
 				</div>
@@ -513,7 +513,7 @@ var MapVoting = React.createClass({
 		let voted = (self.props.currentGatherer.mapVote !== null);
 
 		return (
-			<div className="panel panel-default">
+			<div className="panel panel-primary">
 				<div className="panel-heading">
 					{ voted ? "Map Votes" : "Please Vote for a Map" }
 				</div>
@@ -591,7 +591,7 @@ var Gather = React.createClass({
 		}
 		return (
 			<div>
-				<div className="panel panel-default add-bottom">
+				<div className="panel panel-primary add-bottom">
 					<div className="panel-heading">Current Gather</div>
 					<div className="panel-body">
 						<GatherProgress {...this.props} />
@@ -775,7 +775,7 @@ var Gatherers = React.createClass({
 			);
 		} else {
 			return (
-				<div className="panel panel-default add-bottom">
+				<div className="panel panel-primary add-bottom">
 					<div className="panel-body text-center join-hero">
 						<button 
 							onClick={this.joinGather} 

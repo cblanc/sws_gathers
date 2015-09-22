@@ -10,8 +10,14 @@ var archivedGatherSchema = new Schema({
 
 archivedGatherSchema.index({ createdAt: -1 });
 
-archivedGatherSchema.static('recent', function (callback) {
-
+archivedGatherSchema.static({
+	recent: function (callback) {
+		this
+			.where({})
+			.sort({createdAt: -1})
+			.limit(5)
+			.exec(callback);
+	}
 });
 
 module.exports = mongoose.model("ArchivedGather", archivedGatherSchema);

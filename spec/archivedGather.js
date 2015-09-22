@@ -52,7 +52,7 @@ describe("ArchivedGather", () => {
 	});
 
 	describe("Create", () => {
-		it ("creates an archived gather", () => {
+		it ("creates an archived gather", done => {
 			ArchivedGather.create({
 				gather: gather.toJson()
 			}, (error, result) => {
@@ -64,5 +64,39 @@ describe("ArchivedGather", () => {
 				done();
 			});
 		});
+	});
+
+	describe(".recent", () => {
+		var gathers;
+		beforeEach(done => {
+			async.timesSeries(7, (n, next) => {
+				ArchivedGather.create({
+					gather: generateCompletedGather()
+				}, (error, result) => {
+					setTimeout(() => {
+						next(error, result);
+					}, 30);
+				});
+			}, (error, results) => {
+				if (error) return done(error);
+				gathers = results;
+				done();
+			});		
+		});
+		// it ("returns an empty array if no recent gathers", done => {
+
+		// });
+		// it ("returns 5 most recent gathers", done => {
+		// 	let lastFive = gathers.slice(Math.max(gathers.length - 5, 1));
+		// 	ArchivedGather.recent((error, results) => {
+		// 		if (error) return done(error);
+		// 		assert.equal(results.length, 5);
+		// 		lastFive.forEach(recent => {
+		// 			assert.isTrue(results.some(result => {
+		// 				return result.gather.done.time === recent.done.time;
+		// 			}));
+		// 		});
+		// 	});
+		// });
 	});
 });

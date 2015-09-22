@@ -38,6 +38,9 @@ helpers.clearDb = function (callback) {
 		},
 		function (cb) {
 			Profile.remove({}, cb)
+		},
+		function (cb) {
+			ArchivedGather.remove({}, cb)
 		}
 	], callback);
 }

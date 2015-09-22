@@ -111,8 +111,11 @@ var ChatMessage = React.createClass({
   	}
   },
 
-	componentDidMount() {
+  componentWillMount() {
 		this.updateCreatedAt();
+  },
+
+	componentDidMount() {
 		this.interval = setInterval(this.updateCreatedAt, 60000);
 	},
 

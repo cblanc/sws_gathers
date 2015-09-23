@@ -5,7 +5,7 @@ class SoundController {
 		if (Howl === undefined) {
 			throw new Error("Howl.js required to created sound controller");
 		}
-		this.minPlayInterval = 300000; // 5 minutes
+		this.minPlayInterval = 180000; // 5 minutes
 		this.isMuted = Howler._muted;
 		this.volume = Howler._volume;
 		this.tunes = {
@@ -70,17 +70,14 @@ class SoundController {
 		};
 	}
 
-	playGatherMusic (options) {
+	playGatherMusic () {
 		var self = this;
-		options = options || {};
 		if (!self.gather.playable) return;
 		self.gather.music.play();
 		self.gather.playable = false;
-		if (options.throttle === false) {
-			setTimeout(function () {
-				self.gather.playable = true;
-			}, self.minPlayInterval);
-		}
+		setTimeout(function () {
+			self.gather.playable = true;
+		}, self.minPlayInterval);
 	}
 }
 

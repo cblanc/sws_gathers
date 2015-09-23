@@ -93,7 +93,8 @@ var Chatroom = React.createClass({
 
 var ChatMessage = React.createClass({
 	mixins: [
-    ReactAutolink
+    ReactAutolink,
+    ReactEmoji
   ],
 
   getInitialState() {
@@ -124,9 +125,16 @@ var ChatMessage = React.createClass({
 	},
 
 	messageContent: function () {
-		return this.autolink(this.props.message.content, { 
+		let self = this;
+		return self.autolink(self.props.message.content, { 
 			target: "_blank", 
 			rel: "nofollow" 
+		}).map((elem) => {
+			if (_.isString(elem)) {
+				return self.emojify(elem);
+			} else {
+				return elem;
+			}
 		});
 	},
 

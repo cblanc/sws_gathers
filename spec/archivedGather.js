@@ -47,6 +47,10 @@ var generateCompletedGather = () => {
 describe("ArchivedGather", () => {
 	var gather;
 
+	before(done => helper.clearDb(done));
+
+	afterEach(done => helper.clearDb(done))
+
 	beforeEach(() => {
 		gather = generateCompletedGather();
 	});
@@ -83,9 +87,16 @@ describe("ArchivedGather", () => {
 				done();
 			});		
 		});
-		// it ("returns an empty array if no recent gathers", done => {
-
-		// });
+		it ("returns an empty array if no recent gathers", done => {
+			helper.clearDb(() => {
+				ArchivedGather.recent((error, gathers) => {
+					if (error) return done(error);
+					assert.isArray(gathers);
+					assert.equal(gathers.length, 0);
+					done();
+				});
+			});
+		});
 		// it ("returns 5 most recent gathers", done => {
 		// 	let lastFive = gathers.slice(Math.max(gathers.length - 5, 1));
 		// 	ArchivedGather.recent((error, results) => {

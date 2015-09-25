@@ -516,6 +516,20 @@ describe("Gather Model:", function () {
 		});
 	});
 
+	describe("modifyGatherer", function () {
+		beforeEach(function () {
+			gather.addGatherer(user);
+		});	
+		it ("modifies a gatherer", function () {
+			assert.isFalse(gather.gatherers[0].confirm);
+			gather.modifyGatherer(user, gatherer => {
+				gatherer.confirm = true;
+			});
+			let g = gather.getGatherer(user);
+			assert.isTrue(g.confirm);
+		});
+	});
+
 	describe("getGatherer", function () {
 		beforeEach(function () {
 			gather.addGatherer(user);

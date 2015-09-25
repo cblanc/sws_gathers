@@ -18,7 +18,7 @@ messageSchema.index({ deleted: 1, createdAt: -1 });
 
 // Instance Methods
 
-messageSchema.methods.toJson = () => {
+messageSchema.methods.toJson = function () {
 	return {
 		id: this.id,
 		author: this.author,
@@ -27,7 +27,7 @@ messageSchema.methods.toJson = () => {
 	};
 };
 
-messageSchema.statics.list = (options, callback) => {
+messageSchema.statics.list = function (options, callback) {
 	let query = this.find({deleted: false})
 
 	if (options.before) {

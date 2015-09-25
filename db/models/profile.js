@@ -22,7 +22,7 @@ var profileSchema = new Schema({
 profileSchema.path('userId').index({ unique: true });
 
 profileSchema.static({
-	findOrCreate: (user, callback) => {
+	findOrCreate: function (user, callback) {
 		if (!user || typeof user.id !== 'number') return callback(new Error("Invalid user"));
 		let self = this;
 		self.findOne({userId: user.id}, (error, profile) => {
@@ -37,7 +37,7 @@ profileSchema.static({
 });
 
 profileSchema.method({
-	toJson: () => {
+	toJson: function () {
 		let output = {};
 		output.abilities = this.abilities;
 		output.skill = this.skill;

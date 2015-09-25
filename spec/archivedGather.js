@@ -97,17 +97,19 @@ describe("ArchivedGather", () => {
 				});
 			});
 		});
-		// it ("returns 5 most recent gathers", done => {
-		// 	let lastFive = gathers.slice(Math.max(gathers.length - 5, 1));
-		// 	ArchivedGather.recent((error, results) => {
-		// 		if (error) return done(error);
-		// 		assert.equal(results.length, 5);
-		// 		lastFive.forEach(recent => {
-		// 			assert.isTrue(results.some(result => {
-		// 				return result.gather.done.time === recent.done.time;
-		// 			}));
-		// 		});
-		// 	});
-		// });
+		it ("returns 5 most recent gathers", done => {
+			let lastFive = gathers.slice(Math.max(gathers.length - 5, 1));
+			ArchivedGather.recent((error, results) => {
+				if (error) return done(error);
+				assert.equal(results.length, 5);
+				lastFive.forEach(recent => {
+					assert.isTrue(results.some(result => {
+						return result.gather.done.time.getTime() 
+							=== recent.gather.done.time.getTime();
+					}));
+				});
+				done();
+			});
+		});
 	});
 });

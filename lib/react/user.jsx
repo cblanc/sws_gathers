@@ -226,3 +226,27 @@ var CurrentUser = React.createClass({
 	}
 });
 
+var AssumeUserIdButton = React.createClass({
+	assumeId(e) {
+		e.preventDefault();
+		if (this.props.gatherer) {
+			socket.emit("users:authorize", {
+				id: this.props.gatherer.id
+			});
+			// Refresh Gather list
+			setTimeout(() => {
+				socket.emit("gather:refresh");
+			}, 5000);
+		}
+	},
+
+	render() {
+		let currentUser = this.props.currentUser;
+		let gatherer = this.props.gatherer;
+		if (currentUser && gatherer) {
+			return <button
+				className="btn btn-xs btn-danger" 
+				onClick={this.assumeId}>Assume User ID</button>
+		}
+	}
+});

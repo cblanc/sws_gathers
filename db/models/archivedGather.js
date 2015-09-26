@@ -17,6 +17,11 @@ archivedGatherSchema.static({
 			.sort({createdAt: -1})
 			.limit(5)
 			.exec(callback);
+	},
+	archive: function (gather, callback) {
+		this.create({
+			gather: gather.toJson()
+		}, callback);
 	}
 });
 

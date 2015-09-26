@@ -70,6 +70,19 @@ describe("ArchivedGather", () => {
 		});
 	});
 
+	describe(".archive", () => {
+		it ("archives a gather instance", done => {
+			ArchivedGather.archive(gather, (error, result) => {
+				if (error) return done(error);
+				assert.isDefined(result.createdAt);
+				let gather = result.gather;
+				assert.equal(gather.gatherers.length, 12);
+				assert.equal(gather.state, "done");
+				done();
+			});
+		});
+	});
+
 	describe(".recent", () => {
 		var gathers;
 		beforeEach(done => {

@@ -19,8 +19,11 @@ archivedGatherSchema.static({
 			.exec(callback);
 	},
 	archive: function (gather, callback) {
+		// Do not try to fix this
+		// failed attempts to fix this: 1
+		let data = JSON.parse(JSON.stringify(gather.toJson()));
 		this.create({
-			gather: gather.toJson()
+			gather: data
 		}, callback);
 	}
 });

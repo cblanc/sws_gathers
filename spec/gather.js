@@ -29,6 +29,7 @@ describe("Gather Model:", function () {
 					assert.equal(gather.current, 'gathering');
 					assert.equal(gather.gatherers.length, 1);
 				});
+				it ("doesn't add a player still on cooldown");
 				it ("retains 'gathering' state until number of players is 12", function () {
 					assert.equal(gather.gatherers.length, 0);
 					gatherers.forEach(function (user, index, array) {
@@ -139,6 +140,7 @@ describe("Gather Model:", function () {
 					var candidate = gather.gatherers[helper.random(12)];
 					gather.selectLeader(voter, candidate);
 					gather.removeGatherer(voter);
+					assert.isDefined(gather.cooldown[voter.id]);
 					assert.equal(gather.current, 'gathering');
 				});
 			});
@@ -183,6 +185,7 @@ describe("Gather Model:", function () {
 				assert.equal(gather.current, "selection");
 				gather.removeGatherer(leaver);
 				assert.equal(gather.current, "gathering");
+				assert.isDefined(gather.cooldown[leaver.id]);
 			});
 			it ("transitions to gathering and removes all gatherers on regather", function () {
 				for (let i = 0; i < gather.REGATHER_THRESHOLD - 1; i++) {
@@ -565,6 +568,28 @@ describe("Gather Model:", function () {
 			gather.voteForServer(user, serverId);
 			var gatherer = gather.getGatherer(user);
 			assert.equal(gatherer.serverVote, serverId);
+		});
+	});
+
+	describe("applyCooldown", function () {
+		it ("applies a cooldown to the gatherer", function () {
+			gather.applyCooldown(user);
+			assert.isDefined(gather.cooldown[user.id]);
+		});
+	});
+
+	describe("needsToCoolOff", function () {
+		it ("returns false if gatherer is new", function () {
+			assert.isFalse(gather.needsToCoolOff(user));
+		});
+		it ("returns false if gatherer has cooled off", function () {
+			gather.applyCooldown(user);
+			gather.cooldown[user.id] = new Date(0);
+			assert.isFalse(gather.needsToCoolOff(user));
+		});
+		it ("returns true if gatherer needs to cool off", function () {
+			gather.applyCooldown(user);
+			assert.isTrue(gather.needsToCoolOff(user));
 		});
 	});
 

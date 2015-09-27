@@ -409,6 +409,7 @@ describe("Gather Model:", function () {
 			assert.isArray(output.gatherers);
 			assert.isString(output.state);
 			assert.isNull(output.election.startTime);
+			assert.isObject(output.cooldown);
 			assert.equal(output.election.interval, gather.election.INTERVAL);
 		});
 	});

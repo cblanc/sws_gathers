@@ -570,7 +570,7 @@ var Gather = React.createClass({
 	
 	render() {
 		if (this.props.gather.state === 'done') {
-			return (<CompletedGather {...this.props} />);
+			return (<CompletedGather show={true} {...this.props} />);
 		}
 
 		var voting;
@@ -599,7 +599,18 @@ var Gather = React.createClass({
 
 		var previousGather;
 		if (this.props.previousGather) {
-			previousGather = (<CompletedGather {...this.props} gather={this.props.previousGather} />);
+			previousGather = (
+				<div className="panel panel-primary">
+					<div className="panel-heading">
+						Previous Gather
+					</div>
+					<div className="panel-body">
+						<CompletedGather {...this.props} 
+							gather={this.props.previousGather} 
+							show={true} />
+					</div>
+				</div>
+			);
 		}
 		return (
 			<div>
@@ -644,10 +655,12 @@ var LifeformIcons = React.createClass({
 				return <img 
 					className="lifeform-icon"
 					alt={lifeform}
+					key={lifeform}
 					src={`/images/${lifeform.toLowerCase()}.png`} />
 			} else {
 				return <img 
 					className="lifeform-icon"
+					key={lifeform}
 					src={`/images/blank.gif`} />
 			}
 		});
@@ -740,7 +753,10 @@ var Gatherers = React.createClass({
 							value={gatherer.user.id}
 							onClick={this.bootGatherer}>
 							Boot from Gather
-						</button>
+						</button>&nbsp;
+						<AssumeUserIdButton 
+							gatherer={gatherer} 
+							currentUser={this.props.user} />
 					</dd>
 				]
 			}
@@ -805,14 +821,34 @@ var CompletedGather = React.createClass({
 		return d.toLocaleTimeString();
 	},
 
+	getInitialState() {
+		return {
+			show: !!this.props.show
+		};
+	},
+
+	toggleGatherInfo() {
+		let newState = !this.state.show;
+		this.setState({
+			show: newState
+		});
+	},
+
 	render() {
+		let gatherInfo = [];
+		if (this.state.show) {
+			gatherInfo.push(<GatherTeams gather={this.props.gather} />);
+			gatherInfo.push(<GatherVotingResults gather={this.props.gather} 
+				maps={this.props.maps} 
+				servers={this.props.servers}/>);
+		}
 		return (
-			<div id="previous_gather">
-				<div className="panel panel-primary add-bottom">
-					<div className="panel-heading">Previous Gather ({this.completionDate()})</div>
+			<div>
+				<div className="panel panel-success add-bottom pointer"
+					onClick={this.toggleGatherInfo}>
+					<div className="panel-heading"><strong>{this.completionDate()}</strong></div>
 				</div>
-				<GatherTeams gather={this.props.gather} />
-				<GatherVotingResults gather={this.props.gather} maps={this.props.maps} servers={this.props.servers}/>
+				{gatherInfo}
 			</div>
 		);
 	}
@@ -868,3 +904,49 @@ var GatherVotingResults = React.createClass({
 		);
 	}
 });
+
+var ArchivedGathers = React.createClass({
+	componentDidMount() {
+		let self = this;
+		socket.on("gather:archive:refresh", data => {
+			self.setProps({
+				archive: data.archive,
+				maps: data.maps,
+				servers: data.servers
+			});
+		});
+	},
+
+	getDefaultProps() {
+		return {
+			archive: [],
+			maps: [],
+			servers: []
+		}
+	},
+
+	render() {
+		let archive = this.props.archive
+			.sort((a, b) => {
+				return new Date(b.createdAt) - new Date(a.createdAt);
+			})
+			.map(archivedGather => {
+				return <CompletedGather 
+					show={false}
+					gather={archivedGather.gather} 
+					maps={this.props.maps}
+					servers={this.props.servers} />
+			});
+
+		return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">Archived Gathers</div>
+				<div className="panel-body">
+					{archive}
+				</div>
+			</div>
+		);
+	}
+});
+
+

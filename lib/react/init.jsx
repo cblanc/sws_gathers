@@ -48,6 +48,7 @@ var renderPage = (socket) => {
 	React.render(<Gather />, document.getElementById('gathers'));
 	React.render(<CurrentUser />, document.getElementById('currentuser'));
 	React.render(<SoundPanel />, document.getElementById('soundcontroller'));
+	React.render(<ArchivedGathers />, document.getElementById('archived-gathers'));
 };
 
 var initialiseComponents = () => {

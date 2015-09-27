@@ -66,6 +66,10 @@ html, body {
 	display: inline-block;
 }
 
+.label-padding {
+	padding: 5px 0;
+}
+
 .lifeform-icon {
 	width: 20px;
 	margin: 0 3px;
@@ -98,6 +102,44 @@ html, body {
 
 .gatherer-panel {
 	box-shadow: none;
+}
+
+.panel-alien {
+    border-color: #186845;
+}
+.panel-alien>.panel-heading {
+    color: #B7DCCC;
+    background-color: #569F80;
+    border-color: #186845;
+}
+.panel-alien>.panel-heading+.panel-collapse .panel-body {
+    border-top-color: #186845;
+}
+.panel-alien>.panel-footer+.panel-collapse .panel-body {
+    border-bottom-color: #186845;
+}
+.label-alien {
+	color: #B7DCCC;
+  background-color: #186845;
+}
+
+.panel-marine {
+    border-color: #1B4362;
+}
+.panel-marine>.panel-heading {
+    color: #B6C9D7;
+    background-color: #557995;
+    border-color: #1B4362;
+}
+.panel-marine>.panel-heading+.panel-collapse .panel-body {
+    border-top-color: #1B4362;
+}
+.panel-marine>.panel-footer+.panel-collapse .panel-body {
+    border-bottom-color: #1B4362;
+}
+.label-marine {
+	color: #B7C6D8;
+  background-color: #1B4362;
 }
 
 /*Utility Styles*/

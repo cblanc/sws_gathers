@@ -734,11 +734,11 @@ var Gatherers = React.createClass({
 					);
 				} else {
 					if (gatherer.leader) {
-						action = (<span className="label label-primary team-label">Leader</span>);
+						action = (<span className={`label label-padding label-${gatherer.team} team-label`}>Leader</span>);
 					} else if (gatherer.team !== "lobby") {
-						action = (<span className="label label-primary team-label">{_.capitalize(gatherer.team)}</span>);
+						action = (<span className={`label label-padding label-${gatherer.team} team-label`}>{_.capitalize(gatherer.team)}</span>);
 					} else {
-						action = (<span className="label label-default team-label">Lobby</span>);
+						action = (<span className="label label-padding label-default team-label">Lobby</span>);
 					}
 				}
 			}
@@ -761,8 +761,9 @@ var Gatherers = React.createClass({
 				]
 			}
 
+			let tabColor = gatherer.team !== "lobby" ? `panel-${gatherer.team}` : "panel-info";
 			return (
-				<div className="panel panel-info gatherer-panel" key={gatherer.user.id} data-userid={gatherer.user.id}>
+				<div className={`panel ${tabColor} gatherer-panel`} key={gatherer.user.id} data-userid={gatherer.user.id}>
 					<div className="panel-heading">
 						<h4 className="panel-title">
 							{country} {gatherer.user.username}

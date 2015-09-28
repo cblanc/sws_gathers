@@ -288,7 +288,18 @@ var TeamSpeakButton = React.createClass({
 	}
 });
 
-var GatherActions = React.createClass({
+var JoinGatherButton = React.createClass({
+	componentDidMount() {
+		var self = this;
+		this.timer = setInterval(() => {
+			self.forceUpdate();
+		}, 30000);
+	},
+
+	componentWillUnmount() {
+		clearInterval(this.timer);
+	},
+
 	joinGather(e) {
 		e.preventDefault();
 		socket.emit("gather:join");
@@ -299,6 +310,51 @@ var GatherActions = React.createClass({
 		socket.emit("gather:leave");
 	},
 
+	cooldownTime() {
+		let user = this.props.user;
+		if (!user) return false;
+		let cooloffTime = this.props.gather.cooldown[user.id];
+		if (!cooloffTime) return false;
+		let timeRemaining = new Date(cooloffTime) - new Date();
+		return timeRemaining > 0 ? timeRemaining : false;
+	},
+
+	render() {
+		let currentGatherer = this.props.currentGatherer;
+		if (currentGatherer) {
+			return <button 
+							onClick={this.leaveGather} 
+							className="btn btn-danger">Leave Gather</button>;
+		} 
+		if (this.props.gather.state === 'gathering') {
+			let cooldownTime = this.cooldownTime();
+			if (cooldownTime) {
+				return <CooloffButton timeRemaining={cooldownTime} />;
+			} else {
+				return <button 
+						onClick={this.joinGather} 
+						className="btn btn-success">Join Gather</button>;
+			}
+		}
+		return false;
+	}
+});
+
+var CooloffButton = React.createClass({
+	timeRemaining() {
+		return `${Math.floor(this.props.timeRemaining / 60000) + 1} minutes remaining`;
+	},
+
+	render() {
+		return <button 
+			disabled="true"
+			className="btn btn-success">
+				Leaver Cooloff ({this.timeRemaining()})
+		</button>
+	}
+})
+
+var GatherActions = React.createClass({
 	voteRegather(e) {
 		e.preventDefault(e);
 		socket.emit("gather:vote", {
@@ -315,35 +371,22 @@ var GatherActions = React.createClass({
 	},
 
 	render() {
-		var joinButton;
-		var currentGatherer = this.props.currentGatherer;
-		if (currentGatherer) {
-			joinButton = (<li><button 
-							onClick={this.leaveGather} 
-							className="btn btn-danger">Leave Gather</button></li>);
-		} else if (this.props.gather.state === 'gathering') {
-			joinButton = (
-				<button 
-					onClick={this.joinGather} 
-					className="btn btn-success">Join Gather</button>
-			);
-		}
-
-		var regatherButton;
+		let regatherButton;
+		let currentGatherer = this.props.currentGatherer;
 		if (currentGatherer) {
 			let regatherVotes = this.regatherVotes();
 			if (currentGatherer.regatherVote) {
 				regatherButton = (
-					<li><button 
+					<button 
 						value="false"
 						onClick={this.voteRegather} 
-						className="btn btn-danger">{`Voted Regather (${regatherVotes}/8)`}</button></li>);
+						className="btn btn-danger">{`Voted Regather (${regatherVotes}/8)`}</button>);
 			} else {
 				regatherButton = (
-					<li><button 
+					<button 
 						value="true"
 						onClick={this.voteRegather} 
-						className="btn btn-danger">{`Vote Regather (${regatherVotes}/8)`}</button></li>);
+						className="btn btn-danger">{`Vote Regather (${regatherVotes}/8)`}</button>);
 			}
 		}
 
@@ -352,9 +395,16 @@ var GatherActions = React.createClass({
 				<div className="panel-body">
 					<div className="text-right">
 						<ul className="list-inline no-bottom">
-							<TeamSpeakButton />&nbsp;
-							{regatherButton}&nbsp;
-							{joinButton}
+							<TeamSpeakButton />
+							<li>
+								{regatherButton}
+							</li>
+							<li>
+								<JoinGatherButton 
+									gather={this.props.gather} 
+									currentGatherer={this.props.currentGatherer}
+									user={this.props.user} />
+							</li>
 						</ul>
 					</div>
 				</div>

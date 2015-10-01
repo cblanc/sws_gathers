@@ -1,6 +1,11 @@
 "use strict";
 
-require("newrelic");
+var env = process.env.NODE_ENV || "development";
+
+if (env === "production") {
+	require("newrelic");
+}
+
 var fs = require("fs");
 var path = require("path");
 var express = require("express");
@@ -8,7 +13,6 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var config = require(path.join(__dirname, "config/config.js"));
-var env = process.env.NODE_ENV || "development";
 
 // Load Models
 require(path.join(__dirname, "db/index"));

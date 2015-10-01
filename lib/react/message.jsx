@@ -1,52 +1,12 @@
 "use strict";
 
 var Chatroom = React.createClass({
-	getDefaultProps() {
-		return {
-			history: []
-		};
-	},
-
 	componentDidMount() {
-		let self = this;
-
-		socket.on("message:append", data => {
-			let history = self.props.history;
-			let historicalUpdate = !!data.messages;
-			if (historicalUpdate) {
-				history = history.concat(data.messages);
-			} else {
-				history.push(data);
-			}
-			self.setProps({
-				history: history.sort((a, b) => {
-					return new Date(a.createdAt) - new Date(b.createdAt);
-				})
-			});
-			if (!historicalUpdate) {
-				self.scrollToBottom();
-			}
-		});
-
-		// Message History Retrieved
-		socket.on("message:refresh", data => {
-			self.setProps({
-				history: data.chatHistory
-			});
-			self.scrollToBottom();
-		});
-
-		socket.on("users:update", data => {
-			self.setProps({
-				currentUser: data.currentUser
-			});
-		});
-
-		socket.emit("message:refresh", {});
+		this.scrollToBottom();
 	},
 
 	loadMoreMessages() {
-		var earliestMessage = this.props.history[0];
+		var earliestMessage = this.props.messages[0];
 		if (earliestMessage === undefined) return;
 		socket.emit("message:refresh", {
 			before: earliestMessage.createdAt
@@ -63,10 +23,11 @@ var Chatroom = React.createClass({
 	},
 
 	render() {
-		let messages = this.props.history.map(message => 
+		console.log(this.props.messages);
+		let messages = this.props.messages.map(message => 
 			<ChatMessage message={message} 
 				key={message.id} 
-				currentUser={this.props.currentUser} />
+				user={this.props.user} />
 		);
 		return (
 			<div className="panel panel-primary chatbox">
@@ -140,8 +101,8 @@ var ChatMessage = React.createClass({
 
 	render() {
 		let deleteButton;
-		let currentUser = this.props.currentUser;
-		if (currentUser && currentUser.admin) {
+		let user = this.props.user;
+		if (user && user.admin) {
 			deleteButton = <DeleteMessageButton messageId={this.props.message._id} />;
 		}
 		return (
@@ -227,4 +188,3 @@ var MessageBar = React.createClass({
 		);
 	}
 });
-

@@ -42,17 +42,6 @@ var UserLogin = React.createClass({
 })
 
 var UserMenu = React.createClass({
-	getDefaultProps() {
-		return {
-			users: []
-		};
-	},
-
-	componentDidMount() {
-		let self = this;
-		socket.on('users:update', data => self.setProps({users: data.users}));
-	},
-
 	render() {
 		let users = this.props.users.map(user => {
 			return (
@@ -85,26 +74,35 @@ var AdminPanel = React.createClass({
 
 	render() {
 		return (
-		<div>
-			<h5>Swap Into a Different Account</h5>
-			<UserLogin />
-			<h5>Gather Options</h5>
-			<div>
-				<button
-					className="btn btn-danger max-width"
-					onClick={this.handleGatherReset}>
-					Reset Gather</button>
+			<div className="modal fade" id="adminmodal">
+			  <div className="modal-dialog">
+			    <div className="modal-content">
+			      <div className="modal-header">
+			        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 className="modal-title">Administration Panel</h4>
+			      </div>
+			      <div className="modal-body" id="admin-menu">
+				      <h5>Swap Into a Different Account</h5>
+							<UserLogin />
+							<h5>Gather Options</h5>
+							<div>
+								<button
+									className="btn btn-danger max-width"
+									onClick={this.handleGatherReset}>
+									Reset Gather</button>
+							</div>
+			      </div>
+			      <div className="modal-footer">
+			        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
 			</div>
-		</div>
 		);
 	}
 });
 
 var ProfileModal = React.createClass({
-	componentDidMount() {
-		let self = this;
-		socket.on("users:update", data => self.setProps({user: data.currentUser}));
-	},
 	handleUserUpdate(e) {
 		e.preventDefault();
 		let abilities = {
@@ -124,6 +122,7 @@ var ProfileModal = React.createClass({
 			}
 		});
 	},
+
 	render() {
 		if (!this.props.user) return false;
 		let abilities = this.props.user.profile.abilities;
@@ -146,47 +145,51 @@ var ProfileModal = React.createClass({
 			.map(skill => { return <option key={skill}>{skill}</option>});
 
 		return (
-			<form>
-			  <div className="form-group">
-			    <label>Player Skill</label><br />
-				  <select 
-				  	defaultValue={skillLevel}
-				  	className="form-control" 
-				  	ref="playerskill">
-					  {skillLevels}
-					</select>
-					<p className="add-top"><small>Try to give an accurate representation of your skill to raise the quality of your gathers</small></p>
+			<div className="modal fade" id="profilemodal">
+			  <div className="modal-dialog">
+			    <div className="modal-content">
+			      <div className="modal-header">
+			        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 className="modal-title">Profile</h4>
+			      </div>
+			      <div className="modal-body" id="profile-panel">
+			      	<form>
+							  <div className="form-group">
+							    <label>Player Skill</label><br />
+								  <select 
+								  	defaultValue={skillLevel}
+								  	className="form-control" 
+								  	ref="playerskill">
+									  {skillLevels}
+									</select>
+									<p className="add-top"><small>Try to give an accurate representation of your skill to raise the quality of your gathers</small></p>
+							  </div>
+							  <hr />
+							  <div className="form-group">
+							  	<label>Preferred Lifeforms</label><br />
+								  {abilitiesForm}
+								  <p><small>Specify which lifeforms you'd like to play in the gather</small></p>
+							  </div>
+							  <hr />
+						  	<p className="small">You will need to rejoin the gather to see your updated profile</p>
+							  <div className="form-group">
+								  <button 
+								  	type="submit"
+								  	className="btn btn-primary"
+								  	data-dismiss="modal"
+								  	onClick={this.handleUserUpdate}>
+								  	Update &amp; Close</button>
+						  	</div>
+							</form>
+			      </div>
+			    </div>
 			  </div>
-			  <hr />
-			  <div className="form-group">
-			  	<label>Preferred Lifeforms</label><br />
-				  {abilitiesForm}
-				  <p><small>Specify which lifeforms you'd like to play in the gather</small></p>
-			  </div>
-			  <hr />
-		  	<p className="small">You will need to rejoin the gather to see your updated profile</p>
-			  <div className="form-group">
-				  <button 
-				  	type="submit"
-				  	className="btn btn-primary"
-				  	data-dismiss="modal"
-				  	onClick={this.handleUserUpdate}>
-				  	Update &amp; Close</button>
-		  	</div>
-			</form>
+			</div>
 		);
 	}
 });
 
 var CurrentUser = React.createClass({
-	componentDidMount() {
-		let self = this;
-		React.render(<AdminPanel />, document.getElementById('admin-menu'));
-		React.render(<ProfileModal />, document.getElementById('profile-panel'));
-		socket.on("users:update", data => self.setProps({user: data.currentUser}));
-		socket.emit("users:refresh");
-	},
-
 	render() {
 		if (this.props.user) {
 			var adminOptions;
@@ -212,9 +215,6 @@ var CurrentUser = React.createClass({
 							<a data-toggle="modal" 
 								data-target="#profilemodal" 
 								href="#"><i className="fa fa-gear fa-fw"></i> Profile</a>
-						</li>
-						<li>
-							<a href="#"><i className="fa fa-flag fa-fw"></i> Notifications</a>
 						</li>
 						{adminOptions}
 					</ul>
@@ -250,3 +250,5 @@ var AssumeUserIdButton = React.createClass({
 		}
 	}
 });
+
+$(function () { initialiseComponents();	});

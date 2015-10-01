@@ -41,14 +41,15 @@ var showGatherBanNotice = () => {
 };
 
 var renderPage = (socket) => {
-	initialiseVisibilityMonitoring(socket);
+	// initialiseVisibilityMonitoring(socket);
 	soundController = new SoundController();
-	React.render(<UserMenu />, document.getElementById('side-menu'));
-	React.render(<Chatroom />, document.getElementById('chatroom'));
-	React.render(<Gather />, document.getElementById('gathers'));
-	React.render(<CurrentUser />, document.getElementById('currentuser'));
-	React.render(<SoundPanel />, document.getElementById('soundcontroller'));
-	React.render(<ArchivedGathers />, document.getElementById('archived-gathers'));
+	// React.render(<UserMenu />, document.getElementById('side-menu'));
+	// React.render(<Chatroom />, document.getElementById('chatroom'));
+	// React.render(<Gather />, document.getElementById('gathers'));
+	// React.render(<CurrentUser />, document.getElementById('currentuser'));
+	// React.render(<SoundPanel />, document.getElementById('soundcontroller'));
+	// React.render(<ArchivedGathers />, document.getElementById('archived-gathers'));
+	React.render(<App />, document.getElementById("body_content"));
 };
 
 var initialiseComponents = () => {

@@ -140,7 +140,7 @@ var ProfileModal = React.createClass({
 		}
 
 		let skillLevel = this.props.user.profile.skill;
-		let skillLevels = ["Low Skill", "Medium Skill", "High Skill", skillLevel]
+		let skillLevels = _.uniq(["Low Skill", "Medium Skill", "High Skill", skillLevel])
 			.filter(skill => { return typeof skill === 'string' })
 			.map(skill => { return <option key={skill}>{skill}</option>});
 

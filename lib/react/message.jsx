@@ -23,7 +23,6 @@ var Chatroom = React.createClass({
 	},
 
 	render() {
-		console.log(this.props.messages);
 		let messages = this.props.messages.map(message => 
 			<ChatMessage message={message} 
 				key={message.id} 

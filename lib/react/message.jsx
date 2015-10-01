@@ -8,6 +8,7 @@ var Chatroom = React.createClass({
 	loadMoreMessages() {
 		var earliestMessage = this.props.messages[0];
 		if (earliestMessage === undefined) return;
+		this.disableScroll = true;
 		socket.emit("message:refresh", {
 			before: earliestMessage.createdAt
 		});
@@ -15,6 +16,14 @@ var Chatroom = React.createClass({
 
 	sendMessage(message) {
 		socket.emit("newMessage", {message: message});
+	},
+
+	componentDidUpdate() {
+		if (this.disableScroll) {
+			this.disableScroll = false;
+		} else {
+			this.scrollToBottom();
+		}
 	},
 
 	scrollToBottom() {

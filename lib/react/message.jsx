@@ -23,11 +23,13 @@ var Chatroom = React.createClass({
 	},
 
 	render() {
-		let messages = this.props.messages.map(message => 
-			<ChatMessage message={message} 
+		let messages = this.props.messages.map(message => {
+			if (message) {
+				return <ChatMessage message={message} 
 				key={message.id} 
 				user={this.props.user} />
-		);
+			}
+		});
 		return (
 			<div className="panel panel-primary chatbox">
 				<div className="panel-heading">Gather Chat</div>

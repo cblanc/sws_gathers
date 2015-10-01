@@ -1,6 +1,7 @@
 "use strict";
 
 var path = require("path");
+var winston = require("winston");
 var mongoose = require("mongoose");
 var config = require(path.join(__dirname, "../config/config.js"));
 

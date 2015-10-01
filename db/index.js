@@ -4,7 +4,26 @@ var path = require("path");
 var mongoose = require("mongoose");
 var config = require(path.join(__dirname, "../config/config.js"));
 
-mongoose.connect(config.mongo.uri);
+var connect = function () {
+	mongoose.connect(config.mongo.uri, { 
+		server: { 
+			socketOptions: { 
+				keepAlive: 1, 
+				connectTimeoutMS: 30000 
+			} 
+		} 
+	});
+};
+
+connect();
+
+mongoose.connection.on("error", function (error) {
+	winston.error(error);
+});
+
+mongoose.connection.on("disconnected", function () {
+	winston.error("MongoDB: Was disconnected.");
+});
 
 // Load models
 require(path.join(__dirname, "/models/message"));

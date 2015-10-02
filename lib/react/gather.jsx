@@ -598,20 +598,9 @@ var MapVoting = React.createClass({
 })
 
 var Gather = React.createClass({
-	thisGatherer() {
-		let gather = this.props.gather;
-		let user = this.props.user;
-		if (gather && user && gather.gatherers.length) {
-			return gather.gatherers
-				.filter(gatherer => gatherer.id === user.id)
-				.pop() || null;
-		}
-		return null;
-	},
-	
 	render() {
 		let gather = this.props.gather;
-		let thisGatherer = this.thisGatherer();
+		let thisGatherer = this.props.thisGatherer;
 		let servers = this.props.servers;
 		let maps = this.props.maps;
 		let user = this.props.user;

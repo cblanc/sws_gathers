@@ -143,8 +143,6 @@ var App = React.createClass({
 								maps={this.props.maps}
 								servers={this.props.servers}
 								previousGather={this.props.previousGather}/>
-						</div>	
-						<div className="col-md-6 col-md-offset-6" id="archived-gathers">
 							<ArchivedGathers archive={this.props.archive}
 								maps={this.props.maps}
 								servers={this.props.servers} />

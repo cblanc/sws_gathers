@@ -15,9 +15,28 @@ var App = React.createClass({
 		}
 	},
 
+	thisGatherer() {
+		let gather = this.props.gather;
+		let user = this.props.user;
+		if (gather && user && gather.gatherers.length) {
+			return gather.gatherers
+				.filter(gatherer => gatherer.id === user.id)
+				.pop() || null;
+		}
+		return null;
+	},
+
 	componentDidMount() {
 		let self = this;
 		let socket = this.props.socket;
+		let soundController = this.props.soundController;
+
+		socket.on('notification', data => {
+			if (data && data.sound === 'gather_starting' 
+					&& this.thisGatherer()) {
+				soundController.playGatherMusic();
+			}
+		});
 
 		socket.on('users:update', 
 			data => self.setProps({
@@ -119,6 +138,7 @@ var App = React.createClass({
 						<div className="col-md-6" id="gathers">
 							<Gather 
 								gather={this.props.gather}
+								thisGatherer={this.thisGatherer()}
 								user={this.props.user} 
 								maps={this.props.maps}
 								servers={this.props.servers}

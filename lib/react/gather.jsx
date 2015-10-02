@@ -598,26 +598,6 @@ var MapVoting = React.createClass({
 })
 
 var Gather = React.createClass({
-	getDefaultProps() {
-		return {
-			gather: null,
-			user: null
-		}
-	},
-
-	// checkForStateChange: function (data) {
-	// 	let previousState = this.props.gather.state;
-	// 	let newState = data.gather.state;
-	// 	if (newState === previousState) return;
-
-	// 	// Callbacks for new states
-	// 	if (newState === "election" 
-	// 			&& previousState === "gathering"
-	// 			&& data.currentGatherer) {
-	// 		soundController.playGatherMusic();
-	// 	}
-	// },
-
 	thisGatherer() {
 		let gather = this.props.gather;
 		let user = this.props.user;

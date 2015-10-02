@@ -37,7 +37,7 @@ var rankVotes = function (votes, candidates) {
 };
 
 class SoundController {
-	constructor (options) {
+	constructor () {
 		if (Howl === undefined) {
 			throw new Error("Howl.js required to created sound controller");
 		}
@@ -47,14 +47,6 @@ class SoundController {
 		this.playGatherMusic = _.throttle(() => {
 			this.gather.music.play();
 		}, this.MINIMUM_PLAY_INTERVAL);
-
-		if (options && options.socket) {
-			socket.on("notification", data => {
-				if (data && data.sound === "gather_starting") {
-					this.playGatherMusic();
-				}
-			});
-		}
 
 		this.isMuted = Howler._muted;
 

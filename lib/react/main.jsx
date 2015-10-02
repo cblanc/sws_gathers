@@ -7,33 +7,54 @@ var App = React.createClass({
 				gatherers: []
 			},
 			users: [],
-			messages: []
+			messages: [],
+			maps: [],
+			servers: [],
+			archive: [],
+			soundController: null
 		}
 	},
 
 	componentDidMount() {
 		let self = this;
-
-		socket.on("users:update", 
-			data => self.setProps({user: data.currentUser}));
+		let socket = this.props.socket;
 
 		socket.on('users:update', 
-			data => self.setProps({users: data.users}));
+			data => self.setProps({
+				users: data.users,
+				user: data.currentUser
+			})
+		);
 
 		socket.on("message:append", data => {
 			self.setProps({
-				messages: self.props.messages
-					.concat(data.chatHistory)
+				messages: self.props.messages.concat(data.messages)
 					.sort((a, b) => {
 						return new Date(a.createdAt) - new Date(b.createdAt);
 					})
 			});
 		});
 
-		// Message History Retrieved
 		socket.on("message:refresh", data => {
 			self.setProps({
-				messages: data.chatHistory
+				messages: data.messages
+			});
+		});
+
+		socket.on("gather:refresh", (data) => {
+			self.setProps({
+				gather: data.gather,
+				maps: data.maps,
+				servers: data.servers,
+				previousGather: data.previousGather
+			});
+		});
+
+		socket.on("gather:archive:refresh", data => {
+			self.setProps({
+				archive: data.archive,
+				maps: data.maps,
+				servers: data.servers
 			});
 		});
 
@@ -53,7 +74,7 @@ var App = React.createClass({
 			  	<CurrentUser user={this.props.user} />
 			  </ul>
 			  <ul className="nav navbar-top-links navbar-right" id="soundcontroller">
-			  	{/*<SoundPanel />*/}
+			  	<SoundPanel soundController={this.props.soundController} />
 			  </ul>
 			  <ul className="nav navbar-top-links navbar-right">
 				  <li className="dropdown">
@@ -96,10 +117,17 @@ var App = React.createClass({
 								user={this.props.user} />
 						</div>
 						<div className="col-md-6" id="gathers">
-							{/*<Gather />*/}
+							<Gather 
+								gather={this.props.gather}
+								user={this.props.user} 
+								maps={this.props.maps}
+								servers={this.props.servers}
+								previousGather={this.props.previousGather}/>
 						</div>	
 						<div className="col-md-6 col-md-offset-6" id="archived-gathers">
-							{/*<ArchivedGathers />*/}
+							<ArchivedGathers archive={this.props.archive}
+								maps={this.props.maps}
+								servers={this.props.servers} />
 						</div>
 					</div>
 				</div>

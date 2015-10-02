@@ -5,9 +5,6 @@ var UserLogin = React.createClass({
 		socket.emit("users:authorize", {
 			id: parseInt(id, 10)
 		});
-		setTimeout(function () {
-			socket.emit("gather:refresh");
-		}, 1000);
 	},
 
 	handleSubmit(e) {
@@ -250,5 +247,3 @@ var AssumeUserIdButton = React.createClass({
 		}
 	}
 });
-
-$(function () { initialiseComponents();	});

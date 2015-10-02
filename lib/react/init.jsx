@@ -1,7 +1,6 @@
 "use strict";
 
-var socket;
-var soundController;
+var socket, soundController;
 
 var initialiseVisibilityMonitoring = (socket) => {
 	let hidden, visibilityChange; 
@@ -28,29 +27,11 @@ var initialiseVisibilityMonitoring = (socket) => {
 	}, false);
 }
 
-var removeAuthWidget = () => {
-	$("#authenticating").remove();
-};
+var removeAuthWidget = () => $("#authenticating").remove();
 
-var showAuthenticationNotice = () => {
-	$("#auth-required").show();
-};
+var showAuthenticationNotice = () => $("#auth-required").show();
 
-var showGatherBanNotice = () => {
-	$("#gather-banned").show();
-};
-
-var renderPage = (socket) => {
-	// initialiseVisibilityMonitoring(socket);
-	soundController = new SoundController();
-	// React.render(<UserMenu />, document.getElementById('side-menu'));
-	// React.render(<Chatroom />, document.getElementById('chatroom'));
-	// React.render(<Gather />, document.getElementById('gathers'));
-	// React.render(<CurrentUser />, document.getElementById('currentuser'));
-	// React.render(<SoundPanel />, document.getElementById('soundcontroller'));
-	// React.render(<ArchivedGathers />, document.getElementById('archived-gathers'));
-	React.render(<App />, document.getElementById("body_content"));
-};
+var showGatherBanNotice = () => $("#gather-banned").show();
 
 var initialiseComponents = () => {
 	let socketUrl = window.location.protocol + "//" + window.location.host;
@@ -58,12 +39,16 @@ var initialiseComponents = () => {
 		.on("connect", () => {
 			console.log("Connected");
 			removeAuthWidget();
-			renderPage(socket);
+			soundController = new SoundController({
+				socket: socket
+			});
+			React.render(<App socket={socket} soundController={soundController}/>, 
+				document.getElementById("body_content"));
 			socket.on("reconnect", () => {
+					console.log("Reconnected");
 					socket.emit("message:refresh");
 					socket.emit("gather:refresh");
 					socket.emit("users:refresh");
-					console.log("Reconnected");
 				})
 				.on("disconnect", () => {
 					console.log("Disconnected")

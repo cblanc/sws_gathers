@@ -590,8 +590,6 @@ var MapVoting = React.createClass({
 				<div className="panel-heading">
 					{votes === 2 ? "Map Votes" : 
 						`Please Vote for a Map. ${2 - votes} votes remaining` }
-
-					{ voted ? "Map Votes" : "Please Vote for a Map" }
 				</div>
 				<div className="list-group gather-voting">
 					{maps}

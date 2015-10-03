@@ -15,6 +15,13 @@ var App = React.createClass({
 		}
 	},
 
+	updateTitle() {
+		let gather = this.props.gather;
+		if (gather) {
+			document.title = `NSL Gathers (${gather.gatherers.length}/12)`;
+		}
+	},
+
 	thisGatherer() {
 		let gather = this.props.gather;
 		let user = this.props.user;
@@ -67,6 +74,7 @@ var App = React.createClass({
 				servers: data.servers,
 				previousGather: data.previousGather
 			});
+			this.updateTitle();
 		});
 
 		socket.on("gather:archive:refresh", data => {

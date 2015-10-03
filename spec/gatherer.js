@@ -29,7 +29,57 @@ describe("Gather Model:", function () {
 	});
 
 	describe("#voteForMap", function () {
+		it ("assigns vote for map id", function () {
+			assert.equal(gatherer.mapVote.length, 0);
+			gatherer.voteForMap(1);
+			assert.isTrue(gatherer.mapVote.some(voteId => voteId === 1));
+		});
+		it ("only assigns vote once", function () {
+			gatherer.voteForMap(1);
+			gatherer.voteForMap(1);
+			assert.equal(gatherer.mapVote.length, 1);
+		});
+		it ("allows a maximum of 2 votes", function () {
+			gatherer.voteForMap(1);
+			gatherer.voteForMap(2);
+			gatherer.voteForMap(3);
+			assert.equal(gatherer.mapVote.length, 2);
+		});
+		it ("removes oldest vote if maximum vote exceeded", function () {
+			gatherer.voteForMap(1);
+			gatherer.voteForMap(2);
+			gatherer.voteForMap(3);
+			assert.isFalse(gatherer.mapVote.some(voteId => voteId === 1));
+			assert.isTrue(gatherer.mapVote.some(voteId => voteId === 2));
+			assert.isTrue(gatherer.mapVote.some(voteId => voteId === 3));
+		});
+	});
 
+	describe("#voteForServer", function () {
+		it ("assigns vote for server id", function () {
+			assert.equal(gatherer.serverVote.length, 0);
+			gatherer.voteForServer(1);
+			assert.isTrue(gatherer.serverVote.some(voteId => voteId === 1));
+		});
+		it ("only assigns vote once", function () {
+			gatherer.voteForServer(1);
+			gatherer.voteForServer(1);
+			assert.equal(gatherer.serverVote.length, 1);
+		});
+		it ("allows a maximum of 2 votes", function () {
+			gatherer.voteForServer(1);
+			gatherer.voteForServer(2);
+			gatherer.voteForServer(3);
+			assert.equal(gatherer.serverVote.length, 2);
+		});
+		it ("removes oldest vote if maximum vote exceeded", function () {
+			gatherer.voteForServer(1);
+			gatherer.voteForServer(2);
+			gatherer.voteForServer(3);
+			assert.isFalse(gatherer.serverVote.some(voteId => voteId === 1));
+			assert.isTrue(gatherer.serverVote.some(voteId => voteId === 2));
+			assert.isTrue(gatherer.serverVote.some(voteId => voteId === 3));
+		});
 	});
 
 	describe("#voteForLeader", function () {

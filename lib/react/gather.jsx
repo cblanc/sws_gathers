@@ -480,7 +480,7 @@ var ServerVoting = React.createClass({
 
 	votesForServer(server) {
 		return this.props.gather.gatherers.reduce((acc, gatherer) => {
-			if (server.id === gatherer.serverVote) acc++;
+			if (gatherer.serverVote.some(voteId => voteId === server.id)) acc++;
 			return acc;
 		}, 0);
 	},
@@ -494,7 +494,7 @@ var ServerVoting = React.createClass({
 				return bVotes - aVotes;
 			}).map(server => {
 			let votes = self.votesForServer(server);
-			if (thisGatherer.serverVote === server.id) {
+			if (thisGatherer.serverVote.some(voteId => voteId === server.id)) {
 				return (
 					<a href="#" 
 						className="list-group-item list-group-item-success" 
@@ -516,12 +516,13 @@ var ServerVoting = React.createClass({
 			}
 		});
 
-		let voted = thisGatherer.serverVote !== null; 
+		let votes = thisGatherer.serverVote.length;
 
 		return (
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					{voted ? "Server Votes" : "Please Vote for a Server" }
+					{votes === 2 ? "Server Votes" : 
+					`Please Vote for a Server. ${2 - votes} votes remaining` }
 				</div>
 				<div className="list-group gather-voting">
 					{servers}
@@ -545,7 +546,7 @@ var MapVoting = React.createClass({
 
 	votesForMap(map) {
 		return this.props.gather.gatherers.reduce((acc, gatherer) => {
-			if (map.id === gatherer.mapVote) acc++;
+			if (gatherer.mapVote.some(voteId => voteId === map.id)) acc++;
 			return acc;
 		}, 0);
 	},
@@ -559,7 +560,7 @@ var MapVoting = React.createClass({
 					return bVotes - aVotes;
 				}).map(map => {
 				let votes = self.votesForMap(map);
-				if (thisGatherer.mapVote === map.id) {
+				if (thisGatherer.mapVote.some(voteId => voteId === map.id)) {
 					return (
 						<a href="#" 
 							key={map.id} 
@@ -582,11 +583,14 @@ var MapVoting = React.createClass({
 				}
 			});
 
-		let voted = (thisGatherer.mapVote !== null);
+		let votes = thisGatherer.mapVote.length;
 
 		return (
 			<div className="panel panel-primary">
 				<div className="panel-heading">
+					{votes === 2 ? "Map Votes" : 
+						`Please Vote for a Map. ${2 - votes} votes remaining` }
+
 					{ voted ? "Map Votes" : "Please Vote for a Map" }
 				</div>
 				<div className="list-group gather-voting">
@@ -942,7 +946,8 @@ var CompletedGather = React.createClass({
 var GatherVotingResults = React.createClass({
 	countVotes(voteType) {
 		return this.props.gather.gatherers.reduce((acc, gatherer) => {
-			if (gatherer[voteType] !== null) acc.push(gatherer[voteType]);
+			let votes = gatherer[voteType];
+			if (votes.length > 0) votes.forEach(vote => acc.push(vote));
 			return acc;
 		}, []);
 	},

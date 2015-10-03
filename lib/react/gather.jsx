@@ -232,11 +232,11 @@ var TeamSpeakButton = React.createClass({
 			url: "ts3server://ensl.org/",
 			password: password,
 			alien: {
-				channel: "NS2 Gather/Gather #1/Alien (Team Y)",
+				channel: "NS2 Gather/Gather #1/Alien",
 				password: password
 			},
 			marine: {
-				channel: "NS2 Gather/Gather #1/Marine (Team X)",
+				channel: "NS2 Gather/Gather #1/Marine",
 				password: password
 			}
 		};
@@ -724,6 +724,19 @@ var Gatherers = React.createClass({
 		});
 	},
 
+	enslUrl(gatherer) {
+		return `http://www.ensl.org/users/${gatherer.id}`
+	},
+
+	hiveUrl(gatherer) {
+		let hiveId = gatherer.user.hive.id;
+		if (hiveId) {
+			return `http://hive.naturalselection2.com/profile/${hiveId}`
+		} else {
+			return null;
+		}
+	},
+
 	render() {
 		let self = this;
 		let user = this.props.user;
@@ -800,6 +813,7 @@ var Gatherers = React.createClass({
 			let adminOptions;
 			if (admin) {
 				adminOptions = [
+					<hr />,
 					<dt>Admin</dt>,
 					<dd>
 						<button
@@ -844,6 +858,15 @@ var Gatherers = React.createClass({
 								<dd>{team}</dd>
 								<dt>Hive Stats</dt>
 								<dd>{hive}</dd>
+								<dt>Links</dt>
+								<dd>
+									<a href={this.enslUrl(gatherer)} 
+										className="btn btn-xs btn-primary"
+										target="_blank">ENSL Profile</a>&nbsp;
+									<a href={this.hiveUrl(gatherer)} 
+										className="btn btn-xs btn-primary"
+										target="_blank">Hive Profile</a>
+								</dd>
 								{adminOptions}
 							</dl>
 						</div>

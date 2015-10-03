@@ -132,8 +132,10 @@ var ChatMessage = React.createClass({
 							</strong>
 						<small className="pull-right text-muted">
 							{deleteButton}
-							<i className="fa fa-clock-o fa-fw"></i> 
-							{this.state.createdAt}
+							<span className="hidden-xs">
+								<i className="fa fa-clock-o fa-fw"></i> 
+								{this.state.createdAt}
+							</span>
 						</small>
 					</div>
 					<p className="wordwrap">{this.messageContent()}</p>

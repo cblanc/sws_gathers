@@ -37,6 +37,16 @@ html, body {
 	margin: 10px 10px;
 }
 
+.imgur-container {
+	text-align: center;
+	margin: 5px 0;
+}
+
+.imgur-chat {
+	max-height: 280px;
+	max-width: 80%;
+}
+
 /*Splash Page*/
 
 .join-hero {

@@ -62,6 +62,8 @@ var Chatroom = React.createClass({
 	}
 });
 
+var imgurRegex = /^(https?:\/\/i\.imgur\.com\/\S*\.jpg)$/i;
+
 var ChatMessage = React.createClass({
 	mixins: [
     ReactAutolink,
@@ -97,7 +99,18 @@ var ChatMessage = React.createClass({
 
 	messageContent: function () {
 		let self = this;
-		return self.autolink(self.props.message.content, { 
+		let message = self.props.message.content
+		if (message.match(imgurRegex)) {
+			return (
+				<div className="imgur-container">
+					<a href={message} target="_blank">
+						<img className="imgur-chat" src={message} />
+					</a>
+				</div>
+			);
+		}
+
+		return self.autolink(message, { 
 			target: "_blank", 
 			rel: "nofollow" 
 		}).map((elem) => {

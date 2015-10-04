@@ -945,6 +945,10 @@ var GatherVotingResults = React.createClass({
 	countVotes(voteType) {
 		return this.props.gather.gatherers.reduce((acc, gatherer) => {
 			let votes = gatherer[voteType];
+
+			// Temporary fix because some mapvotes are ints and not arrays
+			if (!Array.isArray(votes)) votes = [votes];
+
 			if (votes.length > 0) votes.forEach(vote => acc.push(vote));
 			return acc;
 		}, []);

@@ -95,7 +95,7 @@ var App = React.createClass({
 				role="navigation" 
 				style={{marginBottom: "0"}}>
 				<div className="navbar-header">
-					<a className="navbar-brand" href="/">ENSL.org Gathers <strong>Alpha</strong></a>
+					<a className="navbar-brand" href="/">NSL Gathers <small><i>Alpha</i></small></a>
 				</div>
 			  <ul className="nav navbar-top-links navbar-right" id="currentuser">
 			  	<CurrentUser user={this.props.user} />

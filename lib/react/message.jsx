@@ -62,7 +62,7 @@ var Chatroom = React.createClass({
 	}
 });
 
-var imgurRegex = /^(https?:\/\/i\.imgur\.com\/\S*\.jpg)$/i;
+var imgurRegex = /^(https?:\/\/i\.imgur\.com\/\S*\.(jpg|png))$/i;
 
 var ChatMessage = React.createClass({
 	mixins: [

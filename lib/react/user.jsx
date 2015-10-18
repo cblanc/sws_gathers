@@ -87,7 +87,8 @@ var UserModal = React.createClass({
 							</button>
 							<h4 className="modal-title">
 								<img src="images/blank.gif" 
-									className={"flag flag-" + user.country.toLowerCase()} 
+									className={"flag flag-" + ((user.country === null) ? "eu" : 
+										user.country.toLowerCase()) } 
 									alt={user.country} />&nbsp;
 								{user.username}
 							</h4>
@@ -147,7 +148,9 @@ var UserItem = React.createClass({
 
 var UserMenu = React.createClass({
 	render() {
-		let users = this.props.users.map(user => {
+		let users = this.props.users
+		.sort((a, b) => (a.username > b.username) ? 1 : -1)
+		.map(user => {
 			return <UserItem user={user} key={user.id} />
 		});
 		return (
@@ -157,10 +160,10 @@ var UserMenu = React.createClass({
 						<i className="fa fa-users fa-fw"></i>  Online
 						<span className="badge pull-right">{this.props.users.length}</span>
 					</div>
+					<ul className="list-group" id="users-list">
+						{users}
+					</ul>
 				</div>
-				<ul className="list-group" id="users-list">
-					{users}
-				</ul>
 			</div>
 		);
 	}

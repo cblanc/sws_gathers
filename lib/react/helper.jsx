@@ -36,3 +36,19 @@ var rankVotes = function (votes, candidates) {
 	});
 };
 
+var enslUrl = (gatherer) => {
+	return `http://www.ensl.org/users/${gatherer.id}`
+};
+
+var hiveUrl = (gatherer) => {
+	let hiveId = gatherer.user.hive.id;
+	if (hiveId) {
+		return `http://hive.naturalselection2.com/profile/${hiveId}`
+	} else {
+		return null;
+	}
+};
+
+var modalId = (user) => {
+	return `user-modal-${user.id}`
+};

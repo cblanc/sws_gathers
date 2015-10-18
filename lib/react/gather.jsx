@@ -726,19 +726,6 @@ var Gatherers = React.createClass({
 		});
 	},
 
-	enslUrl(gatherer) {
-		return `http://www.ensl.org/users/${gatherer.id}`
-	},
-
-	hiveUrl(gatherer) {
-		let hiveId = gatherer.user.hive.id;
-		if (hiveId) {
-			return `http://hive.naturalselection2.com/profile/${hiveId}`
-		} else {
-			return null;
-		}
-	},
-
 	render() {
 		let self = this;
 		let user = this.props.user;
@@ -862,10 +849,10 @@ var Gatherers = React.createClass({
 								<dd>{hive}</dd>
 								<dt>Links</dt>
 								<dd>
-									<a href={this.enslUrl(gatherer)} 
+									<a href={enslUrl(gatherer)} 
 										className="btn btn-xs btn-primary"
 										target="_blank">ENSL Profile</a>&nbsp;
-									<a href={this.hiveUrl(gatherer)} 
+									<a href={hiveUrl(gatherer)} 
 										className="btn btn-xs btn-primary"
 										target="_blank">Hive Profile</a>
 								</dd>

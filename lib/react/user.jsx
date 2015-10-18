@@ -36,17 +36,119 @@ var UserLogin = React.createClass({
 			</form>
 		);
 	}
+});
+
+var UserModal = React.createClass({
+	render() {
+		let user = this.props.user;
+		console.log(user);
+		let hiveStats;
+		if (user.hive.id) {
+			hiveStats = [
+			<tr><td><strong>Hive Stats</strong></td><td></td></tr>,
+			<tr>
+				<td>ELO</td>
+				<td>{user.hive.skill}</td>
+			</tr>,
+			<tr>
+				<td>Hours Played</td>
+				<td>{Math.round(user.hive.playTime / 3600)}</td>
+			</tr>,
+			<tr>
+				<td>Wins</td>
+				<td>{user.hive.wins}</td>
+			</tr>,
+			<tr>
+				<td>Losses</td>
+				<td>{user.hive.loses}</td>
+			</tr>,
+			<tr>
+				<td>Kills (/min)</td>
+				<td>{user.hive.kills} ({_.round(user.hive.kills / (user.hive.playTime / 60), 1)})</td>
+			</tr>,
+			<tr>
+				<td>Assists (/min)</td>
+				<td>{user.hive.assists} ({_.round(user.hive.assists / (user.hive.playTime / 60), 1)})</td>
+			</tr>,
+			<tr>
+				<td>Deaths (/min)</td>
+				<td>{user.hive.deaths} ({_.round(user.hive.deaths / (user.hive.playTime / 60), 1)})</td>
+			</tr>
+			]
+		}
+		return (
+			<div className="modal fade" id={modalId(user)}>
+				<div className="modal-dialog">
+					<div className="modal-content">
+						<div className="modal-header">
+							<button type="button" className="close" data-dismiss="modal" 
+								aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 className="modal-title">
+								<img src="images/blank.gif" 
+									className={"flag flag-" + user.country.toLowerCase()} 
+									alt={user.country} />&nbsp;
+								{user.username}
+							</h4>
+						</div>
+						<div className="modal-body">
+							<div className="text-center">
+								<img 
+								src={user.avatar} 
+								alt="User Avatar" 
+								className="img-circle" />
+							</div>
+							<table className="table">
+								<tbody>
+									<tr>
+										<td>Lifeforms</td>
+										<td><LifeformIcons gatherer={{user: user}} /></td>
+									</tr>
+									<tr>
+										<td>Links</td>
+										<td>
+											<a href={enslUrl(user)} 
+												className="btn btn-xs btn-primary"
+												target="_blank">ENSL Profile</a>&nbsp;
+											<a href={hiveUrl({user: user})} 
+												className="btn btn-xs btn-primary"
+												target="_blank">Hive Profile</a>
+										</td>
+									</tr>
+									{hiveStats}
+								</tbody>
+							</table>
+						</div>
+						<div className="modal-footer">
+							<button type="button" 
+								className="btn btn-default" 
+								data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 })
+
+var UserItem = React.createClass({
+	render() {
+		let user = this.props.user;
+		return (
+			<li className="list-group-item">
+					<a href="#" data-toggle="modal" 
+					data-target={`#${modalId(user)}`}>{user.username}</a>
+					<UserModal user={user} />
+			</li>
+		);
+	}
+});
 
 var UserMenu = React.createClass({
 	render() {
 		let users = this.props.users.map(user => {
-			return (
-				<li key={user.id}
-					className="list-group-item">
-						<a href="#">{user.username}</a>
-				</li>
-			);
+			return <UserItem user={user} key={user.id} />
 		});
 		return (
 			<div>
@@ -72,14 +174,17 @@ var AdminPanel = React.createClass({
 	render() {
 		return (
 			<div className="modal fade" id="adminmodal">
-			  <div className="modal-dialog">
-			    <div className="modal-content">
-			      <div className="modal-header">
-			        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 className="modal-title">Administration Panel</h4>
-			      </div>
-			      <div className="modal-body" id="admin-menu">
-				      <h5>Swap Into a Different Account</h5>
+				<div className="modal-dialog">
+					<div className="modal-content">
+						<div className="modal-header">
+							<button type="button" className="close" data-dismiss="modal" 
+								aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 className="modal-title">Administration Panel</h4>
+						</div>
+						<div className="modal-body" id="admin-menu">
+							<h5>Swap Into a Different Account</h5>
 							<UserLogin />
 							<h5>Gather Options</h5>
 							<div>
@@ -88,12 +193,13 @@ var AdminPanel = React.createClass({
 									onClick={this.handleGatherReset}>
 									Reset Gather</button>
 							</div>
-			      </div>
-			      <div className="modal-footer">
-			        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-			      </div>
-			    </div>
-			  </div>
+						</div>
+						<div className="modal-footer">
+							<button type="button" className="btn btn-default" 
+								data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -143,44 +249,54 @@ var ProfileModal = React.createClass({
 
 		return (
 			<div className="modal fade" id="profilemodal">
-			  <div className="modal-dialog">
-			    <div className="modal-content">
-			      <div className="modal-header">
-			        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 className="modal-title">Profile</h4>
-			      </div>
-			      <div className="modal-body" id="profile-panel">
-			      	<form>
-							  <div className="form-group">
-							    <label>Player Skill</label><br />
-								  <select 
-								  	defaultValue={skillLevel}
-								  	className="form-control" 
-								  	ref="playerskill">
-									  {skillLevels}
+				<div className="modal-dialog">
+					<div className="modal-content">
+						<div className="modal-header">
+							<button type="button" className="close" data-dismiss="modal" 
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 className="modal-title">Profile</h4>
+						</div>
+						<div className="modal-body" id="profile-panel">
+							<form>
+								<div className="form-group">
+									<label>Player Skill</label><br />
+									<select 
+										defaultValue={skillLevel}
+										className="form-control" 
+										ref="playerskill">
+										{skillLevels}
 									</select>
-									<p className="add-top"><small>Try to give an accurate representation of your skill to raise the quality of your gathers</small></p>
-							  </div>
-							  <hr />
-							  <div className="form-group">
-							  	<label>Preferred Lifeforms</label><br />
-								  {abilitiesForm}
-								  <p><small>Specify which lifeforms you'd like to play in the gather</small></p>
-							  </div>
-							  <hr />
-						  	<p className="small">You will need to rejoin the gather to see your updated profile</p>
-							  <div className="form-group">
-								  <button 
-								  	type="submit"
-								  	className="btn btn-primary"
-								  	data-dismiss="modal"
-								  	onClick={this.handleUserUpdate}>
-								  	Update &amp; Close</button>
-						  	</div>
+									<p className="add-top"><small>
+										Try to give an accurate representation of your skill to raise 
+											the quality of your gathers
+									</small></p>
+								</div>
+								<hr />
+								<div className="form-group">
+									<label>Preferred Lifeforms</label><br />
+									{abilitiesForm}
+									<p><small>
+										Specify which lifeforms you'd like to play in the gather
+									</small></p>
+								</div>
+								<hr />
+								<p className="small">
+									You will need to rejoin the gather to see your updated profile
+								</p>
+								<div className="form-group">
+									<button 
+										type="submit"
+										className="btn btn-primary"
+										data-dismiss="modal"
+										onClick={this.handleUserUpdate}>
+										Update &amp; Close</button>
+								</div>
 							</form>
-			      </div>
-			    </div>
-			  </div>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -193,9 +309,9 @@ var CurrentUser = React.createClass({
 			if (this.props.user.admin) {
 				adminOptions = (
 					<li>
-					 	<a href="#" data-toggle="modal" data-target="#adminmodal">
-					 		<i className="fa fa-magic fa-fw"></i> Administration
-					 	</a>
+						<a href="#" data-toggle="modal" data-target="#adminmodal">
+							<i className="fa fa-magic fa-fw"></i> Administration
+						</a>
 					</li>
 				)
 			}

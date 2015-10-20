@@ -613,12 +613,7 @@ var Gather = React.createClass({
 		let maps = this.props.maps;
 		let user = this.props.user;
 
-		if (gather === null) return;
-
-		if (gather.state === 'done') {
-			return <CompletedGather maps={maps} servers={servers} show={true}
-							gather={this.props.previousGather} />;
-		}
+		if (gather === null) return <div></div>;
 
 		let voting;
 		if (thisGatherer) {
@@ -648,21 +643,6 @@ var Gather = React.createClass({
 			gatherTeams = <GatherTeams gather={gather} />;
 		}
 
-		let previousGather;
-		if (this.props.previousGather) {
-			previousGather = (
-				<div className="panel panel-primary">
-					<div className="panel-heading">
-						Previous Gather
-					</div>
-					<div className="panel-body">
-						<CompletedGather maps={maps} servers={servers} show={true}
-							gather={this.props.previousGather} />
-					</div>
-				</div>
-			);
-		}
-
 		if (gather.gatherers.length > 0) {
 			return (
 				<div>
@@ -676,7 +656,6 @@ var Gather = React.createClass({
 					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} />
 					{gatherTeams}
 					{voting}
-					{previousGather}
 				</div>
 			);
 		} else {
@@ -910,7 +889,11 @@ var Gatherers = React.createClass({
 var CompletedGather = React.createClass({
 	completionDate() {
 		let d = new Date(this.props.gather.done.time);
-		return d.toLocaleTimeString();
+		if (d) {
+			return d.toLocaleTimeString();
+		} else {
+			return "Completed Gather"
+		}
 	},
 
 	getInitialState() {
@@ -1011,10 +994,10 @@ var ArchivedGathers = React.createClass({
 			.sort((a, b) => {
 				return new Date(b.createdAt) - new Date(a.createdAt);
 			})
-			.map(archivedGather => {
+			.map((archivedGather, index) => {
 				return <CompletedGather 
 					id={archivedGather.gather.done.time}
-					show={false}
+					show={(index === 0) ? true : false}
 					gather={archivedGather.gather} 
 					maps={this.props.maps}
 					servers={this.props.servers} />

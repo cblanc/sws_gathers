@@ -225,21 +225,22 @@ var GatherProgress = React.createClass({
 	}
 });
 
+let teamspeakDefaults = {
+	url: "ts3server://ensl.org/",
+	password: "ns2gather",
+	alien: {
+		channel: "NS2 Gather/Gather #1/Alien",
+		password: "ns2gather"
+	},
+	marine: {
+		channel: "NS2 Gather/Gather #1/Marine",
+		password: "ns2gather"
+	}
+};
+
 var TeamSpeakButton = React.createClass({
 	getDefaultProps() {
-		let password = "ns2gather";
-		return {
-			url: "ts3server://ensl.org/",
-			password: password,
-			alien: {
-				channel: "NS2 Gather/Gather #1/Alien",
-				password: password
-			},
-			marine: {
-				channel: "NS2 Gather/Gather #1/Marine",
-				password: password
-			}
-		};
+		return teamspeakDefaults
 	},
 	marineUrl() {
 		return this.teamSpeakUrl(this.props.marine);
@@ -254,47 +255,55 @@ var TeamSpeakButton = React.createClass({
 	},
 	render() {
 		return (
-			<div className="btn-group dropup">
-				<button type="button" 
-					className="btn btn-primary dropdown-toggle" 
-					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Teamspeak <span className="caret"></span>
-				</button>
-				<ul className="dropdown-menu">
-					<li><a href={this.props.url}>Join Teamspeak Lobby</a></li>
-					<li><a href={this.marineUrl()}>Join Marine Teamspeak</a></li>
-					<li><a href={this.alienUrl()}>Join Alien Teamspeak</a></li>
-					<li role="separator" className="divider"></li>
-					<li><a href="#" data-toggle="modal" data-target="#teamspeakmodal">
-						Teamspeak Details</a></li>
-				</ul>
-				<div className="modal fade text-left" id="teamspeakmodal">
-					<div className="modal-dialog">
-						<div className="modal-content">
-							<div className="modal-header">
-								<button type="button" 
-									className="close" 
-									data-dismiss="modal" 
-									aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								<h4 className="modal-title">Teamspeak Server Information</h4>
-							</div>
-							<div className="modal-body">
-								<dl className="dl-horizontal">
-									<dt>Server</dt>
-									<dd>{this.props.url}</dd>
-									<dt>Password</dt>
-									<dd>{this.props.password}</dd>
-									<dt>Marine Channel</dt>
-									<dd>{this.props.marine.channel}</dd>
-									<dt>Alien Channel</dt>
-									<dd>{this.props.alien.channel}</dd>
-								</dl>
-							</div>
-						</div>
+			<ul className="nav navbar-top-links navbar-right">
+			  <li className="dropdown">
+					<a className="dropdown-toggle" data-toggle="dropdown" href="#">
+						Teamspeak &nbsp;<i className="fa fa-caret-down"></i>
+					</a>
+					<ul className="dropdown-menu">
+						<li><a href={this.props.url}>Join Teamspeak Lobby</a></li>
+						<li><a href={this.marineUrl()}>Join Marine Teamspeak</a></li>
+						<li><a href={this.alienUrl()}>Join Alien Teamspeak</a></li>
+						<li role="separator" className="divider"></li>
+						<li><a href="#" data-toggle="modal" data-target="#teamspeakmodal">Teamspeak Details</a></li>
+					</ul>
+				</li>
+		  </ul>
+		);
+	}
+});
+
+var TeamSpeakModal = React.createClass({
+	getDefaultProps() {
+		return teamspeakDefaults;
+	},
+
+	render() {
+		return <div className="modal fade text-left" id="teamspeakmodal">
+			<div className="modal-dialog">
+				<div className="modal-content">
+					<div className="modal-header">
+						<button type="button" 
+							className="close" 
+							data-dismiss="modal" 
+							aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 className="modal-title">Teamspeak Server Information</h4>
+					</div>
+					<div className="modal-body">
+						<dl className="dl-horizontal">
+							<dt>Server</dt>
+							<dd>{this.props.url}</dd>
+							<dt>Password</dt>
+							<dd>{this.props.password}</dd>
+							<dt>Marine Channel</dt>
+							<dd>{this.props.marine.channel}</dd>
+							<dt>Alien Channel</dt>
+							<dd>{this.props.alien.channel}</dd>
+						</dl>
 					</div>
 				</div>
 			</div>
-		);
+		</div>
 	}
 });
 
@@ -403,20 +412,17 @@ var GatherActions = React.createClass({
 		}
 
 		return (
-			<div className="panel panel-primary gather-actions">
-				<div className="panel-body">
-					<div className="text-right">
-						<ul className="list-inline no-bottom">
-							<TeamSpeakButton />
-							<li>
-								{regatherButton}
-							</li>
-							<li>
-								<JoinGatherButton gather={gather} thisGatherer={thisGatherer}
-									user={user} />
-							</li>
-						</ul>
-					</div>
+			<div>
+				<div className="text-right">
+					<ul className="list-inline no-bottom">
+						<li>
+							{regatherButton}
+						</li>
+						<li>
+							<JoinGatherButton gather={gather} thisGatherer={thisGatherer}
+								user={user} />
+						</li>
+					</ul>
 				</div>
 			</div>
 		);
@@ -656,18 +662,19 @@ var Gather = React.createClass({
 				</div>
 			);
 		}
+
 		return (
 			<div>
 				<div className="panel panel-primary add-bottom">
 					<div className="panel-heading">Current Gather</div>
 					<div className="panel-body">
 						<GatherProgress gather={gather} />
+						<GatherActions gather={gather} user={user} thisGatherer={thisGatherer} />
 					</div>
 				</div>
 				<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} />
 				{gatherTeams}
 				{voting}
-				<GatherActions gather={gather} user={user} thisGatherer={thisGatherer} />
 				{previousGather}
 			</div>
 		);

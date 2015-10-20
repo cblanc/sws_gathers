@@ -41,7 +41,6 @@ var UserLogin = React.createClass({
 var UserModal = React.createClass({
 	render() {
 		let user = this.props.user;
-		console.log(user);
 		let hiveStats;
 		if (user.hive.id) {
 			hiveStats = [

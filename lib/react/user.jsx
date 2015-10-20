@@ -96,8 +96,7 @@ var UserModal = React.createClass({
 							<div className="text-center">
 								<img 
 								src={user.avatar} 
-								alt="User Avatar" 
-								className="img-circle" />
+								alt="User Avatar" />
 							</div>
 							<table className="table">
 								<tbody>

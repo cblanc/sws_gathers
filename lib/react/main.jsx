@@ -153,6 +153,7 @@ var App = React.createClass({
 								maps={this.props.maps}
 								servers={this.props.servers}
 								previousGather={this.props.previousGather}/>
+							<hr />
 							<ArchivedGathers archive={this.props.archive}
 								maps={this.props.maps}
 								servers={this.props.servers} />

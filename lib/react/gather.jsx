@@ -663,21 +663,35 @@ var Gather = React.createClass({
 			);
 		}
 
-		return (
-			<div>
-				<div className="panel panel-primary add-bottom">
-					<div className="panel-heading">Current Gather</div>
-					<div className="panel-body">
-						<GatherProgress gather={gather} />
-						<GatherActions gather={gather} user={user} thisGatherer={thisGatherer} />
+		if (gather.gatherers.length > 0) {
+			return (
+				<div>
+					<div className="panel panel-primary add-bottom">
+						<div className="panel-heading">Current Gather</div>
+						<div className="panel-body">
+							<GatherProgress gather={gather} />
+							<GatherActions gather={gather} user={user} thisGatherer={thisGatherer} />
+						</div>
 					</div>
+					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} />
+					{gatherTeams}
+					{voting}
+					{previousGather}
 				</div>
-				<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} />
-				{gatherTeams}
-				{voting}
-				{previousGather}
-			</div>
-		);
+			);
+		} else {
+			return (
+				<div>
+					<div className="panel panel-primary add-bottom">
+						<div className="panel-heading">Current Gather</div>
+						<div className="panel-body text-center">Be the first to join the gather
+						</div>
+					</div>
+					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} />
+				</div>
+			);
+		}
+
 	}
 });
 

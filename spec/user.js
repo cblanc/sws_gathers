@@ -48,6 +48,62 @@ describe("User", () => {
 		});
 	});
 
+	describe("Abilities", () => {
+		describe("isChatAdmin", () => {
+			it ("returns true if admin", () => {
+				user.admin = true;
+				user.moderator = false;
+				assert.isTrue(user.isChatAdmin());
+			});
+			it ("returns true if moderator", () => {
+				user.admin = false;
+				user.moderator = true;
+				assert.isTrue(user.isChatAdmin());
+			});
+			it ("returns true if neither admin nor moderator", () => {
+				user.admin = false;
+				user.moderator = false;
+				assert.isFalse(user.isChatAdmin());
+			});
+		});
+
+		describe("isGatherAdmin", () => {
+			it ("returns true if admin", () => {
+				user.admin = true;
+				user.moderator = false;
+				assert.isTrue(user.isGatherAdmin());
+			});
+			it ("returns true if moderator", () => {
+				user.admin = false;
+				user.moderator = true;
+				assert.isTrue(user.isGatherAdmin());
+			});
+			it ("returns true if neither admin nor moderator", () => {
+				user.admin = false;
+				user.moderator = false;
+				assert.isFalse(user.isGatherAdmin());
+			});
+		});
+		
+		describe("isUserAdmin", () => {
+			it ("returns true if admin", () => {
+				user.admin = true;
+				user.moderator = false;
+				assert.isTrue(user.isUserAdmin());
+			});
+			it ("returns true if moderator", () => {
+				user.admin = false;
+				user.moderator = true;
+				assert.isTrue(user.isUserAdmin());
+			});
+			it ("returns true if neither admin nor moderator", () => {
+				user.admin = false;
+				user.moderator = false;
+				assert.isFalse(user.isUserAdmin());
+			});
+		});
+	});
+
 	describe("#updateProfile", () => {
 		var profile, user;
 

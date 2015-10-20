@@ -982,8 +982,7 @@ var GatherVotingResults = React.createClass({
 						{password}
 					</dl>
 					<p>
-						<a href={`steam://connect/${server.ip}:${server.port}/
-							${server.password}`}
+						<a href={`steam://run/4920/connect+%20${server.ip}:${server.port}%20+password%20${server.password}`}
 							className="btn btn-primary max-width">Join Server</a>
 					</p>
 				</div>

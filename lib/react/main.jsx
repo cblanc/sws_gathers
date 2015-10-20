@@ -103,6 +103,7 @@ var App = React.createClass({
 			  <ul className="nav navbar-top-links navbar-right" id="soundcontroller">
 			  	<SoundPanel soundController={this.props.soundController} />
 			  </ul>
+			  <TeamSpeakButton />
 			  <ul className="nav navbar-top-links navbar-right">
 				  <li className="dropdown">
 						<a className="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -129,6 +130,7 @@ var App = React.createClass({
 			  </ul>
 			</nav>
 			<AdminPanel />
+			<TeamSpeakModal />
 			<ProfileModal user={this.props.user} />
 			<div style={{minHeight: "750px"}}>
 				<div className="container-fluid">

@@ -663,8 +663,6 @@ var Gather = React.createClass({
 				<div>
 					<div className="panel panel-primary add-bottom">
 						<div className="panel-heading">Current Gather</div>
-						<div className="panel-body text-center">Be the first to join the gather
-						</div>
 					</div>
 					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} />
 				</div>

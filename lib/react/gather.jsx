@@ -612,7 +612,6 @@ var Gather = React.createClass({
 		let servers = this.props.servers;
 		let maps = this.props.maps;
 		let user = this.props.user;
-
 		if (gather === null) return <div></div>;
 
 		let voting;

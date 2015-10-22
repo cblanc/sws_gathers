@@ -147,7 +147,7 @@ var UserItem = React.createClass({
 var UserMenu = React.createClass({
 	render() {
 		let users = this.props.users
-		.sort((a, b) => (a.username > b.username) ? 1 : -1)
+		.sort((a, b) => (a.username.toLowerCase() > b.username.toLowerCase()) ? 1 : -1)
 		.map(user => {
 			return <UserItem user={user} key={user.id} />
 		});

@@ -91,7 +91,7 @@ describe("User", () => {
 				user.moderator = false;
 				assert.isTrue(user.isUserAdmin());
 			});
-			it ("returns true if moderator", () => {
+			it ("returns false if moderator", () => {
 				user.admin = false;
 				user.moderator = true;
 				assert.isTrue(user.isUserAdmin());

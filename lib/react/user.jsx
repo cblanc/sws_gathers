@@ -307,7 +307,7 @@ var CurrentUser = React.createClass({
 	render() {
 		if (this.props.user) {
 			var adminOptions;
-			if (this.props.user.admin) {
+			if (this.props.user.admin || this.props.user.moderator) {
 				adminOptions = (
 					<li>
 						<a href="#" data-toggle="modal" data-target="#adminmodal">

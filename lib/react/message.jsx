@@ -194,13 +194,14 @@ var MessageBar = React.createClass({
 
 	render() {
 		return (
-			<form onSubmit={this.handleSubmit} >
+			<form onSubmit={this.handleSubmit} autocomplete="off">
 				<div className="input-group">
 					<input 
 						id="btn-input" 
 						type="text" 
 						className="form-control" 
 						ref="content"
+						autocomplete="off"
 						placeholder="Be polite please..." />
 					<span className="input-group-btn">
 						<input 

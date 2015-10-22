@@ -1,5 +1,11 @@
 "use strict";
 
+// Accepts an array of IDs voted
+// 1. Creates an array of tally objects, 
+//		with ID as prop and vote count as val { 12: 0 }
+// 2. Increments ID vote tally for every vote
+// 3. Sorts 
+
 var rankVotes = function (votes, candidates) {
 	var initial = candidates.reduce(function (acc, candidate) {
 		acc[candidate.id] = 0;
@@ -25,7 +31,11 @@ var rankVotes = function (votes, candidates) {
 	}
 
 	return rank.sort(function (a, b) {
-		return b.count - a.count;
+		if (b.count === a.count) {
+			return b.id - a.id;
+		} else {
+			return b.count - a.count;
+		}
 	}).map(function (tally) {
 		return tally.id
 	}).map(function (id) {

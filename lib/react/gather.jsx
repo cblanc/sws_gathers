@@ -930,6 +930,7 @@ var CompletedGather = React.createClass({
 });
 
 var GatherVotingResults = React.createClass({
+	// Returns an array of ids voted for e.g. [1,2,5,1,1,3,2]
 	countVotes(voteType) {
 		return this.props.gather.gatherers.reduce((acc, gatherer) => {
 			let votes = gatherer[voteType];

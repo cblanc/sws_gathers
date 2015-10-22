@@ -24,24 +24,50 @@ class SoundController {
 		}, this.MINIMUM_PLAY_INTERVAL);
 
 		this.isMuted = Howler._muted;
-
+		
+		let gatherMusic;
 		if (storageAvailable("localStorage")) {
 			let volume = localStorage.getItem("gatherVolume");
 			if (volume !== undefined) Howler.volume(volume);
+			gatherMusic = localStorage.getItem("gatherMusic");
 		}
 
 		this.tunes = {
 			"classic": {
 				description: "Classic",
-				url: 'http://www.ensl.org/sounds/gather-1.mp3'
+				url: 'http://www.ensl.org/files/audio/gather-1.mp3'
+			},
+			"nights": {
+				description: "Nights",
+				url: 'http://www.ensl.org/files/audio/nights.mp3'
+			},
+			"america": {
+				description: "Infamous",
+				url: 'http://www.ensl.org/files/audio/america.mp3'
+			},
+			"skyice": {
+				description: "Skyice",
+				url: 'http://www.ensl.org/files/audio/skyice.mp3'
+			},
+			"robbie": {
+				description: "Robbie",
+				url: 'http://www.ensl.org/files/audio/robbie.mp3'
+			},
+			"justwannahavefun": {
+				description: "Gorges just want to have fun",
+				url: 'http://www.ensl.org/files/audio/justwannahavefun.mp3'
 			},
 			"eyeofthegorgie": {
 				description: "Eye of the Gorgie",
 				url: 'http://www.ensl.org/files/audio/eyeofthegorgie.mp3'
-			}
+			},
+			"boondock": {
+				description: "Boondock Marines",
+				url: 'http://www.ensl.org/files/audio/boondock.mp3'
+			},
 		}
 
-		this.setupGatherMusic("classic");
+		this.setupGatherMusic(gatherMusic);
 	}
 
 	mute() {
@@ -76,11 +102,20 @@ class SoundController {
 		if (this.gather && this.gather.music) return this.gather.music.stop();
 	}
 
+	defaultGatherMusic() {
+		return "classic";
+	}
+
 	setupGatherMusic (musicName) {
 		let self = this;
-		let gatherMusic = this.tunes[musicName];
+		let gatherMusic = self.tunes[musicName];
 
-		if (!gatherMusic) return;
+		if (!gatherMusic) {
+			// Default to classic
+			musicName = this.defaultGatherMusic();
+			gatherMusic = self.tunes[musicName]; 
+		}
+
 		if (self.gather && self.gather.name === musicName) return;
 
 		// Stop if already playing
@@ -100,11 +135,69 @@ class SoundController {
 	}
 }
 
+var MusicSelector = React.createClass({
+	getInitialState() {
+		return {
+			music: this.selectedMusic()
+		}
+	},
+
+	selectedMusic() {
+		if (storageAvailable("localStorage")) {
+			return localStorage.getItem("gatherMusic") 
+				|| this.props.soundController.defaultGatherMusic();
+		} else {
+			return this.props.soundController.defaultGatherMusic(); 
+		}
+	},
+
+	setMusic(event) {
+		let name = event.target.value;
+		let soundController = this.props.soundController;
+		let selectedTune = soundController.tunes[name];
+		if (selectedTune === undefined) return;
+		this.setState({ music: name });
+		soundController.setupGatherMusic(name);
+		if (storageAvailable("localStorage")) {
+			localStorage.setItem("gatherMusic", name);
+		}
+	},
+
+	render() {
+		let soundController = this.props.soundController;
+		let tunes = [];
+		for (var attr in soundController.tunes) {
+			let o = soundController.tunes[attr];
+			o.id = attr;
+			tunes.push(o);
+		}
+		let options = tunes.map(tune => {
+			return <option key={tune.id} value={tune.id}>{tune.description}</option>;
+		});
+		return (
+			<div className="form-group music-select">
+				<label>Music</label>
+				<select
+					className="form-control"
+					defaultValue={this.state.music}
+					onChange={this.setMusic}
+					value={this.state.music}>
+					{options}
+				</select>
+			</div>
+		);
+	}
+})
 
 var SoundPanel = React.createClass({
 	componentDidMount() {
 		let soundController = this.props.soundController;
 		let scale = 10;
+
+		$('a#sound-dropdown').on('click', function (event) {
+			$(this).parent().toggleClass('open');
+		});
+
 		$("#volume-slide").slider({
 			min: 0,
 			max: scale,
@@ -112,8 +205,6 @@ var SoundPanel = React.createClass({
 		}).on("slideStop", ({value}) => {
 			soundController.setVolume(value / scale);
 		}).slider('setValue', soundController.getVolume() * scale);
-
-		console.log(soundController.getVolume());
 	},
 
 	mute() {
@@ -154,10 +245,10 @@ var SoundPanel = React.createClass({
 		}
 		return <ul className="nav navbar-top-links navbar-right">
 		  <li className="dropdown">
-				<a className="dropdown-toggle" data-toggle="dropdown" href="#">
+				<a className="dropdown-toggle" href="#" id="sound-dropdown">
 					Sound &nbsp;{mutedIcon}&nbsp;<i className="fa fa-caret-down"></i>
 				</a>
-				<ul className="dropdown-menu">
+				<ul className="dropdown-menu" id="sound-dropdown">
 					{mutedButton}
 					<li>
 						<a href='#' onClick={this.play}>
@@ -169,10 +260,15 @@ var SoundPanel = React.createClass({
 							<i className="fa fa-stop"></i>&nbsp;Stop
 						</a>
 					</li>
+					<hr />
 					<li>
 						<div className="volume-slide">
+							<label>Volume</label>
 							<div id="volume-slide"></div>
 						</div>
+					</li>
+					<li>
+						<MusicSelector soundController={soundController} />
 					</li>
 				</ul>
 			</li>

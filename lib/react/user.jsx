@@ -185,7 +185,7 @@ var AdminPanel = React.createClass({
 							<h4 className="modal-title">Administration Panel</h4>
 						</div>
 						<div className="modal-body" id="admin-menu">
-							<h5>Swap Into a Different Account</h5>
+							<h5>Swap Into a Different Account (Only works for admins)</h5>
 							<UserLogin />
 							<h5>Gather Options</h5>
 							<div>

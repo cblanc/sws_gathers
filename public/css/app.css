@@ -192,3 +192,9 @@ html, body {
 .panel-light-background {
 	background-color: #d9edf7;
 }
+
+/* Sound */
+
+.slider {
+	margin: 5px 15px;
+}

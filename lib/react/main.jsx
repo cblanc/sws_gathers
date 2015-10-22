@@ -112,17 +112,17 @@ var App = React.createClass({
 						<ul className="dropdown-menu">
 							<li>
 								<a href="https://github.com/cblanc/sws_gathers" target="_blank">
-									Github&nbsp;<i className="fa fa-github">&nbsp;</i>
+									<i className="fa fa-github">&nbsp;</i>&nbsp;Github
 								</a>
 							</li>
 							<li>
 								<a href="http://steamcommunity.com/id/nslgathers" target="_blank">
-									Steam Bot&nbsp;<i className="fa fa-external-link">&nbsp;</i>
+									<i className="fa fa-external-link">&nbsp;</i>&nbsp;Steam Bot
 								</a>
 							</li>
 							<li>
 								<a href="http://www.ensl.org/articles/464" target="_blank">
-									Gather Rules&nbsp;<i className="fa fa-external-link">&nbsp;</i>
+									<i className="fa fa-external-link">&nbsp;</i>&nbsp;Gather Rules
 								</a>
 							</li>
 						</ul>

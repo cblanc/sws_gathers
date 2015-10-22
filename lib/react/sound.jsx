@@ -1,3 +1,16 @@
+function storageAvailable(type) {
+	try {
+		var storage = window[type],
+			x = '__storage_test__';
+		storage.setItem(x, x);
+		storage.removeItem(x);
+		return true;
+	}
+	catch(e) {
+		return false;
+	}
+}
+
 class SoundController {
 	constructor () {
 		if (Howl === undefined) {
@@ -12,7 +25,10 @@ class SoundController {
 
 		this.isMuted = Howler._muted;
 
-		this.volume = Howler._volume;
+		if (storageAvailable("localStorage")) {
+			let volume = localStorage.getItem("gatherVolume");
+			if (volume !== undefined) Howler.volume(volume);
+		}
 
 		this.tunes = {
 			"classic": {
@@ -28,13 +44,6 @@ class SoundController {
 		this.setupGatherMusic("classic");
 	}
 
-	volume(val) {
-		if (typeof val === 'number' && Math.abs(val) <= 1) {
-			this.volume = val;
-			return Howler.volume(val)
-		}
-	}
-
 	mute() {
 		this.isMuted = true;
 		return Howler.mute();
@@ -43,6 +52,20 @@ class SoundController {
 	unMute() {
 		this.isMuted = false;
 		return Howler.unmute();
+	}
+
+	getVolume() {
+		return Howler.volume();
+	}
+
+	setVolume(val) {
+		if (val === undefined || 
+				typeof val !== 'number' || 
+				Math.abs(val) > 1) return;
+		if (storageAvailable("localStorage")) {
+			localStorage.setItem("gatherVolume", val);
+		}
+		return Howler.volume(val);
 	}
 
 	play(music) {
@@ -79,6 +102,20 @@ class SoundController {
 
 
 var SoundPanel = React.createClass({
+	componentDidMount() {
+		let soundController = this.props.soundController;
+		let scale = 10;
+		$("#volume-slide").slider({
+			min: 0,
+			max: scale,
+			step: 1
+		}).on("slideStop", ({value}) => {
+			soundController.setVolume(value / scale);
+		}).slider('setValue', soundController.getVolume() * scale);
+
+		console.log(soundController.getVolume());
+	},
+
 	mute() {
 		this.props.soundController.mute();
 		this.forceUpdate();
@@ -89,24 +126,56 @@ var SoundPanel = React.createClass({
 		this.forceUpdate();
 	},
 
+	play() {
+		this.props.soundController.play();
+	},
+
+	stop() {
+		this.props.soundController.stop();
+	},
+
 	render() {
 		let soundController = this.props.soundController;
+		let mutedIcon, mutedButton;
 		if (soundController.isMuted) {
-			return (
-				<li>
-					<a href="#" onClick={this.unMute}>
-						Muted&nbsp;<i className="fa fa-volume-off fa-fw"></i>
-					</a>
-				</li>
-			);
+			mutedIcon = <i className="fa fa-volume-off fa-fw"></i>;
+			mutedButton = <li>
+				<a href="#" onClick={this.unMute}>
+					{mutedIcon}&nbsp;Muted
+				</a>
+			</li>;
 		} else {
-			return (
-				<li>
-					<a href="#" onClick={this.mute}>
-						Unmuted&nbsp;<i className="fa fa-volume-up fa-fw"></i>
-					</a>
-				</li>
-			);
+			mutedIcon = <i className="fa fa-volume-up fa-fw"></i>;
+			mutedButton = <li>
+				<a href="#" onClick={this.mute}>
+					{mutedIcon}&nbsp;Unmuted
+				</a>
+			</li>;
 		}
+		return <ul className="nav navbar-top-links navbar-right">
+		  <li className="dropdown">
+				<a className="dropdown-toggle" data-toggle="dropdown" href="#">
+					Sound &nbsp;{mutedIcon}&nbsp;<i className="fa fa-caret-down"></i>
+				</a>
+				<ul className="dropdown-menu">
+					{mutedButton}
+					<li>
+						<a href='#' onClick={this.play}>
+							<i className="fa fa-play"></i>&nbsp;Play
+						</a>
+					</li>
+					<li>
+						<a href='#' onClick={this.stop}>
+							<i className="fa fa-stop"></i>&nbsp;Stop
+						</a>
+					</li>
+					<li>
+						<div className="volume-slide">
+							<div id="volume-slide"></div>
+						</div>
+					</li>
+				</ul>
+			</li>
+	  </ul>;
 	}
 });

@@ -49,10 +49,6 @@ class SoundController {
 				description: "Skyice",
 				url: 'http://www.ensl.org/files/audio/skyice.mp3'
 			},
-			"robbie": {
-				description: "Robbie",
-				url: 'http://www.ensl.org/files/audio/robbie.mp3'
-			},
 			"justwannahavefun": {
 				description: "Gorges just want to have fun",
 				url: 'http://www.ensl.org/files/audio/justwannahavefun.mp3'

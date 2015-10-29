@@ -1,6 +1,20 @@
 "use strict";
 
 var App = React.createClass({
+	getInitialState() {
+		let updateTitle = true;
+
+		if (storageAvailable('localStorage') && 
+				localStorage.getItem("updateTitle") !== undefined) {
+			updateTitle = JSON.parse(localStorage.getItem("updateTitle"));
+		}
+
+
+		return {
+			updateTitle: updateTitle
+		};
+	},
+
 	getDefaultProps() {
 		return {
 			gather: {
@@ -12,14 +26,27 @@ var App = React.createClass({
 			servers: [],
 			archive: [],
 			soundController: null
-		}
+		};
 	},
 
 	updateTitle() {
 		let gather = this.props.gather;
-		if (gather) {
+		if (gather && this.state.updateTitle) {
 			document.title = `NSL Gathers (${gather.gatherers.length}/12)`;
+			return;
 		}
+		document.title = "NSL Gathers";
+	},
+
+	toggleUpdateTitle(event) {
+		let newState = event.target.checked;
+		this.setState({
+			updateTitle: newState
+		});
+		if (storageAvailable('localStorage')) {
+			localStorage.setItem("updateTitle", newState)
+		}
+		this.updateTitle();
 	},
 
 	thisGatherer() {
@@ -37,6 +64,8 @@ var App = React.createClass({
 		let self = this;
 		let socket = this.props.socket;
 		let soundController = this.props.soundController;
+
+		this.updateTitle();
 
 		socket.on('notification', data => {
 			if (data && data.sound === 'gather_starting' 
@@ -130,6 +159,9 @@ var App = React.createClass({
 			  </ul>
 			</nav>
 			<AdminPanel />
+			<SettingsPanel 
+				toggleUpdateTitle={this.toggleUpdateTitle}
+				updateTitle={this.state.updateTitle} />
 			<TeamSpeakModal />
 			<ProfileModal user={this.props.user} />
 			<div style={{minHeight: "750px"}}>

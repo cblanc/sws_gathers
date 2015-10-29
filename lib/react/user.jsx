@@ -328,7 +328,12 @@ var CurrentUser = React.createClass({
 						<li>
 							<a data-toggle="modal" 
 								data-target="#profilemodal" 
-								href="#"><i className="fa fa-gear fa-fw"></i> Profile</a>
+								href="#"><i className="fa fa-user fa-fw"></i> Profile</a>
+						</li>
+						<li>
+							<a data-toggle="modal" 
+								data-target="#settingsmodal" 
+								href="#"><i className="fa fa-gear fa-fw"></i> Settings</a>
 						</li>
 						{adminOptions}
 					</ul>

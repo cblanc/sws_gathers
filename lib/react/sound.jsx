@@ -34,12 +34,16 @@ class SoundController {
 
 		this.tunes = {
 			"classic": {
-				description: "Classic",
+				description: "Gathers Classic",
 				url: 'http://www.ensl.org/files/audio/gather-1.mp3'
 			},
 			"nights": {
 				description: "Nights",
 				url: 'http://www.ensl.org/files/audio/nights.mp3'
+			},
+			"robby": {
+				description: "Robby",
+				url: 'http://www.ensl.org/files/audio/robby.mp3'
 			},
 			"america": {
 				description: "Infamous",
@@ -61,6 +65,10 @@ class SoundController {
 				description: "Boondock Marines",
 				url: 'http://www.ensl.org/files/audio/boondock.mp3'
 			},
+			"preclassic": {
+				description: "Old Gathers Classic",
+				url: 'http://www.ensl.org/files/audio/gather-5.mp3'
+			}
 		}
 
 		this.setupGatherMusic(gatherMusic);
@@ -99,7 +107,7 @@ class SoundController {
 	}
 
 	defaultGatherMusic() {
-		return "classic";
+		return "robby";
 	}
 
 	setupGatherMusic (musicName) {

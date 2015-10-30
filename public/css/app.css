@@ -25,11 +25,12 @@ body {
   transition: 2s;
   z-index: -1;
 }
-/*Remove After Halloween*/
 
 .panel {
-	opacity: 0.9;
+	background-color: rgba(26,55,79,0.9) !important;
 }
+/*Remove After Halloween*/
+
 
 #side-menu {
 	margin-top: 1em;

@@ -1,14 +1,36 @@
 "use strict";
 
 var Chatroom = React.createClass({
+	getInitialState() {
+		return {
+			autoScroll: true
+		};
+	},
+
 	componentDidMount() {
+		let self = this;
+
+		this.scrollListener = _.debounce((event) => {
+			self.temporarilyDisableAutoScroll(event);
+		}, 300, {
+		  leading: false,
+		  trailing: true
+		});
+
+		let node = React.findDOMNode(this.refs.messageContainer);
+		node.addEventListener('scroll', this.scrollListener);
+
 		this.scrollToBottom();
+	},
+
+	componentWillUnmount() {
+		node.removeEventListener('scroll', this.scrollListener);
+		clearTimeout(this.disableScrollTimer);
 	},
 
 	loadMoreMessages() {
 		var earliestMessage = this.props.messages[0];
 		if (earliestMessage === undefined) return;
-		this.disableScroll = true;
 		socket.emit("message:refresh", {
 			before: earliestMessage.createdAt
 		});
@@ -18,15 +40,35 @@ var Chatroom = React.createClass({
 		socket.emit("newMessage", {message: message});
 	},
 
-	componentDidUpdate() {
-		if (this.disableScroll) {
-			this.disableScroll = false;
-		} else {
-			this.scrollToBottom();
+	clearAutoScrollTimeout() {
+		if (this.disableScrollTimer) clearTimeout(this.disableScrollTimer);
+	},
+
+	temporarilyDisableAutoScroll(event) {
+		let self = this;
+		let node = event.target;
+		if (node) {
+			if (node.scrollHeight - node.scrollTop === node.clientHeight) {
+				this.setState({ autoScroll: true });
+				this.clearAutoScrollTimeout();
+			}
+			if (node.scrollHeight - node.scrollTop - node.clientHeight < 50) return;
 		}
+		this.setState({ autoScroll: false });
+		this.clearAutoScrollTimeout();
+		this.disableScrollTimer = setTimeout(() => {
+			self.setState({
+				autoScroll: true
+			})
+		}, 10000);
+	},
+
+	componentDidUpdate() {
+		this.scrollToBottom();
 	},
 
 	scrollToBottom() {
+		if (!this.state.autoScroll) return;
 		let node = React.findDOMNode(this.refs.messageContainer);
 	  node.scrollTop = node.scrollHeight;
 	},

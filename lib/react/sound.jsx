@@ -26,7 +26,7 @@ class SoundController {
 			// Remove after halloween
 			"halloween": {
 				description: "Halloween",
-				url: 'http://www.ensl.org/files/audio/halloween.mp3'
+				url: 'http://www.ensl.org/files/audio/halloween2.mp3'
 			},
 			"classic": {
 				description: "Gathers Classic",

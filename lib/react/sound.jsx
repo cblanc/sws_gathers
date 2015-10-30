@@ -16,10 +16,18 @@ class SoundController {
 		if (storageAvailable("localStorage")) {
 			let volume = localStorage.getItem("gatherVolume");
 			if (volume !== undefined) Howler.volume(volume);
-			gatherMusic = localStorage.getItem("gatherMusic");
+			// Re-enable after halloween
+			// gatherMusic = localStorage.getItem("gatherMusic");
+			gatherMusic = "halloween";
+			localStorage.setItem("gatherMusic", gatherMusic);
 		}
 
 		this.tunes = {
+			// Remove after halloween
+			"halloween": {
+				description: "Halloween",
+				url: 'http://www.ensl.org/files/audio/halloween.mp3'
+			},
 			"classic": {
 				description: "Gathers Classic",
 				url: 'http://www.ensl.org/files/audio/gather-1.mp3'
@@ -94,7 +102,7 @@ class SoundController {
 	}
 
 	defaultGatherMusic() {
-		return "robby";
+		return "halloween";
 	}
 
 	setupGatherMusic (musicName) {

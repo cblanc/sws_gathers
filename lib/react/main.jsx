@@ -5,10 +5,9 @@ var App = React.createClass({
 		let updateTitle = true;
 
 		if (storageAvailable('localStorage') && 
-				localStorage.getItem("updateTitle") !== undefined) {
+				localStorage.getItem("updateTitle") !== null) {
 			updateTitle = JSON.parse(localStorage.getItem("updateTitle"));
 		}
-
 
 		return {
 			updateTitle: updateTitle

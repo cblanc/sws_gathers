@@ -136,9 +136,9 @@ var UserItem = React.createClass({
 		let user = this.props.user;
 		return (
 			<li className="list-group-item">
-					<a href="#" data-toggle="modal" 
-					data-target={`#${modalId(user)}`}>{user.username}</a>
-					<UserModal user={user} />
+				<a href="#" data-toggle="modal" 
+				data-target={`#${modalId(user)}`}>{user.username}</a>
+				<UserModal user={user} />
 			</li>
 		);
 	}

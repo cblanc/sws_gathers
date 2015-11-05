@@ -16,7 +16,7 @@ class SoundController {
 		if (storageAvailable("localStorage")) {
 			let volume = localStorage.getItem("gatherVolume");
 			if (volume !== undefined) Howler.volume(volume);
-			localStorage.setItem("gatherMusic", gatherMusic);
+			gatherMusic = localStorage.getItem("gatherMusic");
 		}
 
 		this.tunes = {

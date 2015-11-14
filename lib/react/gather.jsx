@@ -737,8 +737,11 @@ var Gatherers = React.createClass({
 			if (gatherer.user.country) {
 				var country = (
 					<img src="images/blank.gif" 
-						className={"flag flag-" + gatherer.user.country.toLowerCase()} 
+						className={"flag flag-fr"} 
 						alt={gatherer.user.country} />
+					// <img src="images/blank.gif" 
+					// 	className={"flag flag-" + gatherer.user.country.toLowerCase()} 
+					// 	alt={gatherer.user.country} />
 				);
 			};
 

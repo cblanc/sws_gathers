@@ -38,9 +38,31 @@ var UserLogin = React.createClass({
 	}
 });
 
+var DisconnectUserButton = React.createClass({
+	getDefaultProps() {
+		return {
+			id: null
+		};
+	},
+
+	disconnectUser() {
+		socket.emit("users:disconnect", {
+			id: this.props.id
+		});
+	},
+	
+	render() {
+		return <button
+			className="btn btn-danger"
+			onClick={this.disconnectUser}>
+			Disconnect User</button>
+	}
+});
+
 var UserModal = React.createClass({
 	render() {
-		let user = this.props.user;
+		const currentUser = this.props.currentUser;
+		const user = this.props.user;
 		let hiveStats;
 		if (user.hive.id) {
 			hiveStats = [
@@ -74,6 +96,10 @@ var UserModal = React.createClass({
 				<td>{user.hive.deaths} ({_.round(user.hive.deaths / (user.hive.playTime / 60), 1)})</td>
 			</tr>
 			]
+		}
+		let adminOptions;
+		if (currentUser.admin) {
+			adminOptions = <DisconnectUserButton id={user.id} />;
 		}
 		return (
 			<div className="modal fade" id={modalId(user)}>
@@ -120,6 +146,7 @@ var UserModal = React.createClass({
 							</table>
 						</div>
 						<div className="modal-footer">
+							{adminOptions}
 							<button type="button" 
 								className="btn btn-default" 
 								data-dismiss="modal">Close</button>
@@ -133,12 +160,13 @@ var UserModal = React.createClass({
 
 var UserItem = React.createClass({
 	render() {
-		let user = this.props.user;
+		const user = this.props.user;
+		const currentUser = this.props.currentUser;
 		return (
 			<li className="list-group-item">
 				<a href="#" data-toggle="modal" 
 				data-target={`#${modalId(user)}`}>{user.username}</a>
-				<UserModal user={user} />
+				<UserModal user={user} currentUser={currentUser} />
 			</li>
 		);
 	}
@@ -146,10 +174,11 @@ var UserItem = React.createClass({
 
 var UserMenu = React.createClass({
 	render() {
-		let users = this.props.users
+		const users = this.props.users
 		.sort((a, b) => (a.username.toLowerCase() > b.username.toLowerCase()) ? 1 : -1)
 		.map(user => {
-			return <UserItem user={user} key={user.id} />
+			return <UserItem user={user} key={user.id} 
+				currentUser={this.props.user} />
 		});
 		return (
 			<div>

@@ -22,8 +22,10 @@ var App = React.createClass({
 			users: [],
 			messages: [],
 			maps: [],
+			user: null,
 			servers: [],
 			archive: [],
+			socket: null,
 			soundController: null
 		};
 	},
@@ -168,7 +170,7 @@ var App = React.createClass({
 					<div className="row">
 						<div className="col-md-2 hidden-xs">
 							<ul className="nav" id="side-menu">
-								<UserMenu users={this.props.users} />
+								<UserMenu users={this.props.users} user={this.props.user} />
 							</ul>
 						</div>
 						<div className="col-md-4" id="chatroom">

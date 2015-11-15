@@ -225,6 +225,31 @@ var MessageBar = React.createClass({
 		});
 	},
 
+	getInitialState() {
+		return {
+			statusMessage: null
+		};
+	},
+
+	checkInputLength() {
+		const input = React.findDOMNode(this.refs.content).value;
+		const currentStatusMessage = this.state.statusMessage;
+		if (input.length > 256) {
+			return this.setState({
+				statusMessage: "Maximum of 256 characters will be saved"
+			})
+		}
+		if (currentStatusMessage !== null) {
+			this.setState({
+				statusMessage: null
+			});
+		}
+	},
+
+	handleInputChange() {
+		// Noop, later assigned as debounced method in componentWillMount
+	},
+
 	handleSubmit(e) {
 		e.preventDefault();
 		let content = React.findDOMNode(this.refs.content).value.trim();
@@ -234,16 +259,30 @@ var MessageBar = React.createClass({
 		return;
 	},
 
+	componentWillMount() {
+		this.handleInputChange = _.debounce(this.checkInputLength, {
+			leading: false,
+			trailing: true
+		});
+	},
+
 	render() {
+		let statusMessage;
+		if (this.state.statusMessage !== null) {
+			statusMessage = <div className="input-group">
+				<small>{this.state.statusMessage}</small>
+			</div>;
+		}
 		return (
-			<form onSubmit={this.handleSubmit} autocomplete="off">
+			<form onSubmit={this.handleSubmit} autoComplete="off">
 				<div className="input-group">
 					<input 
 						id="btn-input" 
 						type="text" 
 						className="form-control" 
 						ref="content"
-						autocomplete="off"
+						onChange={this.handleInputChange}
+						autoComplete="off"
 						placeholder="Be polite please..." />
 					<span className="input-group-btn">
 						<input 
@@ -253,6 +292,7 @@ var MessageBar = React.createClass({
 							value="Send" />
 					</span>
 				</div>
+				{statusMessage}
 			</form>
 		);
 	}

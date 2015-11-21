@@ -36,6 +36,10 @@ class SoundController {
 				description: "Infamous",
 				url: 'http://www.ensl.org/files/audio/america.mp3'
 			},
+			"prommah": {
+				description: "Prommah",
+				url: 'http://www.ensl.org/files/audio/prommah.mp3'
+			},
 			"skyice": {
 				description: "Skyice",
 				url: 'http://www.ensl.org/files/audio/skyice.mp3'
@@ -94,7 +98,7 @@ class SoundController {
 	}
 
 	defaultGatherMusic() {
-		return "classic";
+		return "prommah";
 	}
 
 	setupGatherMusic (musicName) {
@@ -102,7 +106,6 @@ class SoundController {
 		let gatherMusic = self.tunes[musicName];
 
 		if (!gatherMusic) {
-			// Default to classic
 			musicName = this.defaultGatherMusic();
 			gatherMusic = self.tunes[musicName]; 
 		}

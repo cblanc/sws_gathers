@@ -40,6 +40,10 @@ class SoundController {
 				description: "Prommah",
 				url: 'http://www.ensl.org/files/audio/prommah.mp3'
 			},
+			"turts": {
+				description: "Turts",
+				url: 'http://www.ensl.org/files/audio/turts.mp3'
+			},
 			"skyice": {
 				description: "Skyice",
 				url: 'http://www.ensl.org/files/audio/skyice.mp3'
@@ -98,7 +102,7 @@ class SoundController {
 	}
 
 	defaultGatherMusic() {
-		return "prommah";
+		return "classic";
 	}
 
 	setupGatherMusic (musicName) {

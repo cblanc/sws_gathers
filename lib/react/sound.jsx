@@ -41,7 +41,7 @@ class SoundController {
 				url: 'http://www.ensl.org/files/audio/prommah.mp3'
 			},
 			"turts": {
-				description: "Turts",
+				description: "Gorges Rock your Ass",
 				url: 'http://www.ensl.org/files/audio/turts.mp3'
 			},
 			"skyice": {

@@ -2,6 +2,24 @@ html, body {
 	height: 100%;
 }
 
+/* Christmas stuff starts here*/
+.panel {
+	opacity: 0.9;
+}
+
+canvas {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -50;
+	background: url(/images/christmas.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+/* Christmas stuff ends here*/
+
 #side-menu {
 	margin-top: 1em;
 }

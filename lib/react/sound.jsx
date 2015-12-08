@@ -24,6 +24,10 @@ class SoundController {
 				description: "Gathers Classic",
 				url: 'http://www.ensl.org/files/audio/gather-1.mp3'
 			},
+			"christmas": {
+				description: "Christmas",
+				url: 'http://www.ensl.org/files/audio/christmas.mp3'
+			},
 			"nights": {
 				description: "Nights",
 				url: 'http://www.ensl.org/files/audio/nights.mp3'
@@ -102,7 +106,7 @@ class SoundController {
 	}
 
 	defaultGatherMusic() {
-		return "classic";
+		return "christmas";
 	}
 
 	setupGatherMusic (musicName) {

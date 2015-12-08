@@ -158,6 +158,9 @@ var App = React.createClass({
 						</ul>
 					</li>
 			  </ul>
+			  <ul className="nav navbar-top-links navbar-right">
+			  	<SnowMachineMenu />
+			  </ul>
 			</nav>
 			<AdminPanel />
 			<SettingsPanel 

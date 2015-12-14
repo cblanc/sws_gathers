@@ -4,7 +4,11 @@ html, body {
 
 /* Christmas stuff starts here*/
 .panel {
-	opacity: 0.9;
+	background-color: rgba(26,55,79,0.9) !important;
+}
+
+.panel-footer {
+	background-color: rgba(26,55,79,0.9) !important;
 }
 
 canvas {

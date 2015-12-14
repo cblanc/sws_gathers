@@ -4,11 +4,15 @@ html, body {
 
 /* Christmas stuff starts here*/
 .panel {
-	background-color: rgba(26,55,79,0.9) !important;
+	background-color: rgba(0,43,54,0.8) !important;
 }
 
 .panel-footer {
-	background-color: rgba(26,55,79,0.9) !important;
+	background-color: rgba(0,43,54,0.8) !important;
+}
+
+.list-group-item {
+	background-color: rgba(0,43,54,0.8) !important;	
 }
 
 canvas {

@@ -696,7 +696,6 @@ var LifeformIcons = React.createClass({
 			if (containsAbility) {
 				return <img 
 					className="lifeform-icon"
-					alt={lifeform}
 					key={lifeform}
 					src={`/images/${lifeform.toLowerCase()}.png`} />
 			} else {

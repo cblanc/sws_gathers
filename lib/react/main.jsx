@@ -68,7 +68,9 @@ var App = React.createClass({
 
 		this.updateTitle();
 
-		socket.on('stateChange', {state} => {
+		socket.on('stateChange', data => {
+			let state = data.state;
+			
 			if (state.from === 'gathering'
 					&& state.to === 'election'
 					&& this.thisGatherer()) {
@@ -164,9 +166,6 @@ var App = React.createClass({
 							</li>
 						</ul>
 					</li>
-			  </ul>
-			  <ul className="nav navbar-top-links navbar-right">
-			  	<SnowMachineMenu />
 			  </ul>
 			</nav>
 			<AdminPanel />

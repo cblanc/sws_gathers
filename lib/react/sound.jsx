@@ -4,7 +4,7 @@ class SoundController {
 			throw new Error("Howl.js required to created sound controller");
 		}
 
-		this.MINIMUM_PLAY_INTERVAL = 120000;
+		this.MINIMUM_PLAY_INTERVAL = 20000;
 
 		this.playGatherMusic = _.throttle(() => {
 			this.gather.music.play();

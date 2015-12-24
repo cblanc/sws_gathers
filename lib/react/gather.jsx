@@ -447,6 +447,10 @@ var VoteButton = React.createClass({
 		});
 	},
 
+	stopGatherMusic() {
+		soundController.stop();
+	},
+
 	render() {
 		let candidate = this.props.candidate;
 		let thisGatherer = this.props.thisGatherer;
@@ -652,7 +656,9 @@ var Gather = React.createClass({
 							<GatherActions gather={gather} user={user} thisGatherer={thisGatherer} />
 						</div>
 					</div>
-					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} />
+					<Gatherers gather={gather} user={user} 
+						soundController={this.props.soundController}
+						thisGatherer={thisGatherer} />
 					{gatherTeams}
 					{voting}
 				</div>
@@ -765,6 +771,7 @@ var Gatherers = React.createClass({
 						<span className="badge add-right">{votes + " votes"}</span>
 						<VoteButton 
 							thisGatherer={thisGatherer} 
+							soundController={this.props.soundController}
 							candidate={gatherer} />
 					</span>
 				);

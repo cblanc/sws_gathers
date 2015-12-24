@@ -68,10 +68,17 @@ var App = React.createClass({
 
 		this.updateTitle();
 
-		socket.on('notification', data => {
-			if (data && data.sound === 'gather_starting' 
+		socket.on('stateChange', {state} => {
+			if (state.from === 'gathering'
+					&& state.to === 'election'
 					&& this.thisGatherer()) {
 				soundController.playGatherMusic();
+			}
+
+			if (state.from === 'election'
+					&& state.to === 'gathering'
+					&& this.thisGatherer()) {
+				soundController.stop();
 			}
 		});
 
@@ -186,6 +193,7 @@ var App = React.createClass({
 								gather={this.props.gather}
 								thisGatherer={this.thisGatherer()}
 								user={this.props.user} 
+								soundController={this.props.soundController}
 								maps={this.props.maps}
 								servers={this.props.servers}
 								previousGather={this.props.previousGather}/>

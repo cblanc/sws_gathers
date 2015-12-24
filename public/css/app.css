@@ -2,32 +2,6 @@ html, body {
 	height: 100%;
 }
 
-/* Christmas stuff starts here*/
-.panel {
-	background-color: rgba(0,43,54,0.8) !important;
-}
-
-.panel-footer {
-	background-color: rgba(0,43,54,0.8) !important;
-}
-
-.list-group-item {
-	background-color: rgba(0,43,54,0.8) !important;	
-}
-
-canvas {
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: -50;
-	background: url(/images/christmas.png) no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-/* Christmas stuff ends here*/
-
 #side-menu {
 	margin-top: 1em;
 }

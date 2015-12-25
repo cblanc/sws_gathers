@@ -509,7 +509,7 @@ var ServerVoting = React.createClass({
 			return (
 				<a href="#" 
 					className={style} 
-					onClick={ e => e.preventDefault() } 
+					onClick={self.voteHandler(server.id)} 
 					key={server.id}>
 					<span className="badge">{votes}</span>
 					{server.name || server.description}

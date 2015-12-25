@@ -570,27 +570,17 @@ var MapVoting = React.createClass({
 					return bVotes - aVotes;
 				}).map(map => {
 				let votes = self.votesForMap(map);
-				if (thisGatherer.mapVote.some(voteId => voteId === map.id)) {
-					return (
-						<a href="#" 
-							key={map.id} 
-							onClick={ e => e.preventDefault() } 
-							className="list-group-item list-group-item-success">
-								<span className="badge">{votes}</span>
-								{map.name}
-						</a>
-					);
-				} else {
-					return (
-						<a href="#" 
-							key={map.id} 
-							onClick={self.voteHandler(map.id)}
-							className="list-group-item">
-								<span className="badge">{votes}</span>
-								{map.name}
-						</a>
-					);
-				}
+				let style = thisGatherer.mapVote.some(voteId => voteId === map.id) ? 
+					"list-group-item list-group-item-success" : "list-group-item";
+				return (
+					<a href="#" 
+						key={map.id} 
+						onClick={self.voteHandler(map.id)}
+						className={style}>
+							<span className="badge">{votes}</span>
+							{map.name}
+					</a>
+				);
 			});
 
 		let votes = thisGatherer.mapVote.length;

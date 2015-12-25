@@ -364,25 +364,25 @@ describe("Gather Model:", function () {
 		});
 	});
 
-	describe("voteForMap", function () {
+	describe("toggleMapVote", function () {
 		beforeEach(function() {
 			gather.addGatherer(user);
 		});
 		it ("assigns map vote to gatherer", function () {
 			var mapId = 1;
-			gather.voteForMap(user, mapId);
+			gather.toggleMapVote(user, mapId);
 			var gatherer = gather.getGatherer(user);
 			assert.equal(gatherer.mapVote, mapId);
 		});
 	});
 
-	describe("voteForServer", function () {
+	describe("toggleServerVote", function () {
 		beforeEach(function() {
 			gather.addGatherer(user);
 		});
 		it ("assigns map vote to gatherer", function () {
 			var serverId = 1;
-			gather.voteForServer(user, serverId);
+			gather.toggleServerVote(user, serverId);
 			var gatherer = gather.getGatherer(user);
 			assert.equal(gatherer.serverVote, serverId);
 		});

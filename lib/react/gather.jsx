@@ -504,26 +504,17 @@ var ServerVoting = React.createClass({
 				return bVotes - aVotes;
 			}).map(server => {
 			let votes = self.votesForServer(server);
-			if (thisGatherer.serverVote.some(voteId => voteId === server.id)) {
-				return (
-					<a href="#" 
-						className="list-group-item list-group-item-success" 
-						onClick={ e => e.preventDefault() } 
-						key={server.id}>
-						<span className="badge">{votes}</span>
-						{server.name || server.description}
-					</a>
-				);				
-			} else {
-				return (
-					<a href="#" className="list-group-item" 
-						onClick={self.voteHandler(server.id)}
-						key={server.id}>
-						<span className="badge">{votes}</span>
-						{server.name || server.description}
-					</a>
-				);
-			}
+			let style = thisGatherer.serverVote.some(voteId => voteId === server.id) ? 
+				"list-group-item list-group-item-success" : "list-group-item";
+			return (
+				<a href="#" 
+					className={style} 
+					onClick={ e => e.preventDefault() } 
+					key={server.id}>
+					<span className="badge">{votes}</span>
+					{server.name || server.description}
+				</a>
+			);
 		});
 
 		let votes = thisGatherer.serverVote.length;

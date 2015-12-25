@@ -55,27 +55,27 @@ describe("Gather Model:", function () {
 		});
 	});
 
-	describe("#voteForServer", function () {
+	describe("#toggleServerVote", function () {
 		it ("assigns vote for server id", function () {
 			assert.equal(gatherer.serverVote.length, 0);
-			gatherer.voteForServer(1);
+			gatherer.toggleServerVote(1);
 			assert.isTrue(gatherer.serverVote.some(voteId => voteId === 1));
 		});
-		it ("only assigns vote once", function () {
-			gatherer.voteForServer(1);
-			gatherer.voteForServer(1);
-			assert.equal(gatherer.serverVote.length, 1);
+		it ("removes server vote if toggled twice", function () {
+			gatherer.toggleServerVote(1);
+			gatherer.toggleServerVote(1);
+			assert.equal(gatherer.serverVote.length, 0);
 		});
 		it ("allows a maximum of 2 votes", function () {
-			gatherer.voteForServer(1);
-			gatherer.voteForServer(2);
-			gatherer.voteForServer(3);
+			gatherer.toggleServerVote(1);
+			gatherer.toggleServerVote(2);
+			gatherer.toggleServerVote(3);
 			assert.equal(gatherer.serverVote.length, 2);
 		});
 		it ("removes oldest vote if maximum vote exceeded", function () {
-			gatherer.voteForServer(1);
-			gatherer.voteForServer(2);
-			gatherer.voteForServer(3);
+			gatherer.toggleServerVote(1);
+			gatherer.toggleServerVote(2);
+			gatherer.toggleServerVote(3);
 			assert.isFalse(gatherer.serverVote.some(voteId => voteId === 1));
 			assert.isTrue(gatherer.serverVote.some(voteId => voteId === 2));
 			assert.isTrue(gatherer.serverVote.some(voteId => voteId === 3));

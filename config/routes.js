@@ -28,6 +28,15 @@ module.exports = app => {
 		response.status(200).json(gather.toJson());
 	});
 
+	app.get("/messages", (request, response) => {
+		if (request.is("json")) {
+			// To Implement
+			response.end("")
+		} else {
+			response.render("messages.hbs");
+		}
+	});
+
 	app.get("*", (request, response) => {
 		response.status(404).render("404.hbs");
 	});

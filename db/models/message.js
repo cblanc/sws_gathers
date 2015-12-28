@@ -15,8 +15,7 @@ var messageSchema = new Schema({
 
 messageSchema.index({ createdAt: -1 });
 messageSchema.index({ deleted: 1, createdAt: -1 });
-
-// Instance Methods
+messageSchema.index({ content: "text", "author.username": "text" });
 
 messageSchema.methods.toJson = function () {
 	return {

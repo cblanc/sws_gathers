@@ -1,10 +1,12 @@
 "use strict";
 
-var path = require("path");
-var winston = require("winston");
-var config = require("./config.js");
-var Gather = require("../lib/gather/gather_singleton");
-var cors = require("cors");
+const path = require("path");
+const winston = require("winston");
+const config = require("./config.js");
+const Gather = require("../lib/gather/gather_singleton");
+const mongoose = require("mongoose");
+const Message = mongoose.model("Message");
+const cors = require("cors");
 
 module.exports = app => {
 	app.use(cors());
@@ -29,12 +31,43 @@ module.exports = app => {
 	});
 
 	app.get("/messages", (request, response) => {
-		if (request.is("json")) {
-			// To Implement
-			response.end("")
-		} else {
-			response.render("messages.hbs");
-		}
+		response.format({
+			json: function() {
+				const limit = parseInt(request.query.limit, 10) || 250;
+				const page = parseInt(request.query.page, 10) || 0;
+				let query = {};
+				let searchTerm = request.query.query;
+				if (searchTerm) {
+					query = {
+						$text: {
+							$search: searchTerm
+						}
+					};
+				}
+				Message
+					.find(query)
+					.limit(limit)
+					.skip(page * limit)
+					.sort({createdAt: -1})
+					.exec((error, messages) => {
+						if (error) {
+							winston.error(error);
+							return response.status(500).json({
+								message: "An error occurred",
+								error: JSON.stringify(error)
+							});
+						}
+						response.status(200).json({
+							messages: messages,
+							page: page,
+							limit: limit
+						});
+					});
+			},
+			default: function() {
+				response.render("messages.hbs");
+			}
+		})
 	});
 
 	app.get("*", (request, response) => {

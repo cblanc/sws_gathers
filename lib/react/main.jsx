@@ -10,7 +10,8 @@ var App = React.createClass({
 		}
 
 		return {
-			updateTitle: updateTitle
+			updateTitle: updateTitle,
+			events: []
 		};
 	},
 
@@ -81,6 +82,15 @@ var App = React.createClass({
 					&& state.to === 'gathering') {
 				soundController.stop();
 			}
+		});
+
+		socket.on('event:append', data => {
+			console.log(data)
+			let events = self.state.events;
+			events.unshift(data);
+			self.setState({
+				events: events.slice(0, 20)
+			});
 		});
 
 		socket.on('users:update', 
@@ -185,6 +195,8 @@ var App = React.createClass({
 							<Chatroom 
 								messages={this.props.messages} 
 								user={this.props.user} />
+							<Events
+								events={this.state.events} />
 						</div>
 						<div className="col-md-6" id="gathers">
 							<Gather 

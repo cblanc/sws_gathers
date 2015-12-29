@@ -7,6 +7,7 @@ var EnslClient = require("../lib/ensl/client");
 var chatController = require("../lib/chat/controller");
 var gatherController = require("../lib/gather/controller");
 var userController = require("../lib/user/controller");
+var eventController = require("../lib/event/controller");
 var usersHelper = require("../lib/user/helper");
 var env = process.env.NODE_ENV || "development";
 var parseCookies = EnslClient.parseCookies;
@@ -65,4 +66,5 @@ module.exports = io => {
 	userController(rootNamespace);
 	chatController(rootNamespace);
 	gatherController(rootNamespace);
+	eventController(rootNamespace);
 };

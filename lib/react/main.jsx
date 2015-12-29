@@ -78,8 +78,7 @@ var App = React.createClass({
 			}
 
 			if (state.from === 'election'
-					&& state.to === 'gathering'
-					&& this.thisGatherer()) {
+					&& state.to === 'gathering') {
 				soundController.stop();
 			}
 		});

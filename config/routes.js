@@ -12,7 +12,7 @@ module.exports = app => {
 	app.use(cors());
 
 	app.get("/", (request, response, next) => {
-		response.render("index.hbs", {
+		response.render("gather.hbs", {
 			redirect: config.ensl_url,
 			bot_url: config.steam_bot_link,
 			rules_url: config.ensl_rules_url
@@ -30,44 +30,41 @@ module.exports = app => {
 		response.status(200).json(gather.toJson());
 	});
 
-	app.get("/messages", (request, response) => {
-		response.format({
-			json: function() {
-				const limit = parseInt(request.query.limit, 10) || 250;
-				const page = parseInt(request.query.page, 10) || 0;
-				let query = {};
-				let searchTerm = request.query.query;
-				if (searchTerm) {
-					query = {
-						$text: {
-							$search: searchTerm
-						}
-					};
+	app.get("/api/messages", (request, response) => {
+		const limit = parseInt(request.query.limit, 10) || 250;
+		const page = parseInt(request.query.page, 10) || 0;
+		let query = {};
+		let searchTerm = request.query.query;
+		if (searchTerm) {
+			query = {
+				$text: {
+					$search: searchTerm
 				}
-				Message
-					.find(query)
-					.limit(limit)
-					.skip(page * limit)
-					.sort({createdAt: -1})
-					.exec((error, messages) => {
-						if (error) {
-							winston.error(error);
-							return response.status(500).json({
-								message: "An error occurred",
-								error: JSON.stringify(error)
-							});
-						}
-						response.status(200).json({
-							messages: messages,
-							page: page,
-							limit: limit
-						});
+			};
+		}
+		Message
+			.find(query)
+			.limit(limit)
+			.skip(page * limit)
+			.sort({createdAt: -1})
+			.exec((error, messages) => {
+				if (error) {
+					winston.error(error);
+					return response.status(500).json({
+						message: "An error occurred",
+						error: JSON.stringify(error)
 					});
-			},
-			default: function() {
-				response.render("messages.hbs");
-			}
-		})
+				}
+				response.status(200).json({
+					messages: messages,
+					page: page,
+					limit: limit
+				});
+			});
+		});
+
+	app.get("/messages", (request, response) => {
+		response.render("messages.hbs");
 	});
 
 	app.get("*", (request, response) => {

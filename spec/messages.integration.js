@@ -41,8 +41,7 @@ describe("Messages", () => {
 		describe("JSON Api", () => {
 			it ("returns most recent messages", done => {
 				request(app)
-					.get("/messages")
-					.set("Accept", "application/json")
+					.get("/api/messages")
 					.expect("Content-Type", /json/)
 					.expect(200)
 					.end((error, response) => {
@@ -56,11 +55,10 @@ describe("Messages", () => {
 			});
 			it ("is sensitive to limit", done => {
 				request(app)
-					.get("/messages")
+					.get("/api/messages")
 					.query({
 						limit: 1
 					})
-					.set("Accept", "application/json")
 					.expect("Content-Type", /json/)
 					.expect(200)
 					.end((error, response) => {
@@ -76,12 +74,11 @@ describe("Messages", () => {
 			it ("returns a maximum of last 250 messages");
 			it ("is sensitive to pagination", done => {
 				request(app)
-					.get("/messages")
+					.get("/api/messages")
 					.query({
 						limit: 1,
 						page: 2
 					})
-					.set("Accept", "application/json")
 					.expect("Content-Type", /json/)
 					.expect(200)
 					.end((error, response) => {
@@ -96,11 +93,10 @@ describe("Messages", () => {
 			});
 			it ("is sensitive to search terms", done => {
 				request(app)
-					.get("/messages")
+					.get("/api/messages")
 					.query({
 						query: "5"
 					})
-					.set("Accept", "application/json")
 					.expect("Content-Type", /json/)
 					.expect(200)
 					.end((error, response) => {
@@ -119,7 +115,6 @@ describe("Messages", () => {
 			it ("renders message browser", done => {
 				request(app)
 					.get("/messages")
-					.set("Accept", "text/html; charset=utf-8")
 					.expect("Content-Type", /html/)
 					.expect(200)
 					.end((error, response) => {

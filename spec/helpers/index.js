@@ -25,7 +25,11 @@ var mongoose = require("mongoose");
 var Message = helpers.Message = mongoose.model("Message");
 var Session = helpers.Session = mongoose.model("Session");
 var Profile = helpers.Profile = mongoose.model("Profile");
+var Event = helpers.Event = mongoose.model("Event");
 var ArchivedGather = helpers.ArchivedGather = mongoose.model("ArchivedGather");
+
+// Pubsub
+const eventPubSub = helpers.eventPubSub = require(path.join(__dirname, "../../lib/event/pubsub.js"));
 
 var async = require("async");
 helpers.clearDb = function (callback) {

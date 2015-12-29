@@ -27,6 +27,7 @@ mongoose.connection.on("disconnected", function () {
 });
 
 // Load models
+require(path.join(__dirname, "/models/event"));
 require(path.join(__dirname, "/models/message"));
 require(path.join(__dirname, "/models/session"));
 require(path.join(__dirname, "/models/profile"));

@@ -71,7 +71,33 @@ describe("Messages", () => {
 						done();
 					});
 			});
-			it ("returns a maximum of last 250 messages");
+			it ("returns a maximum of last 250 messages", done => {
+				async.times(250, (n, next) => {
+					Message.create({
+						author: {
+							username: user.username,
+							avatar: user.avatar
+						},
+						content: "Message " + n
+					}, next);
+				}, (error) => {
+					if (error) return done(error);
+					request(app)
+						.get("/api/messages")
+						.query({
+							limit: 251
+						})
+						.expect("Content-Type", /json/)
+						.expect(200)
+						.end((error, response) => {
+							if (error) return done(error);
+							let result = response.body;
+							assert.equal(result.messages.length, 250);
+							assert.equal(result.limit, 250);
+							done();
+						});
+				});
+			});
 			it ("is sensitive to pagination", done => {
 				request(app)
 					.get("/api/messages")

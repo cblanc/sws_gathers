@@ -31,8 +31,11 @@ module.exports = app => {
 	});
 
 	app.get("/api/messages", (request, response) => {
-		const limit = parseInt(request.query.limit, 10) || 250;
 		const page = parseInt(request.query.page, 10) || 0;
+
+		let limit = parseInt(request.query.limit, 10) || 250;
+		if (limit > 250 || limit < 1) limit = 250;
+
 		let query = {};
 		let searchTerm = request.query.query;
 		if (searchTerm) {

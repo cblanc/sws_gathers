@@ -173,6 +173,11 @@ var App = React.createClass({
 									<i className="fa fa-external-link">&nbsp;</i>&nbsp;Gather Rules
 								</a>
 							</li>
+							<li>
+								<a href="/messages" target="_blank">
+									<i className="fa fa-external-link">&nbsp;</i>&nbsp;Message Archive
+								</a>
+							</li>
 						</ul>
 					</li>
 			  </ul>

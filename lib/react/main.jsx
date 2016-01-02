@@ -3,14 +3,20 @@
 var App = React.createClass({
 	getInitialState() {
 		let updateTitle = true;
+		let showEventsPanel = true;
 
-		if (storageAvailable('localStorage') && 
-				localStorage.getItem("updateTitle") !== null) {
-			updateTitle = JSON.parse(localStorage.getItem("updateTitle"));
+		if (storageAvailable('localStorage')) {
+			if (localStorage.getItem("updateTitle") !== null) {
+				updateTitle = JSON.parse(localStorage.getItem("updateTitle"));
+			}
+			if (localStorage.getItem("showEventsPanel") !== null) {
+				showEventsPanel = JSON.parse(localStorage.getItem("showEventsPanel"));
+			}
 		}
 
 		return {
 			updateTitle: updateTitle,
+			showEventsPanel: showEventsPanel,
 			events: []
 		};
 	},
@@ -40,11 +46,17 @@ var App = React.createClass({
 		document.title = "NSL Gathers";
 	},
 
+	toggleEventsPanel(event) {
+		let newState = event.target.checked;
+		this.setState({ showEventsPanel: newState });
+		if (storageAvailable('localStorage')) {
+			localStorage.setItem("showEventsPanel", newState)
+		}
+	},
+
 	toggleUpdateTitle(event) {
 		let newState = event.target.checked;
-		this.setState({
-			updateTitle: newState
-		});
+		this.setState({ updateTitle: newState });
 		if (storageAvailable('localStorage')) {
 			localStorage.setItem("updateTitle", newState)
 		}
@@ -85,7 +97,6 @@ var App = React.createClass({
 		});
 
 		socket.on('event:append', data => {
-			console.log(data)
 			let events = self.state.events;
 			events.unshift(data);
 			self.setState({
@@ -138,6 +149,11 @@ var App = React.createClass({
 	},
 
 	render() {
+		let eventsPanel;
+		if (this.state.showEventsPanel) {
+			eventsPanel = <Events events={this.state.events} />;
+		}
+
 		return <div id="wrapper">
 			<nav className="navbar navbar-default navbar-static-top" 
 				role="navigation" 
@@ -184,6 +200,8 @@ var App = React.createClass({
 			</nav>
 			<AdminPanel />
 			<SettingsPanel 
+				toggleEventsPanel={this.toggleEventsPanel}
+				showEventsPanel={this.state.showEventsPanel}
 				toggleUpdateTitle={this.toggleUpdateTitle}
 				updateTitle={this.state.updateTitle} />
 			<TeamSpeakModal />
@@ -200,8 +218,6 @@ var App = React.createClass({
 							<Chatroom 
 								messages={this.props.messages} 
 								user={this.props.user} />
-							<Events
-								events={this.state.events} />
 						</div>
 						<div className="col-md-6" id="gathers">
 							<Gather 
@@ -216,6 +232,8 @@ var App = React.createClass({
 							<ArchivedGathers archive={this.props.archive}
 								maps={this.props.maps}
 								servers={this.props.servers} />
+							<hr />
+							{eventsPanel}
 						</div>
 					</div>
 				</div>

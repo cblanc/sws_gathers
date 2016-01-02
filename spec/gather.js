@@ -12,8 +12,9 @@ describe("Gather Model:", function () {
 	beforeEach(function () {
 		user = helper.createUser();
 		gatherers = [];
-		for (var i = 0; i < 12; i++)
-		gatherers.push(helper.createUser());
+		for (var i = 0; i < 12; i++) {
+			gatherers.push(helper.createUser());
+		}
 		gather = Gather();
 	});
 	

@@ -1,32 +1,38 @@
 "use strict";
 
-var fs = require("fs");
-var path = require("path");
-var extend = require("extend");
+const fs = require("fs");
+const path = require("path");
+const extend = require("extend");
+
+const winston = require("winston");
+winston.remove(winston.transports.Console);
 
 var helpers = {}
+
+const Map = helpers.Map = require(path.join(__dirname, "../../lib/gather/map.js"));
+const Server = helpers.Server = require(path.join(__dirname, "../../lib/gather/server.js"));
 
 helpers.server = require(path.join(__dirname, "../../index.js"));
 
 helpers.app = helpers.server.app;
 
 // Models
-var User = helpers.User = require(path.join(__dirname, "../../lib/user/user"));
-var Gather = helpers.Gather = require(path.join(__dirname, "../../lib/gather/gather"));
-var Gatherer = helpers.Gatherer = require(path.join(__dirname, "../../lib/gather/gatherer"));
+const User = helpers.User = require(path.join(__dirname, "../../lib/user/user"));
+const Gather = helpers.Gather = require(path.join(__dirname, "../../lib/gather/gather"));
+const Gatherer = helpers.Gatherer = require(path.join(__dirname, "../../lib/gather/gatherer"));
 
 // ENSL Client
-var EnslClient = helpers.EnslClient = require(path.join(__dirname, "../../lib/ensl/client"));
-var HiveClient = helpers.HiveClient = require(path.join(__dirname, "../../lib/hive/client"));
+const EnslClient = helpers.EnslClient = require(path.join(__dirname, "../../lib/ensl/client"));
+const HiveClient = helpers.HiveClient = require(path.join(__dirname, "../../lib/hive/client"));
 
 // Mongo & Associated Models
-var db = require(path.join(__dirname, "../../db/index"));
-var mongoose = require("mongoose");
-var Message = helpers.Message = mongoose.model("Message");
-var Session = helpers.Session = mongoose.model("Session");
-var Profile = helpers.Profile = mongoose.model("Profile");
-var Event = helpers.Event = mongoose.model("Event");
-var ArchivedGather = helpers.ArchivedGather = mongoose.model("ArchivedGather");
+const db = require(path.join(__dirname, "../../db/index"));
+const mongoose = require("mongoose");
+const Message = helpers.Message = mongoose.model("Message");
+const Session = helpers.Session = mongoose.model("Session");
+const Profile = helpers.Profile = mongoose.model("Profile");
+const Event = helpers.Event = mongoose.model("Event");
+const ArchivedGather = helpers.ArchivedGather = mongoose.model("ArchivedGather");
 
 // Pubsub
 const eventPubSub = helpers.eventPubSub = require(path.join(__dirname, "../../lib/event/pubsub.js"));

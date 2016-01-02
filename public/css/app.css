@@ -202,3 +202,14 @@ html, body {
 .music-select {
 	padding: 0 15px;
 }
+
+/* Events */
+
+.events-panel {
+	max-height: 150px;
+	background-color: #002b36;
+	border: 1px solid transparent;
+	color: #839496;
+	border-color: #428bca;
+	border-radius: 4px;
+}

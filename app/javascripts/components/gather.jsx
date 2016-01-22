@@ -1,4 +1,4 @@
-"use strict";
+const React = require("react");
 
 var SelectPlayerButton = React.createClass({
 	selectPlayer(e) {
@@ -684,12 +684,12 @@ var LifeformIcons = React.createClass({
 				return <img 
 					className="lifeform-icon"
 					key={lifeform}
-					src={`/images/${lifeform.toLowerCase()}.png`} />
+					src={`/${lifeform.toLowerCase()}.png`} />
 			} else {
 				return <img 
 					className="lifeform-icon"
 					key={lifeform}
-					src={`/images/blank.gif`} />
+					src={`/blank.gif`} />
 			}
 		});
 		return <span className="add-right hidden-xs">{icons}</span>
@@ -722,7 +722,7 @@ var Gatherers = React.createClass({
 		.map(gatherer => {
 			if (gatherer.user.country) {
 				var country = (
-					<img src="images/blank.gif" 
+					<img src="/blank.gif" 
 						className={"flag flag-" + gatherer.user.country.toLowerCase()} 
 						alt={gatherer.user.country} />
 				);

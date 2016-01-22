@@ -1,3 +1,5 @@
+const Howl = require("j=howl");
+
 class SoundController {
 	constructor () {
 		if (Howl === undefined) {

@@ -15,7 +15,7 @@ var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
 module.exports = app => {
   app.use(express.static(path.join(__dirname, '../public')));
   app.use(cookieParser());
-  app.use(favicon(path.join(__dirname, '../public/images/favicon.ico')));
+  app.use(favicon(path.join(__dirname, '../public/favicon.ico')));
 
 	// Use winston on production
   var log;

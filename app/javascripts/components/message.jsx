@@ -1,4 +1,4 @@
-"use strict";
+const React = require("react");
 
 const MessageBrowser = React.createClass({
 	getInitialState() {

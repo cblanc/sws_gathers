@@ -1,3 +1,5 @@
+const React = require("react");
+
 const Events = React.createClass({
 	propTypes: {
 		events: React.PropTypes.array.isRequired

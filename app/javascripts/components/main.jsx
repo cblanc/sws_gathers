@@ -1,6 +1,138 @@
-"use strict";
+const React = require("react");
+const Gather = require("javascripts/components/gather").Gather;
+const ArchivedGather = require("javascripts/components/gather").ArchivedGather;
+const Event = require("javascripts/components/event");
+const Message = require("javascripts/components/message");
+const Settings = require("javascripts/components/settings");
+const Sound = require("javascripts/components/sound");
+const User = require("javascripts/components/user");
 
-var App = React.createClass({
+
+const SplashScreen = React.createClass({
+	getInitialState() {
+		return {
+			status: "connecting", // connected, authFailed, banned
+			socket: null
+		}
+	},
+
+	componentDidMount() {
+		const socketUrl = window.location.protocol + "//" + window.location.host;
+		let socket = io(socketUrl)
+			.on("connect", () => {
+				console.log("Connected");
+				// removeAuthWidget();
+				socket.on("reconnect", () => {
+						console.log("Reconnected");
+						this.setState({ status: "connected" });
+					})
+					.on("disconnect", () => {
+						console.log("Disconnected")
+					});
+			})
+			.on("error", error => {
+				console.log(error);
+				if (error === "Authentication Failed") {
+					this.setState({ status: "authFailed" });
+				} else if (error === "Gather Banned") {
+					this.setState({ status: "banned" });
+				}
+			});
+
+		this.setState({ socket: socket });
+	},
+
+	render() {
+		const status = this.state.status;
+		if (status === "connected") {
+			return <App socket={this.state.socket} />;
+		} 
+
+		let splash;
+		if (status === "authFailed") {
+			splash = <AuthFailedSplash />
+		} else if (status === "banned") {
+			splash = <BannedSplash />
+		} else {
+			splash = <ConnectingSplash />
+		}
+
+		return (
+			<div>
+				<div style="min-height: 750px;">
+					<div class="container-fluid">
+						{splash}
+					</div>
+				</div>
+			</div>
+		);
+	}
+});
+
+const AuthFailedSplash = React.createClass({
+	render() {
+		return (
+			<div class="row" id="auth-required">
+				<div class="col-lg-6 col-lg-offset-3">
+					<div class="add-top jumbotron jumbo-auth text-center">
+						<div>
+							<img src="/ensl_logo.png" alt="ENSL Logo" />
+						</div>
+						<h3>You need to be logged in to the ENSL website to access gathers</h3>
+						<h3><small>If you are logged on, try visiting a few pages on ENSL.org so the server can update your cookies</small></h3>
+						<h3><small>If this error persists please contact an admin to fix it</small></h3>
+						<br />
+					  <p><a class="btn btn-primary btn-lg" href="www.ensl.org" role="button">Go to website</a></p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+});
+
+const BannedSplash = React.createClass({
+	render() {
+		return (
+			<div className="row">
+				<div className="col-lg-6 col-lg-offset-3">
+					<div className="add-top jumbotron jumbo-auth text-center">
+						<div>
+							<img src="/ensl_logo.png" alt="ENSL Logo" />
+						</div>
+						<h3>You're currently barred from joining gathers</h3>
+						<h3><small>Either wait for the ban to expire or talk to an admin to get it lifted</small></h3>
+						<br />
+					  <p><a className="btn btn-primary btn-lg" href="http://www.ensl.org/bans" role="button">See the ban list</a></p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+});
+
+const ConnectingSplash = React.createClass({
+	render() {
+		return (
+			<div className="row" id="authenticating">
+				<div className="col-lg-6 col-lg-offset-3">
+					<div className="add-top jumbotron jumbo-auth text-center">
+						<div>
+							<img src="/ensl_logo.png" className="jumbo-img" alt="ENSL Logo" />
+						</div>
+						<br />
+						<h3>Authenticating your ENSL account</h3>
+						<br />
+						<div>
+							<img src="/spinner.svg" className="spinner" alt="Loading" />
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+});
+
+const App = React.createClass({
 	getInitialState() {
 		let updateTitle = true;
 		let showEventsPanel = true;
@@ -15,9 +147,10 @@ var App = React.createClass({
 		}
 
 		return {
+			events: [],
 			updateTitle: updateTitle,
 			showEventsPanel: showEventsPanel,
-			events: []
+			soundController: new SoundController()
 		};
 	},
 
@@ -77,7 +210,7 @@ var App = React.createClass({
 	componentDidMount() {
 		let self = this;
 		let socket = this.props.socket;
-		let soundController = this.props.soundController;
+		let soundController = this.state.soundController;
 
 		this.updateTitle();
 
@@ -146,6 +279,7 @@ var App = React.createClass({
 
 		socket.emit("users:refresh");
 		socket.emit("message:refresh");
+		socket.emit("gather:refresh");
 	},
 
 	render() {
@@ -165,7 +299,7 @@ var App = React.createClass({
 			  	<CurrentUser user={this.props.user} />
 			  </ul>
 			  <ul className="nav navbar-top-links navbar-right" id="soundcontroller">
-			  	<SoundPanel soundController={this.props.soundController} />
+			  	<SoundPanel soundController={this.state.soundController} />
 			  </ul>
 			  <TeamSpeakButton />
 			  <ul className="nav navbar-top-links navbar-right">
@@ -224,7 +358,7 @@ var App = React.createClass({
 								gather={this.props.gather}
 								thisGatherer={this.thisGatherer()}
 								user={this.props.user} 
-								soundController={this.props.soundController}
+								soundController={this.state.soundController}
 								maps={this.props.maps}
 								servers={this.props.servers}
 								previousGather={this.props.previousGather}/>
@@ -241,3 +375,5 @@ var App = React.createClass({
 		</div>
 	}
 });
+
+module.exports = SplashScreen;

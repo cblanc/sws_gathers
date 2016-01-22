@@ -1,6 +1,6 @@
-"use strict";
+const React = require("react");
 
-var SettingsPanel = React.createClass({
+const SettingsPanel = React.createClass({
 	render() {
 		return (
 			<div className="modal fade" id="settingsmodal">

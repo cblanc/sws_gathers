@@ -1,6 +1,6 @@
-"use strict";
+const React = require("react");
 
-var UserLogin = React.createClass({
+const UserLogin = React.createClass({
 	authorizeId(id) {
 		socket.emit("users:authorize", {
 			id: parseInt(id, 10)
@@ -38,7 +38,7 @@ var UserLogin = React.createClass({
 	}
 });
 
-var DisconnectUserButton = React.createClass({
+const DisconnectUserButton = React.createClass({
 	getDefaultProps() {
 		return {
 			id: null
@@ -59,7 +59,7 @@ var DisconnectUserButton = React.createClass({
 	}
 });
 
-var UserModal = React.createClass({
+const UserModal = React.createClass({
 	render() {
 		const currentUser = this.props.currentUser;
 		const user = this.props.user;
@@ -111,7 +111,7 @@ var UserModal = React.createClass({
 									<span aria-hidden="true">&times;</span>
 							</button>
 							<h4 className="modal-title">
-								<img src="images/blank.gif" 
+								<img src="blank.gif" 
 									className={"flag flag-" + ((user.country === null) ? "eu" : 
 										user.country.toLowerCase()) } 
 									alt={user.country} />&nbsp;
@@ -158,7 +158,7 @@ var UserModal = React.createClass({
 	}
 })
 
-var UserItem = React.createClass({
+const UserItem = React.createClass({
 	render() {
 		const user = this.props.user;
 		const currentUser = this.props.currentUser;
@@ -172,7 +172,7 @@ var UserItem = React.createClass({
 	}
 });
 
-var UserMenu = React.createClass({
+const UserMenu = React.createClass({
 	render() {
 		const users = this.props.users
 		.sort((a, b) => (a.username.toLowerCase() > b.username.toLowerCase()) ? 1 : -1)
@@ -196,7 +196,7 @@ var UserMenu = React.createClass({
 	}
 });
 
-var AdminPanel = React.createClass({
+const AdminPanel = React.createClass({
 	handleGatherReset() {
 		socket.emit("gather:reset");
 	},
@@ -235,7 +235,7 @@ var AdminPanel = React.createClass({
 	}
 });
 
-var ProfileModal = React.createClass({
+const ProfileModal = React.createClass({
 	handleUserUpdate(e) {
 		e.preventDefault();
 		let abilities = {
@@ -332,10 +332,10 @@ var ProfileModal = React.createClass({
 	}
 });
 
-var CurrentUser = React.createClass({
+const CurrentUser = React.createClass({
 	render() {
 		if (this.props.user) {
-			var adminOptions;
+			let adminOptions;
 			if (this.props.user.admin || this.props.user.moderator) {
 				adminOptions = (
 					<li>

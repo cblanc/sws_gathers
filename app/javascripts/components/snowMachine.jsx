@@ -1,3 +1,5 @@
+const React = require("react");
+
 var SnowMachineMenu = React.createClass({
 	getInitialState() {
 		return {

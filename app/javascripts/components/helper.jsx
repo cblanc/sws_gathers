@@ -1,5 +1,3 @@
-"use strict";
-
 // Accepts an array of IDs voted
 // 1. Creates an array of tally objects, 
 //		with ID as prop and vote count as val { 12: 0 }

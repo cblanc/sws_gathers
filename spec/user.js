@@ -17,7 +17,7 @@ describe("User", () => {
 			username: "FearLess90",
 			country: "CA",
 			time_zone: "Eastern Time (US & Canada)",
-			avatar: "/images/icons/" + userCount + ".png",
+			avatar: "/icons/" + userCount + ".png",
 			admin: false,
 			steam: {
 				url: "http://steamcommunity.com/profiles/76561198076460617",

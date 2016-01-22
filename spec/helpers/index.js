@@ -66,7 +66,7 @@ var createUser = helpers.createUser = (function () {
 			username: "User" + counter,
 			country: "CA",
 			time_zone: "Eastern Time (US & Canada)",
-			avatar: "/images/icons/noavatar.png",
+			avatar: "/icons/noavatar.png",
 			admin: false,
 			steam: {
 				url: "http://steamcommunity.com/profiles/7656119806792633" + counter,

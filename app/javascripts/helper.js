@@ -4,7 +4,7 @@
 // 2. Increments ID vote tally for every vote
 // 3. Sorts 
 
-var rankVotes = function (votes, candidates) {
+const rankVotes = exports.rankVotes = function (votes, candidates) {
 	var initial = candidates.reduce(function (acc, candidate) {
 		acc[candidate.id] = 0;
 		return acc;
@@ -44,24 +44,24 @@ var rankVotes = function (votes, candidates) {
 	});
 };
 
-var enslUrl = (gatherer) => {
+const enslUrl = exports.enslUrl = (gatherer) => {
 	return `http://www.ensl.org/users/${gatherer.id}`
 };
 
-var hiveUrl = (gatherer) => {
-	let hiveId = gatherer.user.hive.id;
+const hiveUrl = exports.hiveUrl = (gatherer) => {
+	const hiveId = gatherer.user.hive.id;
 	if (hiveId) {
-		return `http://hive.naturalselection2.com/profile/${hiveId}`
+		return `http://hive.naturalselection2.com/profile/${hiveId}`;
 	} else {
 		return null;
 	}
 };
 
-var modalId = (user) => {
-	return `user-modal-${user.id}`
+const modalId = exports.modalId = (user) => {
+	return `user-modal-${user.id}`;
 };
 
-function storageAvailable(type) {
+const storageAvailable = exports.storageAvailable = (type) => {
 	try {
 		var storage = window[type],
 			x = '__storage_test__';
@@ -72,4 +72,4 @@ function storageAvailable(type) {
 	catch(e) {
 		return false;
 	}
-}
+};

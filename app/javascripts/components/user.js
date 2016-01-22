@@ -1,4 +1,8 @@
 const React = require("react");
+const helper = require("javascripts/helper");
+const enslUrl = helper.enslUrl;
+const hiveUrl = helper.hiveUrl;
+const modalId = helper.modalId;
 
 const UserLogin = React.createClass({
 	authorizeId(id) {

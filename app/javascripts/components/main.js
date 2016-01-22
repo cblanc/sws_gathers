@@ -6,7 +6,8 @@ const Message = require("javascripts/components/message");
 const Settings = require("javascripts/components/settings");
 const Sound = require("javascripts/components/sound");
 const User = require("javascripts/components/user");
-
+const helper = require("javascripts/helper");
+const storageAvailable = helper.storageAvailable;
 
 const SplashScreen = React.createClass({
 	getInitialState() {

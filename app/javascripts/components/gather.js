@@ -1,4 +1,8 @@
 const React = require("react");
+const helper = require("javascripts/helper");
+const enslUrl = helper.enslUrl;
+const rankVotes = helper.rankeVotes;
+const hiveUrl = helper.hiveUrl;
 
 var SelectPlayerButton = React.createClass({
 	selectPlayer(e) {

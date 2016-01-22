@@ -53,6 +53,7 @@ eventSchema.statics.playerSelected = function (user, data, gather) {
 eventSchema.statics.leaderVote = function (user, data, gather) {
 	winston.info("Vote Data", JSON.stringify(user), JSON.stringify(data));
 	const gatherer = gather.getGatherer({ id: data.leader.candidate });
+	if (gatherer === null) return;
 	this.create({
 		eventType: "gather:vote:leader",
 		description: `${user.username} voted for ${gatherer.user.username}`,

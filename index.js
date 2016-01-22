@@ -1,18 +1,15 @@
 "use strict";
 
-var env = process.env.NODE_ENV || "development";
+const env = process.env.NODE_ENV || "development";
+const fs = require("fs");
+const path = require("path");
+const express = require("express");
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+const config = require(path.join(__dirname, "config/config.js"));
 
-if (env === "production") {
-	require("newrelic");
-}
-
-var fs = require("fs");
-var path = require("path");
-var express = require("express");
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var config = require(path.join(__dirname, "config/config.js"));
+if (env === "production") require("newrelic");
 
 // Load Models
 require(path.join(__dirname, "db/index"));
@@ -28,12 +25,10 @@ require(path.join(__dirname, "config/express"))(app);
 // Add routes
 require(path.join(__dirname, "config/routes"))(app);
 
+// Configure socket.io server
 require(path.join(__dirname, "config/socketio"))(io);
 
-// Configure socket.io server
-
 server.listen(config.port);
-
 console.log("Listening on port", config.port);
 
 module.exports = {

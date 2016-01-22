@@ -3,12 +3,14 @@ exports.config = {
   files: {
     javascripts: {
       joinTo: {
-        'app.js': /^(app|node_modules)/,
-        'vendor.js': /^vendor/
+        "app.js": /^(app)/,
+        "vendor.js": /^(vendor|node_modules)/
       }
     },
     stylesheets: {
-      joinTo: "app.css"
+      joinTo: {
+        "app.css": /^(app|vendor|node_modules)/
+      }
     },
     templates: {
       joinTo: "app.js"
@@ -44,10 +46,15 @@ exports.config = {
   //     'app.js': ['app']
   //   }
   // },
-
+  
   npm: {
     enabled: true,
-    whitelist: ["react", "react-dom", "jquery", "lodash"],
+    styles: {
+      "bootstrap": ["dist/css/bootstrap.min.css"]
+    },
+    whitelist: ["react", "react-dom", "jquery", "lodash", 
+      "react-autolink-text", "react-dom", "react-emoji",
+      "bootstrap", "bootstrap-slider"],
     globals: {
       "_": "lodash",
       "jQuery": "jquery",

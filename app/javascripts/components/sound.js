@@ -1,4 +1,7 @@
-const Howl = require("j=howl");
+const Howl = require("howl");
+const React = require("react");
+const helper = require("javascripts/helper");
+const storageAvailable = helper.storageAvailable;
 
 class SoundController {
 	constructor () {

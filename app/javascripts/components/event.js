@@ -1,3 +1,4 @@
+const $ = require("jquery");
 const React = require("react");
 
 const Events = React.createClass({
@@ -26,3 +27,5 @@ const Events = React.createClass({
 		);
 	}
 });
+
+module.exports = Events;

@@ -1,5 +1,6 @@
 const React = require("react");
-
+const ReactEmoji = require("react-emoji");
+const ReactAutolink = require("ReactAutolink");
 const MessageBrowser = React.createClass({
 	getInitialState() {
 		return {

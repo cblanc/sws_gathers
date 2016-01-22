@@ -28,11 +28,11 @@ require(path.join(__dirname, "config/express"))(app);
 // Add routes
 require(path.join(__dirname, "config/routes"))(app);
 
+require(path.join(__dirname, "config/socketio"))(io);
+
 // Configure socket.io server
 
 server.listen(config.port);
-
-require(path.join(__dirname, "config/socketio"))(io);
 
 console.log("Listening on port", config.port);
 

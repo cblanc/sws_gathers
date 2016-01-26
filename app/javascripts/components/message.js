@@ -1,6 +1,7 @@
 const React = require("react");
+const ReactDOM = require("react-dom");
 const ReactEmoji = require("react-emoji");
-const ReactAutolink = require("ReactAutolink");
+const ReactAutolink = require("react-autolink");
 const MessageBrowser = React.createClass({
 	getInitialState() {
 		return {
@@ -173,7 +174,13 @@ const MessageBrowser = React.createClass({
 	}
 });
 
-var Chatroom = React.createClass({
+const Chatroom = exports.Chatroom = React.createClass({
+	propTypes: {
+		messages: React.PropTypes.array.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		user: React.PropTypes.object.isRequired
+	},
+
 	getInitialState() {
 		return {
 			autoScroll: true
@@ -190,7 +197,7 @@ var Chatroom = React.createClass({
 		  trailing: true
 		});
 
-		let node = React.findDOMNode(this.refs.messageContainer);
+		let node = ReactDOM.findDOMNode(this.refs.messageContainer);
 		node.addEventListener('scroll', this.scrollListener);
 
 		this.scrollToBottom();
@@ -202,15 +209,15 @@ var Chatroom = React.createClass({
 	},
 
 	loadMoreMessages() {
-		var earliestMessage = this.props.messages[0];
+		const earliestMessage = this.props.messages[0];
 		if (earliestMessage === undefined) return;
-		socket.emit("message:refresh", {
+		this.props.socket.emit("message:refresh", {
 			before: earliestMessage.createdAt
 		});
 	},
 
 	sendMessage(message) {
-		socket.emit("newMessage", {message: message});
+		this.props.socket.emit("newMessage", {message: message});
 	},
 
 	clearAutoScrollTimeout() {
@@ -242,16 +249,17 @@ var Chatroom = React.createClass({
 
 	scrollToBottom() {
 		if (!this.state.autoScroll) return;
-		let node = React.findDOMNode(this.refs.messageContainer);
+		let node = ReactDOM.findDOMNode(this.refs.messageContainer);
 	  node.scrollTop = node.scrollHeight;
 	},
 
 	render() {
-		let messages = this.props.messages.map(message => {
+		const socket = this.props.socket;
+		const messages = this.props.messages.map(message => {
 			if (message) {
 				return <ChatMessage message={message} 
 									key={message._id}
-									id={message._id}
+									socket={socket}
 									user={this.props.user} />
 			}
 		});
@@ -271,16 +279,22 @@ var Chatroom = React.createClass({
 					</ul>
 				</div>
 				<div className="panel-footer">
-					<MessageBar />
+					<MessageBar socket={socket}/>
 				</div>
 			</div>
 		);
 	}
 });
 
-var imgurRegex = /^(https?:\/\/i\.imgur\.com\/\S*\.(jpg|png))$/i;
+const imgurRegex = /^(https?:\/\/i\.imgur\.com\/\S*\.(jpg|png))$/i;
 
-var ChatMessage = React.createClass({
+const ChatMessage = React.createClass({
+	propTypes: {
+		user: React.PropTypes.object.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		message: React.PropTypes.object.isRequired
+	},
+
 	mixins: [
     ReactAutolink,
     ReactEmoji
@@ -342,7 +356,8 @@ var ChatMessage = React.createClass({
 		let deleteButton;
 		let user = this.props.user;
 		if (user && user.admin) {
-			deleteButton = <DeleteMessageButton messageId={this.props.message._id} />;
+			deleteButton = <DeleteMessageButton messageId={this.props.message._id} 
+				socket={this.props.socket}/>;
 		}
 		return (
 			<li className="left clearfix">
@@ -374,10 +389,14 @@ var ChatMessage = React.createClass({
 	}
 });
 
-var DeleteMessageButton = React.createClass({
+const DeleteMessageButton = React.createClass({
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	handleClick (e) {
 		e.preventDefault();
-		socket.emit("message:delete", {
+		this.props.socket.emit("message:delete", {
 			id: this.props.messageId
 		});
 	},
@@ -391,9 +410,13 @@ var DeleteMessageButton = React.createClass({
 	}
 })
 
-var MessageBar = React.createClass({
+const MessageBar = React.createClass({
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	sendMessage(content) {
-		socket.emit("message:new", {
+		this.props.socket.emit("message:new", {
 			content: content
 		});
 	},
@@ -405,7 +428,7 @@ var MessageBar = React.createClass({
 	},
 
 	checkInputLength() {
-		const input = React.findDOMNode(this.refs.content).value;
+		const input = ReactDOM.findDOMNode(this.refs.content).value;
 		const currentStatusMessage = this.state.statusMessage;
 		if (input.length > 256) {
 			return this.setState({
@@ -425,9 +448,9 @@ var MessageBar = React.createClass({
 
 	handleSubmit(e) {
 		e.preventDefault();
-		let content = React.findDOMNode(this.refs.content).value.trim();
+		let content = ReactDOM.findDOMNode(this.refs.content).value.trim();
 		if (!content) return;
-		React.findDOMNode(this.refs.content).value = '';
+		ReactDOM.findDOMNode(this.refs.content).value = '';
 		this.sendMessage(content);
 		return;
 	},

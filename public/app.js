@@ -112,22 +112,20 @@
 require.register("javascripts/app", function(exports, require, module) {
 "use strict";
 
+var React = require("react");
 var ReactDOM = require("react-dom");
-
-var App = require("components/main");
+var App = require("javascripts/components/main");
 
 module.exports = function (mount) {
-  ReactDOM.render(App, mount);
+	ReactDOM.render(React.createElement(App, null), mount);
 };
 });
 
 require.register("javascripts/components/event", function(exports, require, module) {
 "use strict";
 
-var $ = require("jquery");
 var React = require("react");
-
-var Events = React.createClass({
+var Events = exports.Events = React.createClass({
 	displayName: "Events",
 
 	propTypes: {
@@ -145,33 +143,28 @@ var Events = React.createClass({
 			events = this.props.events.map(function (event) {
 				return _this.getTime(event.createdAt) + " " + event.description;
 			}).join("\n");
+			return React.createElement(
+				"pre",
+				{ className: "events-panel" },
+				events
+			);
 		} else {
-			events = React.createElement(
-				"tr",
-				null,
-				React.createElement(
-					"td",
-					null,
-					"Listening for new events..."
-				)
+			return React.createElement(
+				"pre",
+				{ className: "events-panel" },
+				"Listening for new events..."
 			);
 		}
-
-		return React.createElement(
-			"pre",
-			{ className: "events-panel" },
-			events
-		);
 	}
 });
-
-module.exports = Events;
 });
 
 require.register("javascripts/components/gather", function(exports, require, module) {
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _user = require("javascripts/components/user");
 
 var React = require("react");
 var helper = require("javascripts/helper");
@@ -181,9 +174,15 @@ var hiveUrl = helper.hiveUrl;
 
 var SelectPlayerButton = React.createClass({
 	displayName: "SelectPlayerButton",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		gatherer: React.PropTypes.object.isRequired
+	},
+
 	selectPlayer: function selectPlayer(e) {
 		e.preventDefault();
-		socket.emit("gather:select", {
+		this.props.socket.emit("gather:select", {
 			player: parseInt(e.target.value, 10)
 		});
 	},
@@ -407,7 +406,8 @@ var GatherProgress = React.createClass({
 		};
 	},
 	render: function render() {
-		var progress, progressBar;
+		var progress = undefined,
+		    progressBar = undefined;
 		var gatherState = this.props.gather.state;
 		if (gatherState === 'gathering' && this.props.gather.gatherers.length) {
 			progress = this.gatheringProgress();
@@ -441,185 +441,16 @@ var GatherProgress = React.createClass({
 	}
 });
 
-var teamspeakDefaults = {
-	url: "ts3server://ensl.org/",
-	password: "ns2gather",
-	alien: {
-		channel: "NS2 Gather/Gather #1/Alien",
-		password: "ns2gather"
-	},
-	marine: {
-		channel: "NS2 Gather/Gather #1/Marine",
-		password: "ns2gather"
-	}
-};
-
-var TeamSpeakButton = React.createClass({
-	displayName: "TeamSpeakButton",
-	getDefaultProps: function getDefaultProps() {
-		return teamspeakDefaults;
-	},
-	marineUrl: function marineUrl() {
-		return this.teamSpeakUrl(this.props.marine);
-	},
-	alienUrl: function alienUrl() {
-		return this.teamSpeakUrl(this.props.alien);
-	},
-	teamSpeakUrl: function teamSpeakUrl(conn) {
-		var params = "channel=" + encodeURIComponent(conn.channel) + "&\n\t\t\tchannelpassword=" + encodeURIComponent(conn.password);
-		return this.props.url + "?" + params;
-	},
-	render: function render() {
-		return React.createElement(
-			"ul",
-			{ className: "nav navbar-top-links navbar-right" },
-			React.createElement(
-				"li",
-				{ className: "dropdown" },
-				React.createElement(
-					"a",
-					{ className: "dropdown-toggle", "data-toggle": "dropdown", href: "#" },
-					"Teamspeak  ",
-					React.createElement("i", { className: "fa fa-caret-down" })
-				),
-				React.createElement(
-					"ul",
-					{ className: "dropdown-menu" },
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: this.props.url },
-							"Join Teamspeak Lobby"
-						)
-					),
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: this.marineUrl() },
-							"Join Marine Teamspeak"
-						)
-					),
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: this.alienUrl() },
-							"Join Alien Teamspeak"
-						)
-					),
-					React.createElement("li", { role: "separator", className: "divider" }),
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: "#", "data-toggle": "modal", "data-target": "#teamspeakmodal" },
-							"Teamspeak Details"
-						)
-					)
-				)
-			)
-		);
-	}
-});
-
-var TeamSpeakModal = React.createClass({
-	displayName: "TeamSpeakModal",
-	getDefaultProps: function getDefaultProps() {
-		return teamspeakDefaults;
-	},
-	render: function render() {
-		return React.createElement(
-			"div",
-			{ className: "modal fade text-left", id: "teamspeakmodal" },
-			React.createElement(
-				"div",
-				{ className: "modal-dialog" },
-				React.createElement(
-					"div",
-					{ className: "modal-content" },
-					React.createElement(
-						"div",
-						{ className: "modal-header" },
-						React.createElement(
-							"button",
-							{ type: "button",
-								className: "close",
-								"data-dismiss": "modal",
-								"aria-label": "Close" },
-							React.createElement(
-								"span",
-								{ "aria-hidden": "true" },
-								"×"
-							)
-						),
-						React.createElement(
-							"h4",
-							{ className: "modal-title" },
-							"Teamspeak Server Information"
-						)
-					),
-					React.createElement(
-						"div",
-						{ className: "modal-body" },
-						React.createElement(
-							"dl",
-							{ className: "dl-horizontal" },
-							React.createElement(
-								"dt",
-								null,
-								"Server"
-							),
-							React.createElement(
-								"dd",
-								null,
-								this.props.url
-							),
-							React.createElement(
-								"dt",
-								null,
-								"Password"
-							),
-							React.createElement(
-								"dd",
-								null,
-								this.props.password
-							),
-							React.createElement(
-								"dt",
-								null,
-								"Marine Channel"
-							),
-							React.createElement(
-								"dd",
-								null,
-								this.props.marine.channel
-							),
-							React.createElement(
-								"dt",
-								null,
-								"Alien Channel"
-							),
-							React.createElement(
-								"dd",
-								null,
-								this.props.alien.channel
-							)
-						)
-					)
-				)
-			)
-		);
-	}
-});
-
 var JoinGatherButton = React.createClass({
 	displayName: "JoinGatherButton",
+
+	propTypes: {
+		thisGatherer: React.PropTypes.object,
+		user: React.PropTypes.object.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired
+	},
+
 	componentDidMount: function componentDidMount() {
 		var self = this;
 		this.timer = setInterval(function () {
@@ -631,11 +462,11 @@ var JoinGatherButton = React.createClass({
 	},
 	joinGather: function joinGather(e) {
 		e.preventDefault();
-		socket.emit("gather:join");
+		this.props.socket.emit("gather:join");
 	},
 	leaveGather: function leaveGather(e) {
 		e.preventDefault();
-		socket.emit("gather:leave");
+		this.props.socket.emit("gather:leave");
 	},
 	cooldownTime: function cooldownTime() {
 		var user = this.props.user;
@@ -677,6 +508,11 @@ var JoinGatherButton = React.createClass({
 
 var CooloffButton = React.createClass({
 	displayName: "CooloffButton",
+
+	propTypes: {
+		timeRemaining: React.PropTypes.number.isRequired
+	},
+
 	timeRemaining: function timeRemaining() {
 		return Math.floor(this.props.timeRemaining / 60000) + 1 + " minutes remaining";
 	},
@@ -695,9 +531,16 @@ var CooloffButton = React.createClass({
 
 var GatherActions = React.createClass({
 	displayName: "GatherActions",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired,
+		thisGatherer: React.PropTypes.object
+	},
+
 	voteRegather: function voteRegather(e) {
 		e.preventDefault(e);
-		socket.emit("gather:vote", {
+		this.props.socket.emit("gather:vote", {
 			regather: e.target.value === "true"
 		});
 	},
@@ -713,6 +556,7 @@ var GatherActions = React.createClass({
 		var regatherButton = undefined;
 		var user = this.props.user;
 		var gather = this.props.gather;
+		var socket = this.props.socket;
 		var thisGatherer = this.props.thisGatherer;
 		if (thisGatherer) {
 			var regatherVotes = this.regatherVotes();
@@ -751,7 +595,7 @@ var GatherActions = React.createClass({
 						"li",
 						null,
 						React.createElement(JoinGatherButton, { gather: gather, thisGatherer: thisGatherer,
-							user: user })
+							user: user, socket: socket })
 					)
 				)
 			)
@@ -761,8 +605,15 @@ var GatherActions = React.createClass({
 
 var VoteButton = React.createClass({
 	displayName: "VoteButton",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		candidate: React.PropTypes.object.isRequired,
+		thisGatherer: React.PropTypes.object
+	},
+
 	cancelVote: function cancelVote(e) {
-		socket.emit("gather:vote", {
+		this.props.socket.emit("gather:vote", {
 			leader: {
 				candidate: null
 			}
@@ -770,7 +621,7 @@ var VoteButton = React.createClass({
 	},
 	vote: function vote(e) {
 		e.preventDefault();
-		socket.emit("gather:vote", {
+		this.props.socket.emit("gather:vote", {
 			leader: {
 				candidate: parseInt(e.target.value, 10)
 			}
@@ -808,10 +659,20 @@ var VoteButton = React.createClass({
 
 var ServerVoting = React.createClass({
 	displayName: "ServerVoting",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired,
+		thisGatherer: React.PropTypes.object,
+		servers: React.PropTypes.array.isRequired
+	},
+
 	voteHandler: function voteHandler(serverId) {
+		var _this = this;
+
 		return function (e) {
 			e.preventDefault();
-			socket.emit("gather:vote", {
+			_this.props.socket.emit("gather:vote", {
 				server: {
 					id: serverId
 				}
@@ -874,10 +735,20 @@ var ServerVoting = React.createClass({
 
 var MapVoting = React.createClass({
 	displayName: "MapVoting",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired,
+		thisGatherer: React.PropTypes.object,
+		maps: React.PropTypes.array.isRequired
+	},
+
 	voteHandler: function voteHandler(mapId) {
+		var _this2 = this;
+
 		return function (e) {
 			e.preventDefault();
-			socket.emit("gather:vote", {
+			_this2.props.socket.emit("gather:vote", {
 				map: {
 					id: mapId
 				}
@@ -938,9 +809,19 @@ var MapVoting = React.createClass({
 	}
 });
 
-var Gather = React.createClass({
+var Gather = exports.Gather = React.createClass({
 	displayName: "Gather",
+
+	propTypes: {
+		thisGatherer: React.PropTypes.object,
+		maps: React.PropTypes.array.isRequired,
+		servers: React.PropTypes.array.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired
+	},
+
 	render: function render() {
+		var socket = this.props.socket;
 		var gather = this.props.gather;
 		var thisGatherer = this.props.thisGatherer;
 		var servers = this.props.servers;
@@ -959,13 +840,13 @@ var Gather = React.createClass({
 						"div",
 						{ className: "col-sm-6" },
 						React.createElement(MapVoting, { gather: gather, maps: maps,
-							thisGatherer: thisGatherer })
+							socket: socket, thisGatherer: thisGatherer })
 					),
 					React.createElement(
 						"div",
 						{ className: "col-sm-6" },
 						React.createElement(ServerVoting, { gather: gather, servers: servers,
-							thisGatherer: thisGatherer })
+							socket: socket, thisGatherer: thisGatherer })
 					)
 				);
 			} else {
@@ -996,12 +877,13 @@ var Gather = React.createClass({
 						"div",
 						{ className: "panel-body" },
 						React.createElement(GatherProgress, { gather: gather }),
-						React.createElement(GatherActions, { gather: gather, user: user, thisGatherer: thisGatherer })
+						React.createElement(GatherActions, { gather: gather, user: user, thisGatherer: thisGatherer,
+							socket: socket })
 					)
 				),
 				React.createElement(Gatherers, { gather: gather, user: user,
 					soundController: this.props.soundController,
-					thisGatherer: thisGatherer }),
+					thisGatherer: thisGatherer, socket: socket }),
 				gatherTeams,
 				voting
 			);
@@ -1018,13 +900,14 @@ var Gather = React.createClass({
 						"Current Gather"
 					)
 				),
-				React.createElement(Gatherers, { gather: gather, user: user, thisGatherer: thisGatherer })
+				React.createElement(Gatherers, { gather: gather, user: user, thisGatherer: thisGatherer,
+					socket: socket })
 			);
 		}
 	}
 });
 
-var LifeformIcons = React.createClass({
+var LifeformIcons = exports.LifeformIcons = React.createClass({
 	displayName: "LifeformIcons",
 	availableLifeforms: function availableLifeforms() {
 		return ["skulk", "gorge", "lerk", "fade", "onos", "commander"];
@@ -1067,29 +950,39 @@ var LifeformIcons = React.createClass({
 
 var Gatherers = React.createClass({
 	displayName: "Gatherers",
+
+	propTypes: {
+		user: React.PropTypes.object,
+		thisGatherer: React.PropTypes.object,
+		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired
+	},
+
 	joinGather: function joinGather(e) {
 		e.preventDefault();
-		socket.emit("gather:join");
+		this.props.socket.emit("gather:join");
 	},
 	bootGatherer: function bootGatherer(e) {
 		e.preventDefault();
-		socket.emit("gather:leave", {
+		this.props.socket.emit("gather:leave", {
 			gatherer: parseInt(e.target.value, 10) || null
 		});
 	},
 	render: function render() {
-		var _this = this;
+		var _this3 = this;
 
 		var self = this;
 		var user = this.props.user;
+		var socket = this.props.socket;
 		var gather = this.props.gather;
-		var admin = user && user.admin || user && user.moderator;
 		var thisGatherer = this.props.thisGatherer;
+		var admin = user && user.admin || user && user.moderator;
 		var gatherers = gather.gatherers.sort(function (a, b) {
 			return (b.user.hive.skill || 1000) - (a.user.hive.skill || 1000);
 		}).map(function (gatherer) {
+			var country = undefined;
 			if (gatherer.user.country) {
-				var country = React.createElement("img", { src: "/blank.gif",
+				country = React.createElement("img", { src: "/blank.gif",
 					className: "flag flag-" + gatherer.user.country.toLowerCase(),
 					alt: gatherer.user.country });
 			};
@@ -1123,7 +1016,7 @@ var Gatherers = React.createClass({
 					),
 					React.createElement(VoteButton, {
 						thisGatherer: thisGatherer,
-						soundController: _this.props.soundController,
+						soundController: _this3.props.soundController,
 						candidate: gatherer })
 				);
 			}
@@ -1172,13 +1065,12 @@ var Gatherers = React.createClass({
 						{
 							className: "btn btn-xs btn-danger",
 							value: gatherer.user.id,
-							onClick: _this.bootGatherer },
+							onClick: _this3.bootGatherer },
 						"Boot from Gather"
 					),
 					" ",
-					React.createElement(AssumeUserIdButton, {
-						gatherer: gatherer,
-						currentUser: user })
+					React.createElement(_user.AssumeUserIdButton, { socket: socket,
+						gatherer: gatherer, currentUser: user })
 				)];
 			}
 
@@ -1470,10 +1362,17 @@ var GatherVotingResults = React.createClass({
 	}
 });
 
-var ArchivedGathers = React.createClass({
+var ArchivedGathers = exports.ArchivedGathers = React.createClass({
 	displayName: "ArchivedGathers",
+
+	propTypes: {
+		archive: React.PropTypes.array.isRequired,
+		servers: React.PropTypes.array.isRequired,
+		maps: React.PropTypes.array.isRequired
+	},
+
 	render: function render() {
-		var _this2 = this;
+		var _this4 = this;
 
 		var archive = this.props.archive.sort(function (a, b) {
 			return new Date(b.createdAt) - new Date(a.createdAt);
@@ -1482,8 +1381,8 @@ var ArchivedGathers = React.createClass({
 				id: archivedGather.gather.done.time,
 				show: index === 0 ? true : false,
 				gather: archivedGather.gather,
-				maps: _this2.props.maps,
-				servers: _this2.props.servers });
+				maps: _this4.props.maps,
+				servers: _this4.props.servers });
 		});
 
 		return React.createElement(
@@ -1507,22 +1406,30 @@ var ArchivedGathers = React.createClass({
 require.register("javascripts/components/main", function(exports, require, module) {
 "use strict";
 
+var _event = require("javascripts/components/event");
+
+var _user = require("javascripts/components/user");
+
+var _sound = require("javascripts/components/sound");
+
+var _teamspeak = require("javascripts/components/teamspeak");
+
+var _settings = require("javascripts/components/settings");
+
+var _message = require("javascripts/components/message");
+
+var _gather = require("javascripts/components/gather");
+
 var React = require("react");
-var Gather = require("javascripts/components/gather").Gather;
-var ArchivedGather = require("javascripts/components/gather").ArchivedGather;
-var Event = require("javascripts/components/event");
-var Message = require("javascripts/components/message");
-var Settings = require("javascripts/components/settings");
 var Sound = require("javascripts/components/sound");
-var User = require("javascripts/components/user");
+var SoundController = Sound.SoundController;
 var helper = require("javascripts/helper");
 var storageAvailable = helper.storageAvailable;
-
 var SplashScreen = React.createClass({
 	displayName: "SplashScreen",
 	getInitialState: function getInitialState() {
 		return {
-			status: "connecting", // connected, authFailed, banned
+			status: "connecting",
 			socket: null
 		};
 	},
@@ -1532,10 +1439,9 @@ var SplashScreen = React.createClass({
 		var socketUrl = window.location.protocol + "//" + window.location.host;
 		var socket = io(socketUrl).on("connect", function () {
 			console.log("Connected");
-			// removeAuthWidget();
+			_this.setState({ status: "connected" });
 			socket.on("reconnect", function () {
 				console.log("Reconnected");
-				_this.setState({ status: "connected" });
 			}).on("disconnect", function () {
 				console.log("Disconnected");
 			});
@@ -1552,6 +1458,7 @@ var SplashScreen = React.createClass({
 	},
 	render: function render() {
 		var status = this.state.status;
+
 		if (status === "connected") {
 			return React.createElement(App, { socket: this.state.socket });
 		}
@@ -1561,7 +1468,7 @@ var SplashScreen = React.createClass({
 			splash = React.createElement(AuthFailedSplash, null);
 		} else if (status === "banned") {
 			splash = React.createElement(BannedSplash, null);
-		} else {
+		} else if (status === "connecting") {
 			splash = React.createElement(ConnectingSplash, null);
 		}
 
@@ -1570,10 +1477,10 @@ var SplashScreen = React.createClass({
 			null,
 			React.createElement(
 				"div",
-				{ style: "min-height: 750px;" },
+				{ style: { "minHeight": "750px" } },
 				React.createElement(
 					"div",
-					{ "class": "container-fluid" },
+					{ className: "container-fluid" },
 					splash
 				)
 			)
@@ -1586,13 +1493,13 @@ var AuthFailedSplash = React.createClass({
 	render: function render() {
 		return React.createElement(
 			"div",
-			{ "class": "row", id: "auth-required" },
+			{ className: "row", id: "auth-required" },
 			React.createElement(
 				"div",
-				{ "class": "col-lg-6 col-lg-offset-3" },
+				{ className: "col-lg-6 col-lg-offset-3" },
 				React.createElement(
 					"div",
-					{ "class": "add-top jumbotron jumbo-auth text-center" },
+					{ className: "add-top jumbotron jumbo-auth text-center" },
 					React.createElement(
 						"div",
 						null,
@@ -1627,7 +1534,7 @@ var AuthFailedSplash = React.createClass({
 						null,
 						React.createElement(
 							"a",
-							{ "class": "btn btn-primary btn-lg", href: "www.ensl.org", role: "button" },
+							{ className: "btn btn-primary btn-lg", href: "www.ensl.org", role: "button" },
 							"Go to website"
 						)
 					)
@@ -1721,6 +1628,11 @@ var ConnectingSplash = React.createClass({
 
 var App = React.createClass({
 	displayName: "App",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	getInitialState: function getInitialState() {
 		var updateTitle = true;
 		var showEventsPanel = true;
@@ -1735,14 +1647,6 @@ var App = React.createClass({
 		}
 
 		return {
-			events: [],
-			updateTitle: updateTitle,
-			showEventsPanel: showEventsPanel,
-			soundController: new SoundController()
-		};
-	},
-	getDefaultProps: function getDefaultProps() {
-		return {
 			gather: {
 				gatherers: []
 			},
@@ -1753,11 +1657,14 @@ var App = React.createClass({
 			servers: [],
 			archive: [],
 			socket: null,
-			soundController: null
+			events: [],
+			updateTitle: updateTitle,
+			showEventsPanel: showEventsPanel,
+			soundController: new SoundController()
 		};
 	},
 	updateTitle: function updateTitle() {
-		var gather = this.props.gather;
+		var gather = this.state.gather;
 		if (gather && this.state.updateTitle) {
 			document.title = "NSL Gathers (" + gather.gatherers.length + "/12)";
 			return;
@@ -1780,8 +1687,8 @@ var App = React.createClass({
 		this.updateTitle();
 	},
 	thisGatherer: function thisGatherer() {
-		var gather = this.props.gather;
-		var user = this.props.user;
+		var gather = this.state.gather;
+		var user = this.state.user;
 		if (gather && user && gather.gatherers.length) {
 			return gather.gatherers.filter(function (gatherer) {
 				return gatherer.id === user.id;
@@ -1819,28 +1726,28 @@ var App = React.createClass({
 		});
 
 		socket.on('users:update', function (data) {
-			return self.setProps({
+			return self.setState({
 				users: data.users,
 				user: data.currentUser
 			});
 		});
 
 		socket.on("message:append", function (data) {
-			self.setProps({
-				messages: self.props.messages.concat(data.messages).sort(function (a, b) {
+			self.setState({
+				messages: self.state.messages.concat(data.messages).sort(function (a, b) {
 					return new Date(a.createdAt) - new Date(b.createdAt);
 				})
 			});
 		});
 
 		socket.on("message:refresh", function (data) {
-			self.setProps({
+			self.setState({
 				messages: data.messages
 			});
 		});
 
 		socket.on("gather:refresh", function (data) {
-			self.setProps({
+			self.setState({
 				gather: data.gather,
 				maps: data.maps,
 				servers: data.servers,
@@ -1850,7 +1757,7 @@ var App = React.createClass({
 		});
 
 		socket.on("gather:archive:refresh", function (data) {
-			self.setProps({
+			self.setState({
 				archive: data.archive,
 				maps: data.maps,
 				servers: data.servers
@@ -1862,10 +1769,84 @@ var App = React.createClass({
 		socket.emit("gather:refresh");
 	},
 	render: function render() {
+		var socket = this.props.socket;
+
 		var eventsPanel = undefined;
 		if (this.state.showEventsPanel) {
-			eventsPanel = React.createElement(Events, { events: this.state.events });
+			eventsPanel = React.createElement(_event.Events, { events: this.state.events });
 		}
+
+		var profileModal = undefined,
+		    chatroom = undefined,
+		    currentUser = undefined;
+		if (this.state.user) {
+			profileModal = React.createElement(_user.ProfileModal, { user: this.state.user });
+			chatroom = React.createElement(_message.Chatroom, { messages: this.state.messages,
+				user: this.state.user, socket: socket });
+			currentUser = React.createElement(
+				"ul",
+				{ className: "nav navbar-top-links navbar-right", id: "currentuser" },
+				React.createElement(_user.CurrentUser, { user: this.state.user })
+			);
+		}
+
+		return React.createElement(
+			"div",
+			{ className: "wrapper" },
+			React.createElement(
+				"header",
+				{ className: "main-header" },
+				React.createElement(
+					"a",
+					{ href: "/", className: "logo" },
+					React.createElement(
+						"span",
+						{ className: "logo-mini" },
+						"NSL Gathers"
+					),
+					React.createElement(
+						"span",
+						{ className: "logo-lg" },
+						"NSL Gathers"
+					)
+				),
+				React.createElement(
+					"nav",
+					{ className: "navbar navbar-static-top", role: "navigation" },
+					React.createElement(
+						"a",
+						{ href: "#", className: "sidebar-toggle", "data-toggle": "offcanvas", role: "button" },
+						React.createElement(
+							"span",
+							{ className: "sr-only" },
+							"Toggle navigation"
+						)
+					),
+					React.createElement(
+						"div",
+						{ className: "navbar-custom-menu" },
+						React.createElement(
+							"ul",
+							{ className: "nav navbar-nav" },
+							React.createElement(
+								"li",
+								{ className: "dropdown messages-menu" },
+								React.createElement(
+									"a",
+									{ href: "#", className: "dropdown-toggle", "data-toggle": "dropdown" },
+									React.createElement("i", { className: "fa fa-envelope-o" }),
+									React.createElement(
+										"span",
+										{ className: "label label-success" },
+										"4"
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+		);
 
 		return React.createElement(
 			"div",
@@ -1893,17 +1874,13 @@ var App = React.createClass({
 						)
 					)
 				),
-				React.createElement(
-					"ul",
-					{ className: "nav navbar-top-links navbar-right", id: "currentuser" },
-					React.createElement(CurrentUser, { user: this.props.user })
-				),
+				currentUser,
 				React.createElement(
 					"ul",
 					{ className: "nav navbar-top-links navbar-right", id: "soundcontroller" },
-					React.createElement(SoundPanel, { soundController: this.state.soundController })
+					React.createElement(_sound.SoundPanel, { soundController: this.state.soundController })
 				),
-				React.createElement(TeamSpeakButton, null),
+				React.createElement(_teamspeak.TeamSpeakButton, null),
 				React.createElement(
 					"ul",
 					{ className: "nav navbar-top-links navbar-right" },
@@ -1979,14 +1956,14 @@ var App = React.createClass({
 					)
 				)
 			),
-			React.createElement(AdminPanel, null),
-			React.createElement(SettingsPanel, {
+			React.createElement(_user.AdminPanel, { socket: socket }),
+			React.createElement(_settings.SettingsPanel, {
 				toggleEventsPanel: this.toggleEventsPanel,
 				showEventsPanel: this.state.showEventsPanel,
 				toggleUpdateTitle: this.toggleUpdateTitle,
 				updateTitle: this.state.updateTitle }),
-			React.createElement(TeamSpeakModal, null),
-			React.createElement(ProfileModal, { user: this.props.user }),
+			React.createElement(_teamspeak.TeamSpeakModal, null),
+			profileModal,
 			React.createElement(
 				"div",
 				{ style: { minHeight: "750px" } },
@@ -2002,33 +1979,32 @@ var App = React.createClass({
 							React.createElement(
 								"ul",
 								{ className: "nav", id: "side-menu" },
-								React.createElement(UserMenu, { users: this.props.users, user: this.props.user })
+								React.createElement(_user.UserMenu, { users: this.state.users, user: this.state.user,
+									socket: socket })
 							)
 						),
 						React.createElement(
 							"div",
 							{ className: "col-md-4", id: "chatroom" },
-							React.createElement(Chatroom, {
-								messages: this.props.messages,
-								user: this.props.user })
+							chatroom
 						),
 						React.createElement(
 							"div",
 							{ className: "col-md-6", id: "gathers" },
-							React.createElement(Gather, {
-								gather: this.props.gather,
+							React.createElement(_gather.Gather, {
+								socket: socket,
+								maps: this.state.maps,
+								user: this.state.user,
+								gather: this.state.gather,
+								servers: this.state.servers,
 								thisGatherer: this.thisGatherer(),
-								user: this.props.user,
-								soundController: this.state.soundController,
-								maps: this.props.maps,
-								servers: this.props.servers,
-								previousGather: this.props.previousGather }),
+								previousGather: this.state.previousGather,
+								soundController: this.state.soundController }),
+							eventsPanel,
 							React.createElement("hr", null),
-							React.createElement(ArchivedGathers, { archive: this.props.archive,
-								maps: this.props.maps,
-								servers: this.props.servers }),
-							React.createElement("hr", null),
-							eventsPanel
+							React.createElement(_gather.ArchivedGathers, { archive: this.state.archive,
+								maps: this.state.maps,
+								servers: this.state.servers })
 						)
 					)
 				)
@@ -2044,8 +2020,9 @@ require.register("javascripts/components/message", function(exports, require, mo
 "use strict";
 
 var React = require("react");
+var ReactDOM = require("react-dom");
 var ReactEmoji = require("react-emoji");
-var ReactAutolink = require("ReactAutolink");
+var ReactAutolink = require("react-autolink");
 var MessageBrowser = React.createClass({
 	displayName: "MessageBrowser",
 	getInitialState: function getInitialState() {
@@ -2299,8 +2276,15 @@ var MessageBrowser = React.createClass({
 	}
 });
 
-var Chatroom = React.createClass({
+var Chatroom = exports.Chatroom = React.createClass({
 	displayName: "Chatroom",
+
+	propTypes: {
+		messages: React.PropTypes.array.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		user: React.PropTypes.object.isRequired
+	},
+
 	getInitialState: function getInitialState() {
 		return {
 			autoScroll: true
@@ -2316,7 +2300,7 @@ var Chatroom = React.createClass({
 			trailing: true
 		});
 
-		var node = React.findDOMNode(this.refs.messageContainer);
+		var node = ReactDOM.findDOMNode(this.refs.messageContainer);
 		node.addEventListener('scroll', this.scrollListener);
 
 		this.scrollToBottom();
@@ -2328,12 +2312,12 @@ var Chatroom = React.createClass({
 	loadMoreMessages: function loadMoreMessages() {
 		var earliestMessage = this.props.messages[0];
 		if (earliestMessage === undefined) return;
-		socket.emit("message:refresh", {
+		this.props.socket.emit("message:refresh", {
 			before: earliestMessage.createdAt
 		});
 	},
 	sendMessage: function sendMessage(message) {
-		socket.emit("newMessage", { message: message });
+		this.props.socket.emit("newMessage", { message: message });
 	},
 	clearAutoScrollTimeout: function clearAutoScrollTimeout() {
 		if (this.disableScrollTimer) clearTimeout(this.disableScrollTimer);
@@ -2361,17 +2345,18 @@ var Chatroom = React.createClass({
 	},
 	scrollToBottom: function scrollToBottom() {
 		if (!this.state.autoScroll) return;
-		var node = React.findDOMNode(this.refs.messageContainer);
+		var node = ReactDOM.findDOMNode(this.refs.messageContainer);
 		node.scrollTop = node.scrollHeight;
 	},
 	render: function render() {
 		var _this2 = this;
 
+		var socket = this.props.socket;
 		var messages = this.props.messages.map(function (message) {
 			if (message) {
 				return React.createElement(ChatMessage, { message: message,
 					key: message._id,
-					id: message._id,
+					socket: socket,
 					user: _this2.props.user });
 			}
 		});
@@ -2406,7 +2391,7 @@ var Chatroom = React.createClass({
 			React.createElement(
 				"div",
 				{ className: "panel-footer" },
-				React.createElement(MessageBar, null)
+				React.createElement(MessageBar, { socket: socket })
 			)
 		);
 	}
@@ -2416,6 +2401,12 @@ var imgurRegex = /^(https?:\/\/i\.imgur\.com\/\S*\.(jpg|png))$/i;
 
 var ChatMessage = React.createClass({
 	displayName: "ChatMessage",
+
+	propTypes: {
+		user: React.PropTypes.object.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		message: React.PropTypes.object.isRequired
+	},
 
 	mixins: [ReactAutolink, ReactEmoji],
 
@@ -2474,7 +2465,8 @@ var ChatMessage = React.createClass({
 		var deleteButton = undefined;
 		var user = this.props.user;
 		if (user && user.admin) {
-			deleteButton = React.createElement(DeleteMessageButton, { messageId: this.props.message._id });
+			deleteButton = React.createElement(DeleteMessageButton, { messageId: this.props.message._id,
+				socket: this.props.socket });
 		}
 		return React.createElement(
 			"li",
@@ -2524,9 +2516,14 @@ var ChatMessage = React.createClass({
 
 var DeleteMessageButton = React.createClass({
 	displayName: "DeleteMessageButton",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	handleClick: function handleClick(e) {
 		e.preventDefault();
-		socket.emit("message:delete", {
+		this.props.socket.emit("message:delete", {
 			id: this.props.messageId
 		});
 	},
@@ -2541,8 +2538,13 @@ var DeleteMessageButton = React.createClass({
 
 var MessageBar = React.createClass({
 	displayName: "MessageBar",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	sendMessage: function sendMessage(content) {
-		socket.emit("message:new", {
+		this.props.socket.emit("message:new", {
 			content: content
 		});
 	},
@@ -2552,7 +2554,7 @@ var MessageBar = React.createClass({
 		};
 	},
 	checkInputLength: function checkInputLength() {
-		var input = React.findDOMNode(this.refs.content).value;
+		var input = ReactDOM.findDOMNode(this.refs.content).value;
 		var currentStatusMessage = this.state.statusMessage;
 		if (input.length > 256) {
 			return this.setState({
@@ -2570,9 +2572,9 @@ var MessageBar = React.createClass({
 	},
 	handleSubmit: function handleSubmit(e) {
 		e.preventDefault();
-		var content = React.findDOMNode(this.refs.content).value.trim();
+		var content = ReactDOM.findDOMNode(this.refs.content).value.trim();
 		if (!content) return;
-		React.findDOMNode(this.refs.content).value = '';
+		ReactDOM.findDOMNode(this.refs.content).value = '';
 		this.sendMessage(content);
 		return;
 	},
@@ -2630,8 +2632,16 @@ require.register("javascripts/components/settings", function(exports, require, m
 
 var React = require("react");
 
-var SettingsPanel = React.createClass({
+var SettingsPanel = exports.SettingsPanel = React.createClass({
 	displayName: "SettingsPanel",
+
+	propTypes: {
+		toggleUpdateTitle: React.PropTypes.func.isRequired,
+		updateTitle: React.PropTypes.bool.isRequired,
+		toggleEventsPanel: React.PropTypes.func.isRequired,
+		showEventsPanel: React.PropTypes.bool.isRequired
+	},
+
 	render: function render() {
 		return React.createElement(
 			"div",
@@ -2760,8 +2770,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Howl = require("howl");
+var $ = require("jquery");
 var React = require("react");
+var Howl = require("howler").Howl;
+var Howler = require("howler").Howler;
 var helper = require("javascripts/helper");
 var storageAvailable = helper.storageAvailable;
 
@@ -3101,10 +3113,200 @@ var SoundPanel = React.createClass({
 		);
 	}
 });
+
+module.exports = {
+	SoundController: SoundController,
+	SoundPanel: SoundPanel
+};
+});
+
+require.register("javascripts/components/teamspeak", function(exports, require, module) {
+"use strict";
+
+var React = require("react");
+
+var teamspeakDefaults = {
+	url: "ts3server://ensl.org/",
+	password: "ns2gather",
+	alien: {
+		channel: "NS2 Gather/Gather #1/Alien",
+		password: "ns2gather"
+	},
+	marine: {
+		channel: "NS2 Gather/Gather #1/Marine",
+		password: "ns2gather"
+	}
+};
+
+var TeamSpeakButton = exports.TeamSpeakButton = React.createClass({
+	displayName: "TeamSpeakButton",
+	getDefaultProps: function getDefaultProps() {
+		return teamspeakDefaults;
+	},
+	marineUrl: function marineUrl() {
+		return this.teamSpeakUrl(this.props.marine);
+	},
+	alienUrl: function alienUrl() {
+		return this.teamSpeakUrl(this.props.alien);
+	},
+	teamSpeakUrl: function teamSpeakUrl(conn) {
+		var params = "channel=" + encodeURIComponent(conn.channel) + "&\n\t\t\tchannelpassword=" + encodeURIComponent(conn.password);
+		return this.props.url + "?" + params;
+	},
+	render: function render() {
+		return React.createElement(
+			"ul",
+			{ className: "nav navbar-top-links navbar-right" },
+			React.createElement(
+				"li",
+				{ className: "dropdown" },
+				React.createElement(
+					"a",
+					{ className: "dropdown-toggle", "data-toggle": "dropdown", href: "#" },
+					"Teamspeak  ",
+					React.createElement("i", { className: "fa fa-caret-down" })
+				),
+				React.createElement(
+					"ul",
+					{ className: "dropdown-menu" },
+					React.createElement(
+						"li",
+						null,
+						React.createElement(
+							"a",
+							{ href: this.props.url },
+							"Join Teamspeak Lobby"
+						)
+					),
+					React.createElement(
+						"li",
+						null,
+						React.createElement(
+							"a",
+							{ href: this.marineUrl() },
+							"Join Marine Teamspeak"
+						)
+					),
+					React.createElement(
+						"li",
+						null,
+						React.createElement(
+							"a",
+							{ href: this.alienUrl() },
+							"Join Alien Teamspeak"
+						)
+					),
+					React.createElement("li", { role: "separator", className: "divider" }),
+					React.createElement(
+						"li",
+						null,
+						React.createElement(
+							"a",
+							{ href: "#", "data-toggle": "modal", "data-target": "#teamspeakmodal" },
+							"Teamspeak Details"
+						)
+					)
+				)
+			)
+		);
+	}
+});
+
+var TeamSpeakModal = exports.TeamSpeakModal = React.createClass({
+	displayName: "TeamSpeakModal",
+	getDefaultProps: function getDefaultProps() {
+		return teamspeakDefaults;
+	},
+	render: function render() {
+		return React.createElement(
+			"div",
+			{ className: "modal fade text-left", id: "teamspeakmodal" },
+			React.createElement(
+				"div",
+				{ className: "modal-dialog" },
+				React.createElement(
+					"div",
+					{ className: "modal-content" },
+					React.createElement(
+						"div",
+						{ className: "modal-header" },
+						React.createElement(
+							"button",
+							{ type: "button",
+								className: "close",
+								"data-dismiss": "modal",
+								"aria-label": "Close" },
+							React.createElement(
+								"span",
+								{ "aria-hidden": "true" },
+								"×"
+							)
+						),
+						React.createElement(
+							"h4",
+							{ className: "modal-title" },
+							"Teamspeak Server Information"
+						)
+					),
+					React.createElement(
+						"div",
+						{ className: "modal-body" },
+						React.createElement(
+							"dl",
+							{ className: "dl-horizontal" },
+							React.createElement(
+								"dt",
+								null,
+								"Server"
+							),
+							React.createElement(
+								"dd",
+								null,
+								this.props.url
+							),
+							React.createElement(
+								"dt",
+								null,
+								"Password"
+							),
+							React.createElement(
+								"dd",
+								null,
+								this.props.password
+							),
+							React.createElement(
+								"dt",
+								null,
+								"Marine Channel"
+							),
+							React.createElement(
+								"dd",
+								null,
+								this.props.marine.channel
+							),
+							React.createElement(
+								"dt",
+								null,
+								"Alien Channel"
+							),
+							React.createElement(
+								"dd",
+								null,
+								this.props.alien.channel
+							)
+						)
+					)
+				)
+			)
+		);
+	}
+});
 });
 
 require.register("javascripts/components/user", function(exports, require, module) {
 "use strict";
+
+var _gather = require("javascripts/components/gather");
 
 var React = require("react");
 var helper = require("javascripts/helper");
@@ -3114,8 +3316,13 @@ var modalId = helper.modalId;
 
 var UserLogin = React.createClass({
 	displayName: "UserLogin",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	authorizeId: function authorizeId(id) {
-		socket.emit("users:authorize", {
+		this.props.socket.emit("users:authorize", {
 			id: parseInt(id, 10)
 		});
 	},
@@ -3155,13 +3362,19 @@ var UserLogin = React.createClass({
 
 var DisconnectUserButton = React.createClass({
 	displayName: "DisconnectUserButton",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		id: React.PropTypes.number.isRequired
+	},
+
 	getDefaultProps: function getDefaultProps() {
 		return {
 			id: null
 		};
 	},
 	disconnectUser: function disconnectUser() {
-		socket.emit("users:disconnect", {
+		this.props.socket.emit("users:disconnect", {
 			id: this.props.id
 		});
 	},
@@ -3178,6 +3391,13 @@ var DisconnectUserButton = React.createClass({
 
 var UserModal = React.createClass({
 	displayName: "UserModal",
+
+	propTypes: {
+		user: React.PropTypes.object.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		currentUser: React.PropTypes.object.isRequired
+	},
+
 	render: function render() {
 		var currentUser = this.props.currentUser;
 		var user = this.props.user;
@@ -3185,7 +3405,7 @@ var UserModal = React.createClass({
 		if (user.hive.id) {
 			hiveStats = [React.createElement(
 				"tr",
-				null,
+				{ key: "stats" },
 				React.createElement(
 					"td",
 					null,
@@ -3198,7 +3418,7 @@ var UserModal = React.createClass({
 				React.createElement("td", null)
 			), React.createElement(
 				"tr",
-				null,
+				{ key: "elo" },
 				React.createElement(
 					"td",
 					null,
@@ -3211,7 +3431,7 @@ var UserModal = React.createClass({
 				)
 			), React.createElement(
 				"tr",
-				null,
+				{ key: "hours" },
 				React.createElement(
 					"td",
 					null,
@@ -3224,7 +3444,7 @@ var UserModal = React.createClass({
 				)
 			), React.createElement(
 				"tr",
-				null,
+				{ key: "wins" },
 				React.createElement(
 					"td",
 					null,
@@ -3237,7 +3457,7 @@ var UserModal = React.createClass({
 				)
 			), React.createElement(
 				"tr",
-				null,
+				{ key: "losses" },
 				React.createElement(
 					"td",
 					null,
@@ -3250,7 +3470,7 @@ var UserModal = React.createClass({
 				)
 			), React.createElement(
 				"tr",
-				null,
+				{ key: "kills" },
 				React.createElement(
 					"td",
 					null,
@@ -3266,7 +3486,7 @@ var UserModal = React.createClass({
 				)
 			), React.createElement(
 				"tr",
-				null,
+				{ key: "assists" },
 				React.createElement(
 					"td",
 					null,
@@ -3282,7 +3502,7 @@ var UserModal = React.createClass({
 				)
 			), React.createElement(
 				"tr",
-				null,
+				{ key: "deaths" },
 				React.createElement(
 					"td",
 					null,
@@ -3300,7 +3520,7 @@ var UserModal = React.createClass({
 		}
 		var adminOptions = undefined;
 		if (currentUser.admin) {
-			adminOptions = React.createElement(DisconnectUserButton, { id: user.id });
+			adminOptions = React.createElement(DisconnectUserButton, { id: user.id, socket: this.props.socket });
 		}
 		return React.createElement(
 			"div",
@@ -3361,7 +3581,7 @@ var UserModal = React.createClass({
 									React.createElement(
 										"td",
 										null,
-										React.createElement(LifeformIcons, { gatherer: { user: user } })
+										React.createElement(_gather.LifeformIcons, { gatherer: { user: user } })
 									)
 								),
 								React.createElement(
@@ -3416,6 +3636,13 @@ var UserModal = React.createClass({
 
 var UserItem = React.createClass({
 	displayName: "UserItem",
+
+	propTypes: {
+		user: React.PropTypes.object.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		currentUser: React.PropTypes.object.isRequired
+	},
+
 	render: function render() {
 		var user = this.props.user;
 		var currentUser = this.props.currentUser;
@@ -3428,13 +3655,20 @@ var UserItem = React.createClass({
 					"data-target": "#" + modalId(user) },
 				user.username
 			),
-			React.createElement(UserModal, { user: user, currentUser: currentUser })
+			React.createElement(UserModal, { user: user, currentUser: currentUser,
+				socket: this.props.socket })
 		);
 	}
 });
 
-var UserMenu = React.createClass({
+var UserMenu = exports.UserMenu = React.createClass({
 	displayName: "UserMenu",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		users: React.PropTypes.array.isRequired
+	},
+
 	render: function render() {
 		var _this = this;
 
@@ -3442,7 +3676,7 @@ var UserMenu = React.createClass({
 			return a.username.toLowerCase() > b.username.toLowerCase() ? 1 : -1;
 		}).map(function (user) {
 			return React.createElement(UserItem, { user: user, key: user.id,
-				currentUser: _this.props.user });
+				currentUser: _this.props.user, socket: _this.props.socket });
 		});
 		return React.createElement(
 			"div",
@@ -3471,10 +3705,15 @@ var UserMenu = React.createClass({
 	}
 });
 
-var AdminPanel = React.createClass({
+var AdminPanel = exports.AdminPanel = React.createClass({
 	displayName: "AdminPanel",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	handleGatherReset: function handleGatherReset() {
-		socket.emit("gather:reset");
+		this.props.socket.emit("gather:reset");
 	},
 	render: function render() {
 		return React.createElement(
@@ -3513,7 +3752,7 @@ var AdminPanel = React.createClass({
 							null,
 							"Swap Into a Different Account (Only works for admins)"
 						),
-						React.createElement(UserLogin, null),
+						React.createElement(UserLogin, { socket: this.props.socket }),
 						React.createElement(
 							"h5",
 							null,
@@ -3547,8 +3786,13 @@ var AdminPanel = React.createClass({
 	}
 });
 
-var ProfileModal = React.createClass({
+var ProfileModal = exports.ProfileModal = React.createClass({
 	displayName: "ProfileModal",
+
+	propTypes: {
+		user: React.PropTypes.object.isRequired
+	},
+
 	handleUserUpdate: function handleUserUpdate(e) {
 		e.preventDefault();
 		var abilities = {
@@ -3708,7 +3952,7 @@ var ProfileModal = React.createClass({
 	}
 });
 
-var CurrentUser = React.createClass({
+var CurrentUser = exports.CurrentUser = React.createClass({
 	displayName: "CurrentUser",
 	render: function render() {
 		if (this.props.user) {
@@ -3776,17 +4020,26 @@ var CurrentUser = React.createClass({
 	}
 });
 
-var AssumeUserIdButton = React.createClass({
+var AssumeUserIdButton = exports.AssumeUserIdButton = React.createClass({
 	displayName: "AssumeUserIdButton",
+
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		gatherer: React.PropTypes.object.isRequired,
+		currentUser: React.PropTypes.object.isRequired
+	},
+
 	assumeId: function assumeId(e) {
+		var _this2 = this;
+
 		e.preventDefault();
 		if (this.props.gatherer) {
-			socket.emit("users:authorize", {
+			this.props.socket.emit("users:authorize", {
 				id: this.props.gatherer.id
 			});
 			// Refresh Gather list
 			setTimeout(function () {
-				socket.emit("gather:refresh");
+				_this2.props.socket.emit("gather:refresh");
 			}, 5000);
 		}
 	},

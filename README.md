@@ -16,16 +16,26 @@ That's it
 
 ## Requirements
 
-- node.js 0.12
+- node.js > 4.0
 
 - MongoDB
 
-## Run
+## Run in development
 
 ```bash
-npm install
+npm install # Install deps
 
-npm start
+npm run watch # Compile and watch frontend assets
+
+RANDOM_USER=true npm run dev # Run dev server, loading yourself as a random user
+```
+
+## Run in production
+
+```bash
+npm install # Install deps
+
+npm start_production # Compile assets and run in production
 ```
 
 ## License

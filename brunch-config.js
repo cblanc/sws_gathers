@@ -36,7 +36,7 @@ exports.config = {
     babel: {
       presets: ["es2015", "react"],
       // Do not use ES6 compiler in vendor code
-      ignore: [/web\/static\/vendor/]
+      ignore: [/vendor/]
     }
   },
 
@@ -50,11 +50,11 @@ exports.config = {
   npm: {
     enabled: true,
     styles: {
-      "bootstrap": ["dist/css/bootstrap.min.css"]
+      "bootstrap-solarized": ["bootstrap-solarized-dark.css"]
     },
     whitelist: ["react", "react-dom", "jquery", "lodash", 
-      "react-autolink-text", "react-dom", "react-emoji",
-      "bootstrap", "bootstrap-slider"],
+      "react-autolink", "react-dom", "react-emoji", "howler",
+      "bootstrap"],
     globals: {
       "_": "lodash",
       "jQuery": "jquery",

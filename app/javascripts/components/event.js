@@ -1,7 +1,5 @@
-const $ = require("jquery");
 const React = require("react");
-
-const Events = React.createClass({
+const Events = exports.Events = React.createClass({
 	propTypes: {
 		events: React.PropTypes.array.isRequired
 	},
@@ -16,16 +14,17 @@ const Events = React.createClass({
 			events = this.props.events.map(event => {
 				return `${this.getTime(event.createdAt)} ${event.description}`;
 			}).join("\n");
+			return (
+				<pre className="events-panel">
+					{events}
+				</pre>
+			);
 		} else {
-			events = <tr><td>Listening for new events...</td></tr>
+			return (
+				<pre className="events-panel">
+					Listening for new events...
+				</pre>
+			);
 		}
-
-		return (
-			<pre className="events-panel">
-				{events}
-			</pre>
-		);
 	}
 });
-
-module.exports = Events;

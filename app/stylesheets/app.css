@@ -213,3 +213,13 @@ html, body {
 	border-color: #428bca;
 	border-radius: 4px;
 }
+
+/* Fix for solarize theme */
+
+.badge {
+	color: #fff;
+}
+
+.gather-voting {
+	color: #fff !important;	
+}

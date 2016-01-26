@@ -1,5 +1,7 @@
-const Howl = require("howl");
+const $ = require("jquery");
 const React = require("react");
+const Howl = require("howler").Howl;
+const Howler = require("howler").Howler;
 const helper = require("javascripts/helper");
 const storageAvailable = helper.storageAvailable;
 
@@ -278,3 +280,8 @@ var SoundPanel = React.createClass({
 	  </ul>;
 	}
 });
+
+module.exports = {
+	SoundController: SoundController,
+	SoundPanel: SoundPanel
+};

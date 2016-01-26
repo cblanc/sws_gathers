@@ -1,5 +1,7 @@
+const React = require("react");
 const ReactDOM = require("react-dom");
+const App = require("javascripts/components/main");
 
-const App = require("components/main");
-
-module.exports = mount => { ReactDOM.render(App, mount) };
+module.exports = function (mount) { 
+	ReactDOM.render(<App />, mount);
+};

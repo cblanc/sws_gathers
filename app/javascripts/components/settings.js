@@ -1,6 +1,13 @@
 const React = require("react");
 
-const SettingsPanel = React.createClass({
+const SettingsPanel = exports.SettingsPanel = React.createClass({
+	propTypes: {
+		toggleUpdateTitle: React.PropTypes.func.isRequired,
+		updateTitle: React.PropTypes.bool.isRequired,
+		toggleEventsPanel: React.PropTypes.func.isRequired,
+		showEventsPanel: React.PropTypes.bool.isRequired
+	},
+
 	render() {
 		return (
 			<div className="modal fade" id="settingsmodal">

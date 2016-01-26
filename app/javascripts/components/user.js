@@ -1,3 +1,4 @@
+import {LifeformIcons} from "javascripts/components/gather";
 const React = require("react");
 const helper = require("javascripts/helper");
 const enslUrl = helper.enslUrl;
@@ -5,8 +6,12 @@ const hiveUrl = helper.hiveUrl;
 const modalId = helper.modalId;
 
 const UserLogin = React.createClass({
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	authorizeId(id) {
-		socket.emit("users:authorize", {
+		this.props.socket.emit("users:authorize", {
 			id: parseInt(id, 10)
 		});
 	},
@@ -43,6 +48,11 @@ const UserLogin = React.createClass({
 });
 
 const DisconnectUserButton = React.createClass({
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		id: React.PropTypes.number.isRequired
+	},
+
 	getDefaultProps() {
 		return {
 			id: null
@@ -50,7 +60,7 @@ const DisconnectUserButton = React.createClass({
 	},
 
 	disconnectUser() {
-		socket.emit("users:disconnect", {
+		this.props.socket.emit("users:disconnect", {
 			id: this.props.id
 		});
 	},
@@ -64,38 +74,44 @@ const DisconnectUserButton = React.createClass({
 });
 
 const UserModal = React.createClass({
+	propTypes: {
+		user: React.PropTypes.object.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		currentUser: React.PropTypes.object.isRequired
+	},
+
 	render() {
 		const currentUser = this.props.currentUser;
 		const user = this.props.user;
 		let hiveStats;
 		if (user.hive.id) {
 			hiveStats = [
-			<tr><td><strong>Hive Stats</strong></td><td></td></tr>,
-			<tr>
+			<tr key="stats"><td><strong>Hive Stats</strong></td><td></td></tr>,
+			<tr key="elo">
 				<td>ELO</td>
 				<td>{user.hive.skill}</td>
 			</tr>,
-			<tr>
+			<tr key="hours">
 				<td>Hours Played</td>
 				<td>{Math.round(user.hive.playTime / 3600)}</td>
 			</tr>,
-			<tr>
+			<tr key="wins">
 				<td>Wins</td>
 				<td>{user.hive.wins}</td>
 			</tr>,
-			<tr>
+			<tr key="losses">
 				<td>Losses</td>
 				<td>{user.hive.loses}</td>
 			</tr>,
-			<tr>
+			<tr key="kills">
 				<td>Kills (/min)</td>
 				<td>{user.hive.kills} ({_.round(user.hive.kills / (user.hive.playTime / 60), 1)})</td>
 			</tr>,
-			<tr>
+			<tr key="assists">
 				<td>Assists (/min)</td>
 				<td>{user.hive.assists} ({_.round(user.hive.assists / (user.hive.playTime / 60), 1)})</td>
 			</tr>,
-			<tr>
+			<tr key="deaths">
 				<td>Deaths (/min)</td>
 				<td>{user.hive.deaths} ({_.round(user.hive.deaths / (user.hive.playTime / 60), 1)})</td>
 			</tr>
@@ -103,7 +119,7 @@ const UserModal = React.createClass({
 		}
 		let adminOptions;
 		if (currentUser.admin) {
-			adminOptions = <DisconnectUserButton id={user.id} />;
+			adminOptions = <DisconnectUserButton id={user.id} socket={this.props.socket} />;
 		}
 		return (
 			<div className="modal fade" id={modalId(user)}>
@@ -163,6 +179,12 @@ const UserModal = React.createClass({
 })
 
 const UserItem = React.createClass({
+	propTypes: {
+		user: React.PropTypes.object.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		currentUser: React.PropTypes.object.isRequired
+	},
+
 	render() {
 		const user = this.props.user;
 		const currentUser = this.props.currentUser;
@@ -170,19 +192,25 @@ const UserItem = React.createClass({
 			<li className="list-group-item">
 				<a href="#" data-toggle="modal" 
 				data-target={`#${modalId(user)}`}>{user.username}</a>
-				<UserModal user={user} currentUser={currentUser} />
+				<UserModal user={user} currentUser={currentUser} 
+					socket={this.props.socket} />
 			</li>
 		);
 	}
 });
 
-const UserMenu = React.createClass({
+const UserMenu = exports.UserMenu = React.createClass({
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		users: React.PropTypes.array.isRequired
+	},
+
 	render() {
 		const users = this.props.users
 		.sort((a, b) => (a.username.toLowerCase() > b.username.toLowerCase()) ? 1 : -1)
 		.map(user => {
 			return <UserItem user={user} key={user.id} 
-				currentUser={this.props.user} />
+				currentUser={this.props.user} socket={this.props.socket} />
 		});
 		return (
 			<div>
@@ -200,9 +228,13 @@ const UserMenu = React.createClass({
 	}
 });
 
-const AdminPanel = React.createClass({
+const AdminPanel = exports.AdminPanel = React.createClass({
+	propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	handleGatherReset() {
-		socket.emit("gather:reset");
+		this.props.socket.emit("gather:reset");
 	},
 
 	render() {
@@ -219,7 +251,7 @@ const AdminPanel = React.createClass({
 						</div>
 						<div className="modal-body" id="admin-menu">
 							<h5>Swap Into a Different Account (Only works for admins)</h5>
-							<UserLogin />
+							<UserLogin socket={this.props.socket} />
 							<h5>Gather Options</h5>
 							<div>
 								<button
@@ -239,7 +271,11 @@ const AdminPanel = React.createClass({
 	}
 });
 
-const ProfileModal = React.createClass({
+const ProfileModal = exports.ProfileModal = React.createClass({
+	propTypes: {
+		user: React.PropTypes.object.isRequired
+	},
+
 	handleUserUpdate(e) {
 		e.preventDefault();
 		let abilities = {
@@ -336,7 +372,7 @@ const ProfileModal = React.createClass({
 	}
 });
 
-const CurrentUser = React.createClass({
+const CurrentUser = exports.CurrentUser = React.createClass({
 	render() {
 		if (this.props.user) {
 			let adminOptions;
@@ -378,16 +414,22 @@ const CurrentUser = React.createClass({
 	}
 });
 
-var AssumeUserIdButton = React.createClass({
+var AssumeUserIdButton = exports.AssumeUserIdButton = React.createClass({
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		gatherer: React.PropTypes.object.isRequired,
+		currentUser: React.PropTypes.object.isRequired,
+	},
+
 	assumeId(e) {
 		e.preventDefault();
 		if (this.props.gatherer) {
-			socket.emit("users:authorize", {
+			this.props.socket.emit("users:authorize", {
 				id: this.props.gatherer.id
 			});
 			// Refresh Gather list
 			setTimeout(() => {
-				socket.emit("gather:refresh");
+				this.props.socket.emit("gather:refresh");
 			}, 5000);
 		}
 	},

@@ -402,22 +402,14 @@ const App = React.createClass({
 			        </div>
 			      </div>
 			      <ul className="sidebar-menu">
-			        <li className="header">MAIN NAVIGATION</li>
+			        <li className="header">Online</li>
 			        <li>
 			        	<a href="#">
-			            <i className="fa fa-dashboard"></i> <span>Online</span>
+			            <i className="fa fa-dashboard"></i> <span>chris</span>
 			          </a>
 		          </li>
-		          <li>
-			        	<a href="#">
-			            <i className="fa fa-dashboard"></i> <span>Teamspeak</span>
-			          </a>
-		          </li>
-		          <li>
-			        	<a href="#">
-			            <i className="fa fa-dashboard"></i> <span>Info</span>
-			          </a>
-		          </li>
+		          <li className="header">Information</li>
+		          <TeamSpeakButton />
 			      </ul>
 			    </section>
 			  </aside>

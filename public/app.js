@@ -1662,7 +1662,8 @@ var App = React.createClass({
 			showEventsPanel: showEventsPanel,
 			soundController: new SoundController(),
 			showMessageBox: true,
-			collapseMenu: false
+			collapseMenu: false,
+			connectionState: "connected"
 		};
 	},
 	updateTitle: function updateTitle() {
@@ -1766,6 +1767,22 @@ var App = React.createClass({
 			});
 		});
 
+		socket.on("connect", function () {
+			_this2.setState({ connectionState: "connected" });
+		});
+
+		socket.on("disconnect", function () {
+			_this2.setState({ connectionState: "disconnected" });
+		});
+
+		socket.on("reconnecting", function () {
+			_this2.setState({ connectionState: "reconnecting" });
+		});
+
+		socket.on("reconnect", function () {
+			_this2.setState({ connectionState: "connected" });
+		});
+
 		socket.emit("users:refresh");
 		socket.emit("message:refresh");
 		socket.emit("gather:refresh");
@@ -1805,9 +1822,42 @@ var App = React.createClass({
 			);
 		}
 
+		var user = this.state.user;
+		var username = undefined,
+		    avatar = undefined;
+		if (user) {
+			username = user.username;
+			avatar = user.avatar;
+		}
+
 		var appClass = ["skin-blue", "sidebar-mini", "fixed"];
 		if (this.state.showMessageBox) appClass.push("control-sidebar-open");
 		if (this.state.collapseMenu) appClass.push("sidebar-collapse");
+
+		var connectionStatus = undefined;
+		var connectionState = this.state.connectionState;
+		if (connectionState === "connected") {
+			connectionStatus = React.createElement(
+				"a",
+				{ href: "#" },
+				React.createElement("i", { className: "fa fa-circle text-success" }),
+				" Online"
+			);
+		} else if (connectionState === "reconnecting") {
+			connectionStatus = React.createElement(
+				"a",
+				{ href: "#" },
+				React.createElement("i", { className: "fa fa-circle text-warning" }),
+				" Reconnecting"
+			);
+		} else if (connectionState === "disconnected") {
+			connectionStatus = React.createElement(
+				"a",
+				{ href: "#" },
+				React.createElement("i", { className: "fa fa-circle text-danger" }),
+				" Disconnected"
+			);
+		}
 
 		return React.createElement(
 			"div",
@@ -1895,7 +1945,7 @@ var App = React.createClass({
 						React.createElement(
 							"div",
 							{ className: "pull-left image" },
-							React.createElement("img", { src: "http://www.ensl.org/images/icons/noavatar.png", className: "img-circle", alt: "User Image" })
+							React.createElement("img", { src: avatar, className: "img-circle", alt: "User Image" })
 						),
 						React.createElement(
 							"div",
@@ -1903,14 +1953,9 @@ var App = React.createClass({
 							React.createElement(
 								"p",
 								null,
-								"User Name"
+								username
 							),
-							React.createElement(
-								"a",
-								{ href: "#" },
-								React.createElement("i", { className: "fa fa-circle text-success" }),
-								" Online"
-							)
+							connectionStatus
 						)
 					),
 					React.createElement(

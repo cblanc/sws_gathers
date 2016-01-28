@@ -3,3 +3,9 @@ npm-debug.log
 .module-cache/
 public/js/app.js
 newrelic_agent.log
+public/app.js
+public/app.js.map
+public/app.css
+public/app.css.map
+public/vendor.js
+public/vendor.js.map

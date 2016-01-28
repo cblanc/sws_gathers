@@ -1660,7 +1660,9 @@ var App = React.createClass({
 			events: [],
 			updateTitle: updateTitle,
 			showEventsPanel: showEventsPanel,
-			soundController: new SoundController()
+			soundController: new SoundController(),
+			showMessageBox: true,
+			collapseMenu: false
 		};
 	},
 	updateTitle: function updateTitle() {
@@ -1768,6 +1770,19 @@ var App = React.createClass({
 		socket.emit("message:refresh");
 		socket.emit("gather:refresh");
 	},
+	toggleMessageBox: function toggleMessageBox(e) {
+		e.preventDefault();
+		console.log("FOO");
+		this.setState({
+			showMessageBox: !this.state.showMessageBox
+		});
+	},
+	toggleCollapseMenu: function toggleCollapseMenu(e) {
+		e.preventDefault();
+		this.setState({
+			collapseMenu: !this.state.collapseMenu
+		});
+	},
 	render: function render() {
 		var socket = this.props.socket;
 
@@ -1790,9 +1805,13 @@ var App = React.createClass({
 			);
 		}
 
+		var appClass = ["skin-blue", "sidebar-mini", "fixed"];
+		if (this.state.showMessageBox) appClass.push("control-sidebar-open");
+		if (this.state.collapseMenu) appClass.push("sidebar-collapse");
+
 		return React.createElement(
 			"div",
-			{ className: "wrapper" },
+			{ className: appClass.join(" ") },
 			React.createElement(
 				"header",
 				{ className: "main-header" },
@@ -1815,7 +1834,7 @@ var App = React.createClass({
 					{ className: "navbar navbar-static-top", role: "navigation" },
 					React.createElement(
 						"a",
-						{ href: "#", className: "sidebar-toggle", "data-toggle": "offcanvas", role: "button" },
+						{ href: "#", className: "sidebar-toggle", onClick: this.toggleCollapseMenu, role: "button" },
 						React.createElement(
 							"span",
 							{ className: "sr-only" },
@@ -1833,19 +1852,195 @@ var App = React.createClass({
 								{ className: "dropdown messages-menu" },
 								React.createElement(
 									"a",
-									{ href: "#", className: "dropdown-toggle", "data-toggle": "dropdown" },
-									React.createElement("i", { className: "fa fa-envelope-o" }),
+									{ href: "#" },
+									React.createElement("i", { className: "fa fa-headphones" })
+								)
+							),
+							React.createElement(
+								"li",
+								{ className: "dropdown messages-menu" },
+								React.createElement(
+									"a",
+									{ href: "#" },
+									React.createElement("i", { className: "fa fa-newspaper-o" }),
 									React.createElement(
 										"span",
 										{ className: "label label-success" },
 										"4"
 									)
 								)
+							),
+							React.createElement(
+								"li",
+								null,
+								React.createElement(
+									"a",
+									{ href: "#", onClick: this.toggleMessageBox },
+									React.createElement("i", { className: "fa fa-comment" })
+								)
 							)
 						)
 					)
 				)
-			)
+			),
+			React.createElement(
+				"aside",
+				{ className: "main-sidebar" },
+				React.createElement(
+					"section",
+					{ className: "sidebar", style: { height: "auto" } },
+					React.createElement(
+						"div",
+						{ className: "user-panel" },
+						React.createElement(
+							"div",
+							{ className: "pull-left image" },
+							React.createElement("img", { src: "http://www.ensl.org/images/icons/noavatar.png", className: "img-circle", alt: "User Image" })
+						),
+						React.createElement(
+							"div",
+							{ className: "pull-left info" },
+							React.createElement(
+								"p",
+								null,
+								"User Name"
+							),
+							React.createElement(
+								"a",
+								{ href: "#" },
+								React.createElement("i", { className: "fa fa-circle text-success" }),
+								" Online"
+							)
+						)
+					),
+					React.createElement(
+						"ul",
+						{ className: "sidebar-menu" },
+						React.createElement(
+							"li",
+							{ className: "header" },
+							"MAIN NAVIGATION"
+						),
+						React.createElement(
+							"li",
+							null,
+							React.createElement(
+								"a",
+								{ href: "#" },
+								React.createElement("i", { className: "fa fa-dashboard" }),
+								" ",
+								React.createElement(
+									"span",
+									null,
+									"Online"
+								)
+							)
+						),
+						React.createElement(
+							"li",
+							null,
+							React.createElement(
+								"a",
+								{ href: "#" },
+								React.createElement("i", { className: "fa fa-dashboard" }),
+								" ",
+								React.createElement(
+									"span",
+									null,
+									"Teamspeak"
+								)
+							)
+						),
+						React.createElement(
+							"li",
+							null,
+							React.createElement(
+								"a",
+								{ href: "#" },
+								React.createElement("i", { className: "fa fa-dashboard" }),
+								" ",
+								React.createElement(
+									"span",
+									null,
+									"Info"
+								)
+							)
+						)
+					)
+				)
+			),
+			React.createElement(
+				"div",
+				{ className: "content-wrapper", style: { "minHeight": "916px" } },
+				React.createElement(
+					"section",
+					{ className: "content-header" },
+					React.createElement(
+						"h1",
+						null,
+						"Gathers",
+						React.createElement(
+							"small",
+							null,
+							"beta"
+						)
+					)
+				),
+				React.createElement(
+					"section",
+					{ className: "content" },
+					React.createElement(
+						"p",
+						null,
+						"Foo"
+					)
+				)
+			),
+			React.createElement(
+				"aside",
+				{ className: "control-sidebar control-sidebar-dark", style: { "position": "fixed", "height": "auto" } },
+				React.createElement(
+					"div",
+					null,
+					React.createElement(
+						"div",
+						null,
+						React.createElement(
+							"h3",
+							{ className: "control-sidebar-heading" },
+							"Recent Activity"
+						),
+						React.createElement(
+							"ul",
+							{ className: "control-sidebar-menu" },
+							React.createElement(
+								"li",
+								null,
+								React.createElement(
+									"a",
+									{ href: "#" },
+									React.createElement("i", { className: "menu-icon fa fa-birthday-cake bg-red" }),
+									React.createElement(
+										"div",
+										{ className: "menu-info" },
+										React.createElement(
+											"h4",
+											{ className: "control-sidebar-subheading" },
+											"Langdon's Birthday"
+										),
+										React.createElement(
+											"p",
+											null,
+											"Will be 23 on April 24th"
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			),
+			React.createElement("div", { className: "control-sidebar-bg", style: { "position": "fixed", "height": "auto" } })
 		);
 
 		return React.createElement(
@@ -1889,7 +2084,7 @@ var App = React.createClass({
 						{ className: "dropdown" },
 						React.createElement(
 							"a",
-							{ className: "dropdown-toggle", "data-toggle": "dropdown", href: "#" },
+							{ href: "#" },
 							"Info  ",
 							React.createElement("i", { className: "fa fa-caret-down" })
 						),

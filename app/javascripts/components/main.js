@@ -168,7 +168,9 @@ const App = React.createClass({
 			events: [],
 			updateTitle: updateTitle,
 			showEventsPanel: showEventsPanel,
-			soundController: new SoundController()
+			soundController: new SoundController(),
+			showMessageBox: true,
+			collapseMenu: false
 		};
 	},
 
@@ -284,6 +286,21 @@ const App = React.createClass({
 		socket.emit("gather:refresh");
 	},
 
+	toggleMessageBox(e) {
+		e.preventDefault();
+		console.log("FOO")
+		this.setState({
+			showMessageBox: !this.state.showMessageBox
+		});
+	},
+
+	toggleCollapseMenu(e) {
+		e.preventDefault();
+		this.setState({
+			collapseMenu: !this.state.collapseMenu
+		});
+	},
+
 	render() {
 		const socket = this.props.socket;
 
@@ -304,29 +321,99 @@ const App = React.createClass({
 			);
 		}
 
+		let appClass = ["skin-blue", "sidebar-mini", "fixed"];
+		if (this.state.showMessageBox) appClass.push("control-sidebar-open");
+		if (this.state.collapseMenu) appClass.push("sidebar-collapse");
+
 		return (
-			<div className="wrapper">
+			<div className={appClass.join(" ")}>
 			  <header className="main-header">
 			  	<a href="/" className="logo">
 						<span className="logo-mini">NSL Gathers</span>
 						<span className="logo-lg">NSL Gathers</span>
 					</a>
 					<nav className="navbar navbar-static-top" role="navigation">      
-					  <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+					  <a href="#" className="sidebar-toggle" onClick={this.toggleCollapseMenu} role="button">
 					    <span className="sr-only">Toggle navigation</span>
 					  </a>
 					  <div className="navbar-custom-menu">
 					    <ul className="nav navbar-nav">    
+					    	<li className="dropdown messages-menu">
+					        <a href="#">
+					          <i className="fa fa-headphones"></i>
+					        </a>
+				        </li>
 					      <li className="dropdown messages-menu">
-					        <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-					          <i className="fa fa-envelope-o"></i>
+					        <a href="#">
+					          <i className="fa fa-newspaper-o"></i>
 					          <span className="label label-success">4</span>
 					        </a>
 				        </li>
+				        <li>
+			            <a href="#" onClick={this.toggleMessageBox}><i className="fa fa-comment"></i></a>
+			          </li>
 			        </ul>
 		        </div>
 	        </nav>
 			  </header>
+			  <aside className="main-sidebar">
+			    <section className="sidebar" style={{height: "auto"}}>
+			      <div className="user-panel">
+			        <div className="pull-left image">
+			          <img src="http://www.ensl.org/images/icons/noavatar.png" className="img-circle" alt="User Image" />
+			        </div>
+			        <div className="pull-left info">
+			          <p>User Name</p>
+			          <a href="#"><i className="fa fa-circle text-success"></i> Online</a>
+			        </div>
+			      </div>
+			      <ul className="sidebar-menu">
+			        <li className="header">MAIN NAVIGATION</li>
+			        <li>
+			        	<a href="#">
+			            <i className="fa fa-dashboard"></i> <span>Online</span>
+			          </a>
+		          </li>
+		          <li>
+			        	<a href="#">
+			            <i className="fa fa-dashboard"></i> <span>Teamspeak</span>
+			          </a>
+		          </li>
+		          <li>
+			        	<a href="#">
+			            <i className="fa fa-dashboard"></i> <span>Info</span>
+			          </a>
+		          </li>
+			      </ul>
+			    </section>
+			  </aside>
+			  <div className="content-wrapper" style={{"minHeight": "916px"}}>
+			    <section className="content-header">
+			      <h1>Gathers<small>beta</small></h1>
+			    </section>
+				  <section className="content">
+				  	<p>Foo</p>
+				  </section>
+				</div>
+				<aside className="control-sidebar control-sidebar-dark" style={{"position": "fixed", "height": "auto"}}>
+					<div>
+						<div>
+							<h3 className="control-sidebar-heading">Recent Activity</h3>
+							<ul className="control-sidebar-menu">
+								<li>
+									<a href="#">
+										<i className="menu-icon fa fa-birthday-cake bg-red"></i>
+										<div className="menu-info">
+											<h4 className="control-sidebar-subheading">Langdon's Birthday</h4>
+											<p>Will be 23 on April 24th</p>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</aside>
+				<div className="control-sidebar-bg" style={{"position":"fixed", "height":"auto"}}></div>
 		  </div>
 		);
 
@@ -345,7 +432,7 @@ const App = React.createClass({
 				  <TeamSpeakButton />
 				  <ul className="nav navbar-top-links navbar-right">
 					  <li className="dropdown">
-							<a className="dropdown-toggle" data-toggle="dropdown" href="#">
+							<a href="#">
 								Info &nbsp;<i className="fa fa-caret-down"></i>
 							</a>
 							<ul className="dropdown-menu">

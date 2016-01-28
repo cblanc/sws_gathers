@@ -170,7 +170,8 @@ const App = React.createClass({
 			showEventsPanel: showEventsPanel,
 			soundController: new SoundController(),
 			showMessageBox: true,
-			collapseMenu: false
+			collapseMenu: false,
+			connectionState: "connected"
 		};
 	},
 
@@ -281,6 +282,22 @@ const App = React.createClass({
 			});
 		});
 
+		socket.on("connect", () => {
+			this.setState({ connectionState: "connected" });
+		});
+
+		socket.on("disconnect", () => {
+			this.setState({ connectionState: "disconnected" });
+		});
+
+		socket.on("reconnecting", () => {
+			this.setState({ connectionState: "reconnecting" });
+		});
+
+		socket.on("reconnect", () => {
+			this.setState({ connectionState: "connected" });
+		});
+
 		socket.emit("users:refresh");
 		socket.emit("message:refresh");
 		socket.emit("gather:refresh");
@@ -321,9 +338,26 @@ const App = React.createClass({
 			);
 		}
 
+		const user = this.state.user;
+		let username, avatar;
+		if (user) {
+			username = user.username;
+			avatar = user.avatar;
+		}
+
 		let appClass = ["skin-blue", "sidebar-mini", "fixed"];
 		if (this.state.showMessageBox) appClass.push("control-sidebar-open");
 		if (this.state.collapseMenu) appClass.push("sidebar-collapse");
+
+		let connectionStatus;
+		const connectionState = this.state.connectionState;
+		if (connectionState === "connected") {
+			connectionStatus = <a href="#"><i className="fa fa-circle text-success"></i> Online</a>;
+		} else if (connectionState === "reconnecting") {
+			connectionStatus = <a href="#"><i className="fa fa-circle text-warning"></i> Reconnecting</a>;
+		} else if (connectionState === "disconnected") {
+			connectionStatus = <a href="#"><i className="fa fa-circle text-danger"></i> Disconnected</a>;
+		}
 
 		return (
 			<div className={appClass.join(" ")}>
@@ -360,11 +394,11 @@ const App = React.createClass({
 			    <section className="sidebar" style={{height: "auto"}}>
 			      <div className="user-panel">
 			        <div className="pull-left image">
-			          <img src="http://www.ensl.org/images/icons/noavatar.png" className="img-circle" alt="User Image" />
+			          <img src={avatar} className="img-circle" alt="User Image" />
 			        </div>
 			        <div className="pull-left info">
-			          <p>User Name</p>
-			          <a href="#"><i className="fa fa-circle text-success"></i> Online</a>
+			          <p>{username}</p>
+			          {connectionStatus}
 			        </div>
 			      </div>
 			      <ul className="sidebar-menu">

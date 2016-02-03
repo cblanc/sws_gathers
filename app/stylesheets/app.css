@@ -16,11 +16,8 @@ html, body {
 	word-wrap: break-word;      /* IE */
 }
 
-#chatroom {
-	margin-top: 1em;
-}
-
-#chatmessage-container {
+.chat-container {
+	padding: 10px;
 }
 
 #chatmessages {
@@ -99,10 +96,6 @@ html, body {
 
 .gather-actions {
 	margin-top: 0.5em;
-}
-
-#gathers {
-	margin-top: 1em;
 }
 
 .gatherer {
@@ -222,4 +215,33 @@ html, body {
 
 .gather-voting {
 	color: #fff !important;	
+}
+
+/* Users Menu */
+
+.sidebar-collapse .users-list-group {
+	display: none;
+}
+
+.users-list-group {
+  padding: 10px 0;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+.users-list-group-item {
+  position: relative;
+  display: block;
+  padding: 5px 10px;
+  margin-bottom: -1px;
+  /*background-color: #073642;*/
+  border: 1px solid #586e75;
+}
+.users-list-group-item:first-child {
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.users-list-group-item:last-child {
+  margin-bottom: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
 }

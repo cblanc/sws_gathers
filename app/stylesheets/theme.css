@@ -87,10 +87,10 @@ body {
   .sidebar-open .content-wrapper,
   .sidebar-open .right-side,
   .sidebar-open .main-footer {
-    -webkit-transform: translate(230px, 0);
-    -ms-transform: translate(230px, 0);
-    -o-transform: translate(230px, 0);
-    transform: translate(230px, 0);
+    -webkit-transform: translate(290px, 0);
+    -ms-transform: translate(290px, 0);
+    -o-transform: translate(290px, 0);
+    transform: translate(290px, 0);
   }
 }
 .content-wrapper,
@@ -444,10 +444,10 @@ a:focus {
 @media (min-width: 768px) {
   .sidebar-collapse .main-sidebar,
   .sidebar-collapse .left-side {
-    -webkit-transform: translate(-230px, 0);
-    -ms-transform: translate(-230px, 0);
-    -o-transform: translate(-230px, 0);
-    transform: translate(-230px, 0);
+    -webkit-transform: translate(-290px, 0);
+    -ms-transform: translate(-290px, 0);
+    -o-transform: translate(-290px, 0);
+    transform: translate(-290px, 0);
   }
 }
 @media (max-width: 767px) {
@@ -687,8 +687,8 @@ a:focus {
 .control-sidebar-bg,
 .control-sidebar {
   top: 0;
-  right: -230px;
-  width: 230px;
+  right: -290px;
+  width: 290px;
   -webkit-transition: right 0.3s ease-in-out;
   -o-transition: right 0.3s ease-in-out;
   transition: right 0.3s ease-in-out;
@@ -718,7 +718,7 @@ a:focus {
   .control-sidebar-open .content-wrapper,
   .control-sidebar-open .right-side,
   .control-sidebar-open .main-footer {
-    margin-right: 230px;
+    margin-right: 290px;
   }
 }
 .nav-tabs.control-sidebar-tabs > li:first-of-type > a,

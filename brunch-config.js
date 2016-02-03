@@ -54,7 +54,7 @@ exports.config = {
     },
     whitelist: ["react", "react-dom", "jquery", "lodash", 
       "react-autolink", "react-dom", "react-emoji", "howler",
-      "bootstrap"],
+      "bootstrap", "perfect-scrollbar"],
     globals: {
       "_": "lodash",
       "jQuery": "jquery",

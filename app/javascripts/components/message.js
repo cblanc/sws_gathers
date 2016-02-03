@@ -1,7 +1,9 @@
 const React = require("react");
 const ReactDOM = require("react-dom");
+const Ps = require("perfect-scrollbar");
 const ReactEmoji = require("react-emoji");
 const ReactAutolink = require("react-autolink");
+
 const MessageBrowser = React.createClass({
 	getInitialState() {
 		return {
@@ -190,6 +192,8 @@ const Chatroom = exports.Chatroom = React.createClass({
 	componentDidMount() {
 		let self = this;
 
+		Ps.initialize(document.getElementById('chatmessages'));
+
 		this.scrollListener = _.debounce((event) => {
 			self.temporarilyDisableAutoScroll(event);
 		}, 300, {
@@ -264,21 +268,18 @@ const Chatroom = exports.Chatroom = React.createClass({
 			}
 		});
 		return (
-			<div className="panel panel-primary chatbox">
-				<div className="panel-heading">Gather Chat</div>
-				<div className="panel-body">
-					<ul className="chat" id="chatmessages" ref="messageContainer">
-						<li className="text-center">
-							<a href="#"
-								onClick={this.loadMoreMessages}
-								className="btn btn-primary btn-xs">
-								Load more messages
-							</a>
-						</li>
-						{messages}
-					</ul>
-				</div>
-				<div className="panel-footer">
+			<div>
+				<ul className="chat" id="chatmessages" ref="messageContainer">
+					<li className="text-center">
+						<a href="#"
+							onClick={this.loadMoreMessages}
+							className="btn btn-primary btn-xs">
+							Load more messages
+						</a>
+					</li>
+					{messages}
+				</ul>
+				<div>
 					<MessageBar socket={socket}/>
 				</div>
 			</div>

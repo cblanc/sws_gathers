@@ -1,10 +1,11 @@
 import {Events} from "javascripts/components/event";
-import {CurrentUser, AdminPanel, ProfileModal, UserMenu} from "javascripts/components/user";
-import {SoundPanel} from "javascripts/components/sound";
-import {TeamSpeakButton, TeamSpeakModal} from "javascripts/components/teamspeak";
-import {SettingsPanel} from "javascripts/components/settings";
+import {InfoButton} from "javascripts/components/info";
 import {Chatroom} from "javascripts/components/message";
-import {Gather, ArchivedGathers} from "javascripts/components/gather"
+import {SoundPanel} from "javascripts/components/sound";
+import {SettingsPanel} from "javascripts/components/settings";
+import {Gather, ArchivedGathers} from "javascripts/components/gather";
+import {TeamSpeakButton, TeamSpeakModal} from "javascripts/components/teamspeak";
+import {CurrentUser, AdminPanel, ProfileModal, UserMenu} from "javascripts/components/user";
 
 const React = require("react");
 const Sound = require("javascripts/components/sound");
@@ -86,7 +87,7 @@ const AuthFailedSplash = React.createClass({
 						<h3><small>If you are logged on, try visiting a few pages on ENSL.org so the server can update your cookies</small></h3>
 						<h3><small>If this error persists please contact an admin to fix it</small></h3>
 						<br />
-					  <p><a className="btn btn-primary btn-lg" href="www.ensl.org" role="button">Go to website</a></p>
+						<p><a className="btn btn-primary btn-lg" href="www.ensl.org" role="button">Go to website</a></p>
 					</div>
 				</div>
 			</div>
@@ -106,7 +107,7 @@ const BannedSplash = React.createClass({
 						<h3>You're currently barred from joining gathers</h3>
 						<h3><small>Either wait for the ban to expire or talk to an admin to get it lifted</small></h3>
 						<br />
-					  <p><a className="btn btn-primary btn-lg" href="http://www.ensl.org/bans" role="button">See the ban list</a></p>
+						<p><a className="btn btn-primary btn-lg" href="http://www.ensl.org/bans" role="button">See the ban list</a></p>
 					</div>
 				</div>
 			</div>
@@ -155,6 +156,7 @@ const App = React.createClass({
 		}
 
 		return {
+			modal: null,
 			gather: {
 				gatherers: []
 			},
@@ -210,6 +212,21 @@ const App = React.createClass({
 				.pop() || null;
 		}
 		return null;
+	},
+
+	mountModal(options) {
+		this.setState({ modal: options });
+	},
+	
+	closeModal() {
+		this.setState({ modal: null });
+	},
+
+	modal() {
+		const options = this.state.modal;
+		if (!options) return;
+		const Component = options.component;
+		return <Component {...options.props} close={this.closeModal} />;
 	},
 
 	componentDidMount() {
@@ -333,8 +350,8 @@ const App = React.createClass({
 									user={this.state.user} socket={socket} />;
 			currentUser = (
 				<ul className="nav navbar-top-links navbar-right" id="currentuser">
-			  	<CurrentUser user={this.state.user} />
-			  </ul>
+					<CurrentUser user={this.state.user} />
+				</ul>
 			);
 		}
 
@@ -361,86 +378,76 @@ const App = React.createClass({
 
 		return (
 			<div className={appClass.join(" ")}>
-			  <header className="main-header">
-			  	<a href="/" className="logo">
+				{this.modal()}
+				<header className="main-header">
+					<a href="/" className="logo">
 						<span className="logo-mini">NSL Gathers</span>
 						<span className="logo-lg">NSL Gathers</span>
 					</a>
 					<nav className="navbar navbar-static-top" role="navigation">      
-					  <a href="#" className="sidebar-toggle" onClick={this.toggleCollapseMenu} role="button">
-					    <span className="sr-only">Toggle navigation</span>
-					  </a>
-					  <div className="navbar-custom-menu">
-					    <ul className="nav navbar-nav">    
-					    	<li className="dropdown messages-menu">
-					        <a href="#">
-					          <i className="fa fa-headphones"></i>
-					        </a>
-				        </li>
-					      <li className="dropdown messages-menu">
-					        <a href="#">
-					          <i className="fa fa-newspaper-o"></i>
-					          <span className="label label-success">4</span>
-					        </a>
-				        </li>
-				        <li>
-			            <a href="#" onClick={this.toggleMessageBox}><i className="fa fa-comment"></i></a>
-			          </li>
-			        </ul>
-		        </div>
-	        </nav>
-			  </header>
-			  <aside className="main-sidebar">
-			    <section className="sidebar" style={{height: "auto"}}>
-			      <div className="user-panel">
-			        <div className="pull-left image">
-			          <img src={avatar} className="img-circle" alt="User Image" />
-			        </div>
-			        <div className="pull-left info">
-			          <p>{username}</p>
-			          {connectionStatus}
-			        </div>
-			      </div>
-			      <ul className="sidebar-menu">
-			        <li className="header">Online</li>
-			        <li>
-			        	<a href="#">
-			            <i className="fa fa-dashboard"></i> <span>chris</span>
-			          </a>
-		          </li>
-		          <li className="header">Information</li>
-		          <TeamSpeakButton />
-			      </ul>
-			    </section>
-			  </aside>
-			  <div className="content-wrapper" style={{"minHeight": "916px"}}>
-			    <section className="content-header">
-			      <h1>Gathers<small>beta</small></h1>
-			    </section>
-				  <section className="content">
-				  	<p>Foo</p>
-				  </section>
-				</div>
-				<aside className="control-sidebar control-sidebar-dark" style={{"position": "fixed", "height": "auto"}}>
-					<div>
-						<div>
-							<h3 className="control-sidebar-heading">Recent Activity</h3>
-							<ul className="control-sidebar-menu">
-								<li>
+						<a href="#" className="sidebar-toggle" onClick={this.toggleCollapseMenu} role="button">
+							<span className="sr-only">Toggle navigation</span>
+						</a>
+						<div className="navbar-custom-menu">
+							<ul className="nav navbar-nav">    
+								<li className="dropdown messages-menu">
 									<a href="#">
-										<i className="menu-icon fa fa-birthday-cake bg-red"></i>
-										<div className="menu-info">
-											<h4 className="control-sidebar-subheading">Langdon's Birthday</h4>
-											<p>Will be 23 on April 24th</p>
-										</div>
+										<i className="fa fa-headphones"></i>
 									</a>
+								</li>
+								<li className="dropdown messages-menu">
+									<a href="#">
+										<i className="fa fa-newspaper-o"></i>
+										<span className="label label-success">4</span>
+									</a>
+								</li>
+								<li>
+									<a href="#" onClick={this.toggleMessageBox}><i className="fa fa-comment"></i></a>
 								</li>
 							</ul>
 						</div>
+					</nav>
+				</header>
+				<aside className="main-sidebar">
+					<section className="sidebar" style={{height: "auto"}}>
+						<div className="user-panel">
+							<div className="pull-left image">
+								<img src={avatar} className="img-circle" alt="User Image" />
+							</div>
+							<div className="pull-left info">
+								<p>{username}</p>
+								{connectionStatus}
+							</div>
+						</div>
+						<ul className="sidebar-menu">
+							<li className="header">
+								<span className="badge">{this.state.users.length}</span> Players Online
+							</li>
+						</ul>
+						<UserMenu users={this.state.users} user={this.state.user} 
+							socket={socket} mountModal={this.mountModal}/>
+						<ul className="sidebar-menu">
+							<li className="header">Information</li>
+							<TeamSpeakButton />
+							<InfoButton />
+						</ul>
+					</section>
+				</aside>
+				<div className="content-wrapper" style={{"minHeight": "916px"}}>
+					<section className="content-header">
+						<h1>Gathers<small>beta</small></h1>
+					</section>
+					<section className="content">
+						<p>Foo</p>
+					</section>
+				</div>
+				<aside className="control-sidebar control-sidebar-dark" style={{"position": "fixed", "height": "auto"}}>
+					<div className="chat-container">
+						{chatroom}
 					</div>
 				</aside>
 				<div className="control-sidebar-bg" style={{"position":"fixed", "height":"auto"}}></div>
-		  </div>
+			</div>
 		);
 
 		return (
@@ -452,39 +459,9 @@ const App = React.createClass({
 						<a className="navbar-brand" href="/">NSL Gathers <small><i>Alpha</i></small></a>
 					</div>
 					{currentUser}
-				  <ul className="nav navbar-top-links navbar-right" id="soundcontroller">
-				  	<SoundPanel soundController={this.state.soundController} />
-				  </ul>
-				  <TeamSpeakButton />
-				  <ul className="nav navbar-top-links navbar-right">
-					  <li className="dropdown">
-							<a href="#">
-								Info &nbsp;<i className="fa fa-caret-down"></i>
-							</a>
-							<ul className="dropdown-menu">
-								<li>
-									<a href="https://github.com/cblanc/sws_gathers" target="_blank">
-										<i className="fa fa-github">&nbsp;</i>&nbsp;Github
-									</a>
-								</li>
-								<li>
-									<a href="http://steamcommunity.com/id/nslgathers" target="_blank">
-										<i className="fa fa-external-link">&nbsp;</i>&nbsp;Steam Bot
-									</a>
-								</li>
-								<li>
-									<a href="http://www.ensl.org/articles/464" target="_blank">
-										<i className="fa fa-external-link">&nbsp;</i>&nbsp;Gather Rules
-									</a>
-								</li>
-								<li>
-									<a href="/messages" target="_blank">
-										<i className="fa fa-external-link">&nbsp;</i>&nbsp;Message Archive
-									</a>
-								</li>
-							</ul>
-						</li>
-				  </ul>
+					<ul className="nav navbar-top-links navbar-right" id="soundcontroller">
+						<SoundPanel soundController={this.state.soundController} />
+					</ul>
 				</nav>
 				<AdminPanel socket={socket} />
 				<SettingsPanel 
@@ -497,16 +474,10 @@ const App = React.createClass({
 				<div style={{minHeight: "750px"}}>
 					<div className="container-fluid">
 						<div className="row">
-							<div className="col-md-2 hidden-xs">
-								<ul className="nav" id="side-menu">
-									<UserMenu users={this.state.users} user={this.state.user} 
-										socket={socket} />
-								</ul>
-							</div>
-							<div className="col-md-4" id="chatroom">
+							<div className="col-md-4">
 								{chatroom}
 							</div>
-							<div className="col-md-6" id="gathers">
+							<div className="col-md-6">
 								<Gather 
 									socket={socket}
 									maps={this.state.maps}

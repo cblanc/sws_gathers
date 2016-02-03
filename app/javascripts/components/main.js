@@ -12,6 +12,7 @@ const Sound = require("javascripts/components/sound");
 const SoundController = Sound.SoundController;
 const helper = require("javascripts/helper");
 const storageAvailable = helper.storageAvailable;
+
 const SplashScreen = React.createClass({
 	getInitialState() {
 		return {
@@ -22,27 +23,20 @@ const SplashScreen = React.createClass({
 
 	componentDidMount() {
 		const socketUrl = window.location.protocol + "//" + window.location.host;
-		let socket = io(socketUrl)
+		const socket = io(socketUrl)
 			.on("connect", () => {
-				console.log("Connected");
 				this.setState({ status: "connected" });
 				socket
-					.on("reconnect", () => {
-						console.log("Reconnected");
-					})
-					.on("disconnect", () => {
-						console.log("Disconnected")
-					});
+					.on("reconnect", () => {})
+					.on("disconnect", () => {});
 			})
 			.on("error", error => {
-				console.log(error);
 				if (error === "Authentication Failed") {
 					this.setState({ status: "authFailed" });
 				} else if (error === "Gather Banned") {
 					this.setState({ status: "banned" });
 				}
 			});
-
 		this.setState({ socket: socket });
 	},
 
@@ -177,58 +171,6 @@ const App = React.createClass({
 		};
 	},
 
-	updateTitle() {
-		let gather = this.state.gather;
-		if (gather && this.state.updateTitle) {
-			document.title = `NSL Gathers (${gather.gatherers.length}/12)`;
-			return;
-		}
-		document.title = "NSL Gathers";
-	},
-
-	toggleEventsPanel(event) {
-		let newState = event.target.checked;
-		this.setState({ showEventsPanel: newState });
-		if (storageAvailable('localStorage')) {
-			localStorage.setItem("showEventsPanel", newState)
-		}
-	},
-
-	toggleUpdateTitle(event) {
-		let newState = event.target.checked;
-		this.setState({ updateTitle: newState });
-		if (storageAvailable('localStorage')) {
-			localStorage.setItem("updateTitle", newState)
-		}
-		this.updateTitle();
-	},
-
-	thisGatherer() {
-		let gather = this.state.gather;
-		let user = this.state.user;
-		if (gather && user && gather.gatherers.length) {
-			return gather.gatherers
-				.filter(gatherer => gatherer.id === user.id)
-				.pop() || null;
-		}
-		return null;
-	},
-
-	mountModal(options) {
-		this.setState({ modal: options });
-	},
-	
-	closeModal() {
-		this.setState({ modal: null });
-	},
-
-	modal() {
-		const options = this.state.modal;
-		if (!options) return;
-		const Component = options.component;
-		return <Component {...options.props} close={this.closeModal} />;
-	},
-
 	componentDidMount() {
 		let self = this;
 		let socket = this.props.socket;
@@ -320,9 +262,64 @@ const App = React.createClass({
 		socket.emit("gather:refresh");
 	},
 
+	updateTitle() {
+		let gather = this.state.gather;
+		if (gather && this.state.updateTitle) {
+			document.title = `NSL Gathers (${gather.gatherers.length}/12)`;
+			return;
+		}
+		document.title = "NSL Gathers";
+	},
+
+	toggleEventsPanel(event) {
+		let newState = event.target.checked;
+		this.setState({ showEventsPanel: newState });
+		if (storageAvailable('localStorage')) {
+			localStorage.setItem("showEventsPanel", newState)
+		}
+	},
+
+	toggleUpdateTitle(event) {
+		let newState = event.target.checked;
+		this.setState({ updateTitle: newState });
+		if (storageAvailable('localStorage')) {
+			localStorage.setItem("updateTitle", newState)
+		}
+		this.updateTitle();
+	},
+
+	thisGatherer() {
+		let gather = this.state.gather;
+		let user = this.state.user;
+		if (gather && user && gather.gatherers.length) {
+			return gather.gatherers
+				.filter(gatherer => gatherer.id === user.id)
+				.pop() || null;
+		}
+		return null;
+	},
+
+	mountModal(options) {
+		this.setState({ modal: options });
+	},
+	
+	closeModal() {
+		this.setState({ modal: null });
+	},
+
+	modal() {
+		const options = this.state.modal;
+		if (!options) return;
+		const Component = options.component;
+		return (
+			<div className="modal fade in" style={{display: "block"}}>
+				<Component {...options.props} close={this.closeModal} />
+			</div>
+		);
+	},
+
 	toggleMessageBox(e) {
 		e.preventDefault();
-		console.log("FOO")
 		this.setState({
 			showMessageBox: !this.state.showMessageBox
 		});
@@ -335,6 +332,17 @@ const App = React.createClass({
 		});
 	},
 
+	openProfileModal(e) {
+		e.preventDefault();
+		this.mountModal({
+			component: ProfileModal,
+			props: {
+				user: this.state.user,
+				socket: this.props.socket
+			}
+		});
+	},
+
 	render() {
 		const socket = this.props.socket;
 
@@ -343,9 +351,15 @@ const App = React.createClass({
 			eventsPanel = <Events events={this.state.events} />;
 		}
 
-		let profileModal, chatroom, currentUser;
+		let chatroom, currentUser, profileLink;
 		if (this.state.user) {
-			profileModal = <ProfileModal user={this.state.user} />;
+			profileLink = (
+				<li className="dropdown messages-menu">
+					<a href="#" className="dropdown-toggle" onClick={this.openProfileModal}>
+						<i className="fa fa-user"></i>
+					</a>
+				</li>
+			);
 			chatroom = <Chatroom messages={this.state.messages} 
 									user={this.state.user} socket={socket} />;
 			currentUser = (
@@ -391,18 +405,15 @@ const App = React.createClass({
 						<div className="navbar-custom-menu">
 							<ul className="nav navbar-nav">    
 								<li className="dropdown messages-menu">
-									<a href="#">
+									<a href="#" className="dropdown-toggle">
 										<i className="fa fa-headphones"></i>
 									</a>
 								</li>
-								<li className="dropdown messages-menu">
-									<a href="#">
-										<i className="fa fa-newspaper-o"></i>
-										<span className="label label-success">4</span>
-									</a>
-								</li>
+								{profileLink}
 								<li>
-									<a href="#" onClick={this.toggleMessageBox}><i className="fa fa-comment"></i></a>
+									<a href="#" onClick={this.toggleMessageBox} className="dropdown-toggle">
+										<i className="fa fa-comment"></i>
+									</a>
 								</li>
 							</ul>
 						</div>
@@ -450,54 +461,52 @@ const App = React.createClass({
 			</div>
 		);
 
-		return (
-			<div id="wrapper">
-				<nav className="navbar navbar-default navbar-static-top" 
-					role="navigation" 
-					style={{marginBottom: "0"}}>
-					<div className="navbar-header">
-						<a className="navbar-brand" href="/">NSL Gathers <small><i>Alpha</i></small></a>
-					</div>
-					{currentUser}
-					<ul className="nav navbar-top-links navbar-right" id="soundcontroller">
-						<SoundPanel soundController={this.state.soundController} />
-					</ul>
-				</nav>
-				<AdminPanel socket={socket} />
-				<SettingsPanel 
-					toggleEventsPanel={this.toggleEventsPanel}
-					showEventsPanel={this.state.showEventsPanel}
-					toggleUpdateTitle={this.toggleUpdateTitle}
-					updateTitle={this.state.updateTitle} />
-				<TeamSpeakModal />
-				{profileModal}
-				<div style={{minHeight: "750px"}}>
-					<div className="container-fluid">
-						<div className="row">
-							<div className="col-md-4">
-								{chatroom}
-							</div>
-							<div className="col-md-6">
-								<Gather 
-									socket={socket}
-									maps={this.state.maps}
-									user={this.state.user} 
-									gather={this.state.gather}
-									servers={this.state.servers}
-									thisGatherer={this.thisGatherer()}
-									previousGather={this.state.previousGather}
-									soundController={this.state.soundController} />
-								{eventsPanel}
-								<hr />
-								<ArchivedGathers archive={this.state.archive}
-									maps={this.state.maps}
-									servers={this.state.servers} />
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		);
+		// return (
+		// 	<div id="wrapper">
+		// 		<nav className="navbar navbar-default navbar-static-top" 
+		// 			role="navigation" 
+		// 			style={{marginBottom: "0"}}>
+		// 			<div className="navbar-header">
+		// 				<a className="navbar-brand" href="/">NSL Gathers <small><i>Alpha</i></small></a>
+		// 			</div>
+		// 			{currentUser}
+		// 			<ul className="nav navbar-top-links navbar-right" id="soundcontroller">
+		// 				<SoundPanel soundController={this.state.soundController} />
+		// 			</ul>
+		// 		</nav>
+		// 		<AdminPanel socket={socket} />
+		// 		<SettingsPanel 
+		// 			toggleEventsPanel={this.toggleEventsPanel}
+		// 			showEventsPanel={this.state.showEventsPanel}
+		// 			toggleUpdateTitle={this.toggleUpdateTitle}
+		// 			updateTitle={this.state.updateTitle} />
+		// 		<div style={{minHeight: "750px"}}>
+		// 			<div className="container-fluid">
+		// 				<div className="row">
+		// 					<div className="col-md-4">
+		// 						{chatroom}
+		// 					</div>
+		// 					<div className="col-md-6">
+		// 						<Gather 
+		// 							socket={socket}
+		// 							maps={this.state.maps}
+		// 							user={this.state.user} 
+		// 							gather={this.state.gather}
+		// 							servers={this.state.servers}
+		// 							thisGatherer={this.thisGatherer()}
+		// 							previousGather={this.state.previousGather}
+		// 							soundController={this.state.soundController} />
+		// 						{eventsPanel}
+		// 						<hr />
+		// 						<ArchivedGathers archive={this.state.archive}
+		// 							maps={this.state.maps}
+		// 							servers={this.state.servers} />
+		// 					</div>
+		// 				</div>
+		// 			</div>
+		// 		</div>
+		// 	</div>
+		// );
 	}
 });
 

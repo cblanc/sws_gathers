@@ -125,56 +125,54 @@ const UserModal = React.createClass({
 		}
 
 		return (
-			<div className="modal fade in" style={{display: "block"}}>
-				<div className="modal-dialog">
-					<div className="modal-content">
-						<div className="modal-header">
-							<button type="button" className="close" onClick={this.props.close}
-								aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-							</button>
-							<h4 className="modal-title">
-								<img src="blank.gif" 
-									className={"flag flag-" + ((user.country === null) ? "eu" : 
-										user.country.toLowerCase()) } 
-									alt={user.country} />&nbsp;
-								{user.username}
-							</h4>
+			<div className="modal-dialog">
+				<div className="modal-content">
+					<div className="modal-header">
+						<button type="button" className="close" onClick={this.props.close}
+							aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 className="modal-title">
+							<img src="blank.gif" 
+								className={"flag flag-" + ((user.country === null) ? "eu" : 
+									user.country.toLowerCase()) } 
+								alt={user.country} />&nbsp;
+							{user.username}
+						</h4>
+					</div>
+					<div className="modal-body">
+						<div className="text-center">
+							<img 
+							src={user.avatar} 
+							alt="User Avatar" />
 						</div>
-						<div className="modal-body">
-							<div className="text-center">
-								<img 
-								src={user.avatar} 
-								alt="User Avatar" />
-							</div>
-							<table className="table">
-								<tbody>
-									<tr>
-										<td>Lifeforms</td>
-										<td><LifeformIcons gatherer={{user: user}} /></td>
-									</tr>
-									<tr>
-										<td>Links</td>
-										<td>
-											<a href={enslUrl(user)} 
-												className="btn btn-xs btn-primary"
-												target="_blank">ENSL Profile</a>&nbsp;
-											<a href={hiveUrl({user: user})} 
-												className="btn btn-xs btn-primary"
-												target="_blank">Hive Profile</a>
-										</td>
-									</tr>
-									{hiveStats}
-								</tbody>
-							</table>
-						</div>
-						<div className="modal-footer">
-							{adminOptions}
-							<button type="button" 
-								className="btn btn-default" 
-								onClick={this.props.close}
-								>Close</button>
-						</div>
+						<table className="table">
+							<tbody>
+								<tr>
+									<td>Lifeforms</td>
+									<td><LifeformIcons gatherer={{user: user}} /></td>
+								</tr>
+								<tr>
+									<td>Links</td>
+									<td>
+										<a href={enslUrl(user)} 
+											className="btn btn-xs btn-primary"
+											target="_blank">ENSL Profile</a>&nbsp;
+										<a href={hiveUrl({user: user})} 
+											className="btn btn-xs btn-primary"
+											target="_blank">Hive Profile</a>
+									</td>
+								</tr>
+								{hiveStats}
+							</tbody>
+						</table>
+					</div>
+					<div className="modal-footer">
+						{adminOptions}
+						<button type="button" 
+							className="btn btn-default" 
+							onClick={this.props.close}
+							>Close</button>
 					</div>
 				</div>
 			</div>
@@ -190,7 +188,8 @@ const UserItem = React.createClass({
 		mountModal: React.PropTypes.func.isRequired
 	},
 
-	openModal() {
+	openModal(e) {
+		e.preventDefault();
 		this.props.mountModal({
 			component: UserModal,
 			props: {
@@ -286,98 +285,118 @@ const AdminPanel = exports.AdminPanel = React.createClass({
 
 const ProfileModal = exports.ProfileModal = React.createClass({
 	propTypes: {
-		user: React.PropTypes.object.isRequired
+		user: React.PropTypes.object.isRequired,
+		socket: React.PropTypes.object.isRequired,
+		close: React.PropTypes.func.isRequired
+	},
+
+	getInitialState() {
+		const user = this.props.user;
+		console.log(user.profile);
+		return {
+			abilities: {
+				skulk: user.profile.abilities.skulk,
+				lerk: user.profile.abilities.lerk,
+				gorge: user.profile.abilities.gorge,
+				fade: user.profile.abilities.fade,
+				onos: user.profile.abilities.onos,
+				commander: user.profile.abilities.commander
+			},
+			skill: user.profile.skill
+		};
 	},
 
 	handleUserUpdate(e) {
 		e.preventDefault();
-		let abilities = {
-			skulk: React.findDOMNode(this.refs.skulk).checked,
-			lerk: React.findDOMNode(this.refs.lerk).checked,
-			gorge: React.findDOMNode(this.refs.gorge).checked,
-			fade: React.findDOMNode(this.refs.fade).checked,
-			onos: React.findDOMNode(this.refs.onos).checked,
-			commander: React.findDOMNode(this.refs.commander).checked
-		};
-		let skill = React.findDOMNode(this.refs.playerskill).value;
-		socket.emit("users:update:profile", {
+		this.props.socket.emit("users:update:profile", {
 			id: this.props.user.id,
 			profile: {
-				abilities: abilities,
-				skill: skill
+				abilities: this.state.abilities,
+				skill: this.state.skill
 			}
 		});
+		this.props.close();
+	},
+
+	handleAbilityChange(e) {
+		let abilities = this.state.abilities;
+		abilities[e.target.name] = e.target.checked;
+		this.setState({abilities: abilities});
+	},
+
+	handleSkillChange(e) {
+		this.setState({ skill: e.target.value });
 	},
 
 	render() {
-		if (!this.props.user) return false;
-		let abilities = this.props.user.profile.abilities;
+		const user = this.props.user;
+		if (!user) return false;
+
+		const abilities = this.state.abilities;
+
 		let abilitiesForm = [];
 		for (let lifeform in abilities) {
 			abilitiesForm.push(
 				<div key={lifeform} className="checkbox">
 					<label className="checkbox-inline">
-						<input type="checkbox" 
-							ref={lifeform}
-							defaultChecked={abilities[lifeform]}/> {_.capitalize(lifeform)}
+						<input type="checkbox" name={lifeform} 
+							checked={abilities[lifeform]} onChange={this.handleAbilityChange} /> 
+							{_.capitalize(lifeform)}
 					</label>
 				</div>
 			);
 		}
 
-		let skillLevel = this.props.user.profile.skill;
+		let skillLevel = user.profile.skill;
 		let skillLevels = _.uniq(["Low Skill", "Medium Skill", "High Skill", skillLevel])
 			.filter(skill => { return typeof skill === 'string' })
-			.map(skill => { return <option key={skill}>{skill}</option>});
+			.map(skill => { return <option key={skill} value={skill}>{skill}</option>});
 
 		return (
-			<div className="modal fade" id="profilemodal">
-				<div className="modal-dialog">
-					<div className="modal-content">
-						<div className="modal-header">
-							<button type="button" className="close" data-dismiss="modal" 
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							<h4 className="modal-title">Profile</h4>
-						</div>
-						<div className="modal-body" id="profile-panel">
-							<form>
-								<div className="form-group">
-									<label>Player Skill</label><br />
-									<select 
-										defaultValue={skillLevel}
-										className="form-control" 
-										ref="playerskill">
-										{skillLevels}
-									</select>
-									<p className="add-top"><small>
-										Try to give an accurate representation of your skill to raise 
-											the quality of your gathers
-									</small></p>
-								</div>
-								<hr />
-								<div className="form-group">
-									<label>Preferred Lifeforms</label><br />
-									{abilitiesForm}
-									<p><small>
-										Specify which lifeforms you'd like to play in the gather
-									</small></p>
-								</div>
-								<hr />
-								<p className="small">
-									You will need to rejoin the gather to see your updated profile
-								</p>
-								<div className="form-group">
-									<button 
-										type="submit"
-										className="btn btn-primary"
-										data-dismiss="modal"
-										onClick={this.handleUserUpdate}>
-										Update &amp; Close</button>
-								</div>
-							</form>
-						</div>
+			<div className="modal-dialog">
+				<div className="modal-content">
+					<div className="modal-header">
+						<button type="button" className="close" aria-label="Close" 
+							onClick={this.props.close}>
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 className="modal-title">Profile</h4>
+					</div>
+					<div className="modal-body" id="profile-panel">
+						<form>
+							<div className="form-group">
+								<label>Player Skill</label><br />
+								<select 
+									value={skillLevel}
+									className="form-control" 
+									onChange={this.handleSkillChange}>
+									{skillLevels}
+								</select>
+								<p className="add-top"><small>
+									Try to give an accurate representation of your skill to raise 
+										the quality of your gathers
+								</small></p>
+							</div>
+							<hr />
+							<div className="form-group">
+								<label>Preferred Lifeforms</label><br />
+								{abilitiesForm}
+								<p><small>
+									Specify which lifeforms you'd like to play in the gather
+								</small></p>
+							</div>
+							<hr />
+							<p className="small">
+								You will need to rejoin the gather to see your updated profile
+							</p>
+							<div className="form-group">
+								<button 
+									type="submit"
+									className="btn btn-primary"
+									onClick={this.handleUserUpdate}>
+									Update &amp; Close</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>

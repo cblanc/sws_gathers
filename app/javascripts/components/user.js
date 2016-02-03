@@ -4,6 +4,7 @@ const helper = require("javascripts/helper");
 const enslUrl = helper.enslUrl;
 const hiveUrl = helper.hiveUrl;
 const modalId = helper.modalId;
+const Ps = require('perfect-scrollbar');
 
 const UserLogin = React.createClass({
 	propTypes: {
@@ -77,7 +78,8 @@ const UserModal = React.createClass({
 	propTypes: {
 		user: React.PropTypes.object.isRequired,
 		socket: React.PropTypes.object.isRequired,
-		currentUser: React.PropTypes.object.isRequired
+		currentUser: React.PropTypes.object.isRequired,
+		close: React.PropTypes.func.isRequired
 	},
 
 	render() {
@@ -121,12 +123,13 @@ const UserModal = React.createClass({
 		if (currentUser.admin) {
 			adminOptions = <DisconnectUserButton id={user.id} socket={this.props.socket} />;
 		}
+
 		return (
-			<div className="modal fade" id={modalId(user)}>
+			<div className="modal fade in" style={{display: "block"}}>
 				<div className="modal-dialog">
 					<div className="modal-content">
 						<div className="modal-header">
-							<button type="button" className="close" data-dismiss="modal" 
+							<button type="button" className="close" onClick={this.props.close}
 								aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 							</button>
@@ -169,7 +172,8 @@ const UserModal = React.createClass({
 							{adminOptions}
 							<button type="button" 
 								className="btn btn-default" 
-								data-dismiss="modal">Close</button>
+								onClick={this.props.close}
+								>Close</button>
 						</div>
 					</div>
 				</div>
@@ -182,18 +186,27 @@ const UserItem = React.createClass({
 	propTypes: {
 		user: React.PropTypes.object.isRequired,
 		socket: React.PropTypes.object.isRequired,
-		currentUser: React.PropTypes.object.isRequired
+		currentUser: React.PropTypes.object.isRequired,
+		mountModal: React.PropTypes.func.isRequired
+	},
+
+	openModal() {
+		this.props.mountModal({
+			component: UserModal,
+			props: {
+				user: this.props.user,
+				currentUser: this.props.currentUser,
+				socket: this.props.socket
+			}
+		});
 	},
 
 	render() {
 		const user = this.props.user;
 		const currentUser = this.props.currentUser;
 		return (
-			<li className="list-group-item">
-				<a href="#" data-toggle="modal" 
-				data-target={`#${modalId(user)}`}>{user.username}</a>
-				<UserModal user={user} currentUser={currentUser} 
-					socket={this.props.socket} />
+			<li className="users-list-group-item">
+				<a href="#" onClick={this.openModal}>{user.username}</a>
 			</li>
 		);
 	}
@@ -202,7 +215,12 @@ const UserItem = React.createClass({
 const UserMenu = exports.UserMenu = React.createClass({
 	propTypes: {
 		socket: React.PropTypes.object.isRequired,
-		users: React.PropTypes.array.isRequired
+		users: React.PropTypes.array.isRequired,
+		mountModal: React.PropTypes.func.isRequired
+	},
+
+	componentDidMount() {
+		Ps.initialize(document.getElementById('user-list'));
 	},
 
 	render() {
@@ -210,19 +228,14 @@ const UserMenu = exports.UserMenu = React.createClass({
 		.sort((a, b) => (a.username.toLowerCase() > b.username.toLowerCase()) ? 1 : -1)
 		.map(user => {
 			return <UserItem user={user} key={user.id} 
-				currentUser={this.props.user} socket={this.props.socket} />
+				currentUser={this.props.user} socket={this.props.socket} 
+				mountModal={this.props.mountModal} />
 		});
 		return (
-			<div>
-				<div className="panel panel-primary add-bottom">
-					<div className="panel-heading">
-						<i className="fa fa-users fa-fw"></i>  Online
-						<span className="badge pull-right">{this.props.users.length}</span>
-					</div>
-					<ul className="list-group" id="users-list">
-						{users}
-					</ul>
-				</div>
+			<div className="user-panel">
+				<ul className="users-list-group" id="user-list">
+					{users}
+				</ul>
 			</div>
 		);
 	}

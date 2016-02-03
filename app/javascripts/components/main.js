@@ -1,3 +1,4 @@
+import {News} from "javascripts/components/news";
 import {Events} from "javascripts/components/event";
 import {InfoButton} from "javascripts/components/info";
 import {Chatroom} from "javascripts/components/message";
@@ -410,6 +411,7 @@ const App = React.createClass({
 									</a>
 								</li>
 								{profileLink}
+								<News />
 								<li>
 									<a href="#" onClick={this.toggleMessageBox} className="dropdown-toggle">
 										<i className="fa fa-comment"></i>

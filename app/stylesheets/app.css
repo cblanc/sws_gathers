@@ -245,3 +245,18 @@ html, body {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
+
+/* News */
+
+.news-menu {
+	list-style: none;
+	padding: 5px;
+}
+
+.news-menu li {
+	padding: 5px;
+}
+
+.news-menu .unread {
+	font-weight: bold;
+}

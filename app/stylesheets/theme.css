@@ -939,8 +939,6 @@ a:focus {
 .navbar-nav > .notifications-menu > .dropdown-menu > li.header,
 .navbar-nav > .messages-menu > .dropdown-menu > li.header,
 .navbar-nav > .tasks-menu > .dropdown-menu > li.header {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   background-color: #ffffff;

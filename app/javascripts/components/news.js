@@ -4,6 +4,7 @@ const helper = require("javascripts/helper");
 const storageAvailable = helper.storageAvailable;
 
 const READ_ARTICLES_STORAGE = "akuh098h209ufnw";
+const HTML_ENTITY_REGEX = /&#\d+;/;
 
 const News = exports.News = React.createClass({
 	getInitialState() {
@@ -43,6 +44,12 @@ const News = exports.News = React.createClass({
 		});
 	},
 
+	renderTitle(title) {
+		return title.replace(HTML_ENTITY_REGEX, match => {
+			return String.fromCharCode(match.slice(2, match.length - 1))
+		});
+	},
+
 	componentDidMount() {
 		$.getJSON("http://ns2news.org/api-json/get_recent_posts?callback=?")
 			.done(this.updatePosts);
@@ -78,7 +85,7 @@ const News = exports.News = React.createClass({
 			return (
 				<li key={post.id}>
 					<a href={post.url} target="_blank" onClick={this.markAsRead(post)}
-						className={postClass}>{post.title}</a>
+						className={postClass}>{this.renderTitle(post.title)}</a>
 				</li>
 			);
 		});

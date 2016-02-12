@@ -405,11 +405,7 @@ const App = React.createClass({
 						</a>
 						<div className="navbar-custom-menu">
 							<ul className="nav navbar-nav">    
-								<li className="dropdown messages-menu">
-									<a href="#" className="dropdown-toggle">
-										<i className="fa fa-headphones"></i>
-									</a>
-								</li>
+								<SoundPanel soundController={this.state.soundController} />
 								{profileLink}
 								<News />
 								<li>

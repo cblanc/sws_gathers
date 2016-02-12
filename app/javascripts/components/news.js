@@ -2,11 +2,14 @@ const $ = require("jquery");
 const React = require("react");
 const helper = require("javascripts/helper");
 const storageAvailable = helper.storageAvailable;
+import {MenubarMixin} from "javascripts/components/menubar";
 
 const READ_ARTICLES_STORAGE = "akuh098h209ufnw";
 const HTML_ENTITY_REGEX = /&#\d+;/;
 
 const News = exports.News = React.createClass({
+	mixins: [MenubarMixin],
+
 	getInitialState() {
 		let readArticles = {};
 		if (storageAvailable('localStorage')) {
@@ -22,13 +25,8 @@ const News = exports.News = React.createClass({
 
 		return {
 			posts: [],
-			show: false,
 			readArticles: readArticles
 		};
-	},
-
-	toggleShow() {
-		this.setState({ show: !this.state.show });
 	},
 
 	updatePosts(data) {
@@ -65,12 +63,6 @@ const News = exports.News = React.createClass({
 				localStorage.setItem(READ_ARTICLES_STORAGE, JSON.stringify(readArticles));
 			}
 		}
-	},
-
-	componentClass() {
-		let componentClass = ["dropdown", "messages-menu"];
-		if (this.state.show) componentClass.push("open");
-		return componentClass.join(" ");
 	},
 
 	hasBeenRead(post) {

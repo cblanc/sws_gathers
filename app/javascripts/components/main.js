@@ -1,12 +1,13 @@
 import {News} from "javascripts/components/news";
 import {Events} from "javascripts/components/event";
 import {InfoButton} from "javascripts/components/info";
+import {AdminPanel} from "javascripts/components/admin";
 import {Chatroom} from "javascripts/components/message";
 import {SoundPanel} from "javascripts/components/sound";
 import {SettingsPanel} from "javascripts/components/settings";
 import {Gather, ArchivedGathers} from "javascripts/components/gather";
 import {TeamSpeakButton, TeamSpeakModal} from "javascripts/components/teamspeak";
-import {CurrentUser, AdminPanel, ProfileModal, UserMenu} from "javascripts/components/user";
+import {CurrentUser, ProfileModal, UserMenu} from "javascripts/components/user";
 
 const React = require("react");
 const Sound = require("javascripts/components/sound");
@@ -198,7 +199,7 @@ const App = React.createClass({
 			let events = self.state.events;
 			events.unshift(data);
 			self.setState({
-				events: events.slice(0, 20)
+				events: events.slice(0, 100)
 			});
 		});
 
@@ -391,6 +392,9 @@ const App = React.createClass({
 			connectionStatus = <a href="#"><i className="fa fa-circle text-danger"></i> Disconnected</a>;
 		}
 
+		let adminPanel;
+		if (user && user.admin) adminPanel = <AdminPanel socket={socket} />;
+
 		return (
 			<div className={appClass.join(" ")}>
 				{this.modal()}
@@ -405,6 +409,7 @@ const App = React.createClass({
 						</a>
 						<div className="navbar-custom-menu">
 							<ul className="nav navbar-nav">    
+								{adminPanel}
 								<SoundPanel soundController={this.state.soundController} />
 								{profileLink}
 								<News />
@@ -447,7 +452,25 @@ const App = React.createClass({
 						<h1>Gathers<small>beta</small></h1>
 					</section>
 					<section className="content">
-						<p>Foo</p>
+						<div className="row">
+							<div className="col-md-8">
+								<Gather 
+									socket={socket}
+									maps={this.state.maps}
+									user={this.state.user} 
+									gather={this.state.gather}
+									servers={this.state.servers}
+									thisGatherer={this.thisGatherer()}
+									previousGather={this.state.previousGather}
+									soundController={this.state.soundController} />
+							</div>
+							<div className="col-md-4">
+								{eventsPanel}
+								<ArchivedGathers archive={this.state.archive}
+									maps={this.state.maps}
+									servers={this.state.servers} />
+							</div>
+						</div>
 					</section>
 				</div>
 				<aside className="control-sidebar control-sidebar-dark" style={{"position": "fixed", "height": "auto"}}>
@@ -458,53 +481,6 @@ const App = React.createClass({
 				<div className="control-sidebar-bg" style={{"position":"fixed", "height":"auto"}}></div>
 			</div>
 		);
-
-		// return (
-		// 	<div id="wrapper">
-		// 		<nav className="navbar navbar-default navbar-static-top" 
-		// 			role="navigation" 
-		// 			style={{marginBottom: "0"}}>
-		// 			<div className="navbar-header">
-		// 				<a className="navbar-brand" href="/">NSL Gathers <small><i>Alpha</i></small></a>
-		// 			</div>
-		// 			{currentUser}
-		// 			<ul className="nav navbar-top-links navbar-right" id="soundcontroller">
-		// 				<SoundPanel soundController={this.state.soundController} />
-		// 			</ul>
-		// 		</nav>
-		// 		<AdminPanel socket={socket} />
-		// 		<SettingsPanel 
-		// 			toggleEventsPanel={this.toggleEventsPanel}
-		// 			showEventsPanel={this.state.showEventsPanel}
-		// 			toggleUpdateTitle={this.toggleUpdateTitle}
-		// 			updateTitle={this.state.updateTitle} />
-		// 		<div style={{minHeight: "750px"}}>
-		// 			<div className="container-fluid">
-		// 				<div className="row">
-		// 					<div className="col-md-4">
-		// 						{chatroom}
-		// 					</div>
-		// 					<div className="col-md-6">
-		// 						<Gather 
-		// 							socket={socket}
-		// 							maps={this.state.maps}
-		// 							user={this.state.user} 
-		// 							gather={this.state.gather}
-		// 							servers={this.state.servers}
-		// 							thisGatherer={this.thisGatherer()}
-		// 							previousGather={this.state.previousGather}
-		// 							soundController={this.state.soundController} />
-		// 						{eventsPanel}
-		// 						<hr />
-		// 						<ArchivedGathers archive={this.state.archive}
-		// 							maps={this.state.maps}
-		// 							servers={this.state.servers} />
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 		</div>
-		// 	</div>
-		// );
 	}
 });
 

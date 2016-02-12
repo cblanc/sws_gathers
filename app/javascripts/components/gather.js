@@ -3,7 +3,7 @@ import {AssumeUserIdButton} from "javascripts/components/user";
 const React = require("react");
 const helper = require("javascripts/helper");
 const enslUrl = helper.enslUrl;
-const rankVotes = helper.rankeVotes;
+const rankVotes = helper.rankVotes;
 const hiveUrl = helper.hiveUrl;
 
 const SelectPlayerButton = React.createClass({
@@ -738,6 +738,7 @@ const Gatherers = React.createClass({
 					<span>
 						<span className="badge add-right">{votes + " votes"}</span>
 						<VoteButton 
+							socket={this.props.socket}
 							thisGatherer={thisGatherer} 
 							soundController={this.props.soundController}
 							candidate={gatherer} />

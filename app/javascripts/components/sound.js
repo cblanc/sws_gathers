@@ -223,6 +223,7 @@ var SoundPanel = React.createClass({
 	},
 
 	play() {
+		this.props.soundController.stop();
 		this.props.soundController.play();
 	},
 

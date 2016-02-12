@@ -6,48 +6,6 @@ const hiveUrl = helper.hiveUrl;
 const modalId = helper.modalId;
 const Ps = require('perfect-scrollbar');
 
-const UserLogin = React.createClass({
-	propTypes: {
-		socket: React.PropTypes.object.isRequired
-	},
-
-	authorizeId(id) {
-		this.props.socket.emit("users:authorize", {
-			id: parseInt(id, 10)
-		});
-	},
-
-	handleSubmit(e) {
-		e.preventDefault();
-		let id = React.findDOMNode(this.refs.authorize_id).value.trim();
-		if (!id) return;
-		React.findDOMNode(this.refs.authorize_id).value = '';
-		this.authorizeId(id);
-	},
-
-	render() {
-		return (
-			<form onSubmit={this.handleSubmit} >
-				<div className="input-group signin">
-					<input 
-						id="btn-input" 
-						type="text" 
-						className="form-control" 
-						ref="authorize_id"
-						placeholder="Change user" />
-					<span className="input-group-btn">
-						<input 
-							type="submit" 
-							className="btn btn-primary" 
-							id="btn-chat" 
-							value="Assume ID" />
-					</span>
-				</div>
-			</form>
-		);
-	}
-});
-
 const DisconnectUserButton = React.createClass({
 	propTypes: {
 		socket: React.PropTypes.object.isRequired,
@@ -235,49 +193,6 @@ const UserMenu = exports.UserMenu = React.createClass({
 				<ul className="users-list-group" id="user-list">
 					{users}
 				</ul>
-			</div>
-		);
-	}
-});
-
-const AdminPanel = exports.AdminPanel = React.createClass({
-	propTypes: {
-		socket: React.PropTypes.object.isRequired
-	},
-
-	handleGatherReset() {
-		this.props.socket.emit("gather:reset");
-	},
-
-	render() {
-		return (
-			<div className="modal fade" id="adminmodal">
-				<div className="modal-dialog">
-					<div className="modal-content">
-						<div className="modal-header">
-							<button type="button" className="close" data-dismiss="modal" 
-								aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-							</button>
-							<h4 className="modal-title">Administration Panel</h4>
-						</div>
-						<div className="modal-body" id="admin-menu">
-							<h5>Swap Into a Different Account (Only works for admins)</h5>
-							<UserLogin socket={this.props.socket} />
-							<h5>Gather Options</h5>
-							<div>
-								<button
-									className="btn btn-danger max-width"
-									onClick={this.handleGatherReset}>
-									Reset Gather</button>
-							</div>
-						</div>
-						<div className="modal-footer">
-							<button type="button" className="btn btn-default" 
-								data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
 			</div>
 		);
 	}

@@ -3,6 +3,7 @@ const React = require("react");
 const Howl = require("howler").Howl;
 const Howler = require("howler").Howler;
 const helper = require("javascripts/helper");
+import {MenubarMixin} from "javascripts/components/menubar";
 const storageAvailable = helper.storageAvailable;
 
 class SoundController {
@@ -195,15 +196,7 @@ var MusicSelector = React.createClass({
 })
 
 var SoundPanel = React.createClass({
-	getInitialState() {
-		return {
-			show: false
-		};
-	},
-
-	toggleShow() {
-		this.setState({ show: !this.state.show });
-	},
+	mixins: [MenubarMixin],
 
 	componentDidMount() {
 		let soundController = this.props.soundController;
@@ -220,12 +213,6 @@ var SoundPanel = React.createClass({
 		}).on("slideStop", ({value}) => {
 			soundController.setVolume(value / scale);
 		}).slider('setValue', soundController.getVolume() * scale);
-	},
-
-	componentClass() {
-		let componentClass = ["dropdown", "messages-menu"];
-		if (this.state.show) componentClass.push("open");
-		return componentClass.join(" ");
 	},
 
 	mute() {

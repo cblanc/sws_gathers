@@ -1,4 +1,5 @@
 const React = require("react");
+const moment = require("moment");
 const ReactDOM = require("react-dom");
 const Ps = require("perfect-scrollbar");
 const ReactEmoji = require("react-emoji");
@@ -307,27 +308,6 @@ const ChatMessage = React.createClass({
   	}
   },
 
-  updateCreatedAt() {
-  	let self = this;
-  	if (this.props.message.createdAt) {
-  		self.setState({
-  			createdAt: $.timeago(self.props.message.createdAt)
-  		})
-  	}
-  },
-
-  componentWillMount() {
-		this.updateCreatedAt();
-  },
-
-	componentDidMount() {
-		this.interval = setInterval(this.updateCreatedAt, 60000);
-	},
-
-	componentWillUnmount: function () {
-		clearInterval(this.interval);
-	},
-
 	messageContent: function () {
 		let self = this;
 		let message = self.props.message.content
@@ -366,9 +346,7 @@ const ChatMessage = React.createClass({
 						<img 
 							src={this.props.message.author.avatar} 
 							alt="User Avatar" 
-							height="40"
-							width="40"
-							className="img-circle" />
+							className="chat-avatar" />
 				</span>
 				<div className="chat-body clearfix">
 					<div className="header">
@@ -378,8 +356,7 @@ const ChatMessage = React.createClass({
 						<small className="pull-right text-muted">
 							{deleteButton}
 							<span className="hidden-xs">
-								<i className="fa fa-clock-o fa-fw"></i> 
-								{this.state.createdAt}
+								{moment(this.props.message.createdAt).format("hh:mm DD/MM")}&nbsp;
 							</span>
 						</small>
 					</div>

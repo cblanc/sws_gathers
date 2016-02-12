@@ -16,6 +16,13 @@ html, body {
 	word-wrap: break-word;      /* IE */
 }
 
+.chat-avatar {
+	border-radius: 50%;
+	max-height: 20px;
+	max-width: 20px;
+	margin-right: 5px;
+}
+
 .chat-container {
 	padding: 10px;
 }

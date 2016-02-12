@@ -48,6 +48,7 @@
     "javascript-state-machine": "~2.3.5",
     "jquery": "~2.2.0",
     "lodash": "~4.0.0",
+    "moment": "^2.11.2",
     "mongoose": "~4.1.1",
     "morgan": "~1.6.1",
     "newrelic": "~1.22.1",

@@ -11,7 +11,6 @@ const News = exports.News = React.createClass({
 		let readArticles = {};
 		if (storageAvailable('localStorage')) {
 			const raw = localStorage.getItem(READ_ARTICLES_STORAGE) || {};
-			console.log(raw)
 			let rawJson;
 			try {
 				rawJson = JSON.parse(raw);
@@ -110,7 +109,7 @@ const News = exports.News = React.createClass({
 			    {tag}
 			  </a>
 			  <ul className="dropdown-menu">
-			    <li className="header">NS2 News.org</li>
+			    <li className="header">NS2News.org</li>
 				  <ul className="news-menu">
 				    {articles}
 				  </ul>

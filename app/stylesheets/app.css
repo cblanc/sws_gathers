@@ -203,6 +203,15 @@ html, body {
 	padding: 0 15px;
 }
 
+.sound-menu {
+	list-style: none;
+	padding: 5px;
+}
+
+.sound-menu li {
+	padding: 5px;
+}
+
 /* Events */
 
 .events-panel {

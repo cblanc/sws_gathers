@@ -354,10 +354,10 @@ const ChatMessage = React.createClass({
 							{this.props.message.author.username}
 							</strong>
 						<small className="pull-right text-muted">
-							{deleteButton}
 							<span className="hidden-xs">
 								{moment(this.props.message.createdAt).format("hh:mm DD/MM")}&nbsp;
 							</span>
+							{deleteButton}
 						</small>
 					</div>
 					<p className="wordwrap">{this.messageContent()}</p>

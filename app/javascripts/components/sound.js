@@ -195,6 +195,16 @@ var MusicSelector = React.createClass({
 })
 
 var SoundPanel = React.createClass({
+	getInitialState() {
+		return {
+			show: false
+		};
+	},
+
+	toggleShow() {
+		this.setState({ show: !this.state.show });
+	},
+
 	componentDidMount() {
 		let soundController = this.props.soundController;
 		let scale = 10;
@@ -210,6 +220,12 @@ var SoundPanel = React.createClass({
 		}).on("slideStop", ({value}) => {
 			soundController.setVolume(value / scale);
 		}).slider('setValue', soundController.getVolume() * scale);
+	},
+
+	componentClass() {
+		let componentClass = ["dropdown", "messages-menu"];
+		if (this.state.show) componentClass.push("open");
+		return componentClass.join(" ");
 	},
 
 	mute() {
@@ -249,36 +265,37 @@ var SoundPanel = React.createClass({
 				</a>
 			</li>;
 		}
-		return <ul className="nav navbar-top-links navbar-right">
-		  <li className="dropdown">
-				<a className="dropdown-toggle" href="#" id="sound-dropdown">
-					Sound &nbsp;{mutedIcon}&nbsp;<i className="fa fa-caret-down"></i>
-				</a>
-				<ul className="dropdown-menu" id="sound-dropdown">
-					{mutedButton}
-					<li>
-						<a href='#' onClick={this.play}>
-							<i className="fa fa-play"></i>&nbsp;Play
-						</a>
-					</li>
-					<li>
-						<a href='#' onClick={this.stop}>
-							<i className="fa fa-stop"></i>&nbsp;Stop
-						</a>
-					</li>
-					<hr />
-					<li>
-						<div className="volume-slide">
-							<label>Volume</label>
-							<div id="volume-slide"></div>
-						</div>
-					</li>
-					<li>
-						<MusicSelector soundController={soundController} />
-					</li>
-				</ul>
+		return (
+			<li className={this.componentClass()}>
+			  <a href="#" onClick={this.toggleShow}>{mutedIcon}</a>
+			  <ul className="dropdown-menu">
+			    <li className="header">Sound Settings</li>
+				  <ul className="sound-menu">
+				    {mutedButton}
+						<li>
+							<a href='#' onClick={this.play}>
+								<i className="fa fa-play"></i>&nbsp;Play
+							</a>
+						</li>
+						<li>
+							<a href='#' onClick={this.stop}>
+								<i className="fa fa-stop"></i>&nbsp;Stop
+							</a>
+						</li>
+						<hr />
+						<li>
+							<div className="volume-slide">
+								<label>Volume</label>
+								<div id="volume-slide"></div>
+							</div>
+						</li>
+						<li>
+							<MusicSelector soundController={soundController} />
+						</li>
+				  </ul>
+			  </ul>
 			</li>
-	  </ul>;
+		);
 	}
 });
 

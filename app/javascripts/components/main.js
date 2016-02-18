@@ -453,7 +453,7 @@ const App = React.createClass({
 					</section>
 					<section className="content">
 						<div className="row">
-							<div className="col-md-8">
+							<div className="col-lg-8">
 								<Gather 
 									socket={socket}
 									maps={this.state.maps}
@@ -464,8 +464,13 @@ const App = React.createClass({
 									previousGather={this.state.previousGather}
 									soundController={this.state.soundController} />
 							</div>
-							<div className="col-md-4">
+							<div className="col-lg-4 col-md-12 col-sm-12">
 								{eventsPanel}
+							</div>
+						</div>
+						<hr />
+						<div className="row">
+							<div className="col-lg-8 col-md-12 col-sm-12">
 								<ArchivedGathers archive={this.state.archive}
 									maps={this.state.maps}
 									servers={this.state.servers} />

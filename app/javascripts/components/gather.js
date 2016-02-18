@@ -570,6 +570,7 @@ const Gather = exports.Gather = React.createClass({
 		const socket = this.props.socket;
 		const gather = this.props.gather;
 		const thisGatherer = this.props.thisGatherer;
+		const soundController = this.props.soundController;
 		const servers = this.props.servers;
 		const maps = this.props.maps;
 		const user = this.props.user;
@@ -614,9 +615,8 @@ const Gather = exports.Gather = React.createClass({
 								socket={socket} />
 						</div>
 					</div>
-					<Gatherers gather={gather} user={user} 
-						soundController={this.props.soundController}
-						thisGatherer={thisGatherer} socket={socket} />
+					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} 
+						socket={socket} soundController={soundController}/>
 					{gatherTeams}
 					{voting}
 				</div>
@@ -628,7 +628,7 @@ const Gather = exports.Gather = React.createClass({
 						<div className="panel-heading">Current Gather</div>
 					</div>
 					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} 
-						socket={socket} />
+						socket={socket} soundController={soundController}/>
 				</div>
 			);
 		}
@@ -674,17 +674,14 @@ const LifeformIcons = exports.LifeformIcons = React.createClass({
 	}
 });
 
-const Gatherers = React.createClass({
+const GathererListItem = React.createClass({
 	propTypes: {
-		user: React.PropTypes.object,
-		thisGatherer: React.PropTypes.object,
+		user: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired,
 		socket: React.PropTypes.object.isRequired,
-		gather: React.PropTypes.object.isRequired
-	},
-
-	joinGather(e) {
-		e.preventDefault();
-		this.props.socket.emit("gather:join");
+		gatherer: React.PropTypes.object.isRequired,
+		thisGatherer: React.PropTypes.object,
+		soundController: React.PropTypes.object.isRequired
 	},
 
 	bootGatherer(e) {
@@ -694,146 +691,186 @@ const Gatherers = React.createClass({
 		});
 	},
 
+	getInitialState() {
+		return {
+			collapse: true
+		};
+	},
+
+	toggleCollapse(e) {
+		e.preventDefault();
+		this.setState({ collapse: !this.state.collapse });
+	},
+
+	collapseState() {
+		return `panel-collapse out collapse ${this.state.collapse ? "" : "in"}`;
+	},
+
+	render() {
+		const user = this.props.user;
+		const gather = this.props.gather;
+		const socket = this.props.socket;
+		const gatherer = this.props.gatherer;
+		const thisGatherer = this.props.thisGatherer;
+		const soundController = this.props.soundController;
+
+		let country;
+		if (gatherer.user.country) {
+			country = (
+				<img src="/blank.gif" 
+					className={"flag flag-" + gatherer.user.country.toLowerCase()} 
+					alt={gatherer.user.country} />
+			);
+		};
+
+		const skill = gatherer.user.profile.skill || "Not Available";
+
+		const hiveStats = [];
+		if (gatherer.user.hive.skill) hiveStats.push(`${gatherer.user.hive.skill} ELO`);
+
+		if (gatherer.user.hive.playTime) {
+			hiveStats.push(`${Math.floor(gatherer.user.hive.playTime / 3600)} Hours`);
+		}
+
+		const hive = (hiveStats.length) ? hiveStats.join(", ") : "Not Available";
+		
+		const team = (gatherer.user.team) ? gatherer.user.team.name : "None";
+
+		let action;
+		if (gather.state === "election") {
+			let votes = gather.gatherers.reduce((acc, voter) => {
+				if (voter.leaderVote === gatherer.id) acc++;
+				return acc;
+			}, 0)
+			action = (
+				<span>
+					<span className="badge add-right">{votes + " votes"}</span>
+					<VoteButton 
+						socket={socket}
+						thisGatherer={thisGatherer} 
+						soundController={soundController}
+						candidate={gatherer} />
+				</span>
+			);
+		}
+
+		if (gather.state === 'selection') {
+			if (thisGatherer && 
+					thisGatherer.leader &&
+					thisGatherer.team === gather.pickingTurn) {
+				action = (
+					<span>
+						<SelectPlayerButton gatherer={gatherer} socket={socket}/>
+					</span>
+				);
+			} else {
+				if (gatherer.leader) {
+					action = (<span className={`label label-padding 
+						label-${gatherer.team} 
+						team-label`}>Leader</span>);
+				} else if (gatherer.team !== "lobby") {
+					action = (<span className={`label label-padding 
+						label-${gatherer.team} 
+						team-label`}>{_.capitalize(gatherer.team)}</span>);
+				} else {
+					action = (<span className="label label-padding label-default team-label">
+						Lobby</span>);
+				}
+			}
+		}
+
+		let adminOptions;
+		if ((user && user.admin) || (user && user.moderator)) {
+			adminOptions = [
+				<hr />,
+				<dt>Admin</dt>,
+				<dd>
+					<button
+						className="btn btn-xs btn-danger"
+						value={gatherer.user.id}
+						onClick={this.bootGatherer}>
+						Boot from Gather
+					</button>&nbsp;
+					<AssumeUserIdButton socket={socket}
+						gatherer={gatherer} currentUser={user} />
+				</dd>
+			]
+		}
+
+		let tabColor = gatherer.team !== "lobby" ? `panel-${gatherer.team}` : "panel-info";
+		return (
+			<div className={`panel ${tabColor} gatherer-panel`} 
+				key={gatherer.user.id} data-userid={gatherer.user.id}>
+				<div className="panel-heading">
+					<h4 className="panel-title">
+						{country} {gatherer.user.username}
+						<span className="pull-right">
+							<a href="#" className="btn btn-xs btn-primary add-right"
+								onClick={this.toggleCollapse}>
+								Info <span className="caret"></span></a>
+							<LifeformIcons gatherer={gatherer} />
+							{action}
+						</span>
+					</h4>
+				</div>
+				<div id={gatherer.user.id.toString() + "-collapse"} 
+					className={this.collapseState()} >
+					<div className="panel-body">
+						<dl className="dl-horizontal">
+							<dt>Skill Level</dt>
+							<dd>{skill}</dd>
+							<dt>Team</dt>
+							<dd>{team}</dd>
+							<dt>Hive Stats</dt>
+							<dd>{hive}</dd>
+							<dt>Links</dt>
+							<dd>
+								<a href={enslUrl(gatherer)} 
+									className="btn btn-xs btn-primary"
+									target="_blank">ENSL Profile</a>&nbsp;
+								<a href={hiveUrl(gatherer)} 
+									className="btn btn-xs btn-primary"
+									target="_blank">Hive Profile</a>
+							</dd>
+							{adminOptions}
+						</dl>
+					</div>
+				</div>
+			</div>
+		);
+	}
+});
+
+const Gatherers = React.createClass({
+	propTypes: {
+		user: React.PropTypes.object,
+		thisGatherer: React.PropTypes.object,
+		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired,
+		soundController: React.PropTypes.object.isRequired
+	},
+
+	joinGather(e) {
+		e.preventDefault();
+		this.props.socket.emit("gather:join");
+	},
+
 	render() {
 		const self = this;
 		const user = this.props.user;
 		const socket = this.props.socket;
 		const gather = this.props.gather;
 		const thisGatherer = this.props.thisGatherer;
-		const admin = (user && user.admin) || (user && user.moderator);
 		const gatherers = gather.gatherers
 		.sort((a, b) => {
 				return (b.user.hive.skill || 1000) - (a.user.hive.skill || 1000);
 			})
 		.map(gatherer => {
-			let country;
-			if (gatherer.user.country) {
-				country = (
-					<img src="/blank.gif" 
-						className={"flag flag-" + gatherer.user.country.toLowerCase()} 
-						alt={gatherer.user.country} />
-				);
-			};
+			return <GathererListItem socket={socket} gatherer={gatherer} thisGatherer={thisGatherer}
+				soundController={this.props.soundController}
+				user={user} gather={gather}/>
+		});
 
-			let skill = gatherer.user.profile.skill || "Not Available";
-
-			let hiveStats = [];
-			if (gatherer.user.hive.skill) hiveStats.push(`${gatherer.user.hive.skill} ELO`);
-
-			if (gatherer.user.hive.playTime) {
-				hiveStats.push(`${Math.floor(gatherer.user.hive.playTime / 3600)} Hours`);
-			}
-
-			let hive = (hiveStats.length) ? hiveStats.join(", ") : "Not Available";
-			
-			let team = (gatherer.user.team) ? gatherer.user.team.name : "None";
-
-			let action;
-			if (gather.state === "election") {
-				let votes = gather.gatherers.reduce((acc, voter) => {
-					if (voter.leaderVote === gatherer.id) acc++;
-					return acc;
-				}, 0)
-				action = (
-					<span>
-						<span className="badge add-right">{votes + " votes"}</span>
-						<VoteButton 
-							socket={this.props.socket}
-							thisGatherer={thisGatherer} 
-							soundController={this.props.soundController}
-							candidate={gatherer} />
-					</span>
-				);
-			}
-
-			if (gather.state === 'selection') {
-				if (thisGatherer && 
-						thisGatherer.leader &&
-						thisGatherer.team === gather.pickingTurn) {
-					action = (
-						<span>
-							<SelectPlayerButton gatherer={gatherer} />
-						</span>
-					);
-				} else {
-					if (gatherer.leader) {
-						action = (<span className={`label label-padding 
-							label-${gatherer.team} 
-							team-label`}>Leader</span>);
-					} else if (gatherer.team !== "lobby") {
-						action = (<span className={`label label-padding 
-							label-${gatherer.team} 
-							team-label`}>{_.capitalize(gatherer.team)}</span>);
-					} else {
-						action = (<span className="label label-padding label-default team-label">
-							Lobby</span>);
-					}
-				}
-			}
-
-			let adminOptions;
-			if (admin) {
-				adminOptions = [
-					<hr />,
-					<dt>Admin</dt>,
-					<dd>
-						<button
-							className="btn btn-xs btn-danger"
-							value={gatherer.user.id}
-							onClick={this.bootGatherer}>
-							Boot from Gather
-						</button>&nbsp;
-						<AssumeUserIdButton socket={socket}
-							gatherer={gatherer} currentUser={user} />
-					</dd>
-				]
-			}
-
-			let tabColor = gatherer.team !== "lobby" ? `panel-${gatherer.team}` : "panel-info";
-			return (
-				<div className={`panel ${tabColor} gatherer-panel`} 
-					key={gatherer.user.id} data-userid={gatherer.user.id}>
-					<div className="panel-heading">
-						<h4 className="panel-title">
-							{country} {gatherer.user.username}
-							<span className="pull-right">
-								<a data-toggle="collapse"
-									href={"#"+gatherer.user.id.toString() + "-collapse"} 
-									aria-expanded="false" 
-									className="btn btn-xs btn-primary add-right"
-									aria-controls={gatherer.user.id.toString() + "-collapse"}>
-									Info <span className="caret"></span></a>
-								<LifeformIcons gatherer={gatherer} />
-								{action}
-							</span>
-						</h4>
-					</div>
-					<div id={gatherer.user.id.toString() + "-collapse"} 
-						className="panel-collapse collapse out" >
-						<div className="panel-body">
-							<dl className="dl-horizontal">
-								<dt>Skill Level</dt>
-								<dd>{skill}</dd>
-								<dt>Team</dt>
-								<dd>{team}</dd>
-								<dt>Hive Stats</dt>
-								<dd>{hive}</dd>
-								<dt>Links</dt>
-								<dd>
-									<a href={enslUrl(gatherer)} 
-										className="btn btn-xs btn-primary"
-										target="_blank">ENSL Profile</a>&nbsp;
-									<a href={hiveUrl(gatherer)} 
-										className="btn btn-xs btn-primary"
-										target="_blank">Hive Profile</a>
-								</dd>
-								{adminOptions}
-							</dl>
-						</div>
-					</div>
-				</div>
-			);
-		})
 		if (gather.gatherers.length) {
 			return (
 				<div class="panel-group" 

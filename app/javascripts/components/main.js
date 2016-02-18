@@ -1,13 +1,15 @@
 import {News} from "javascripts/components/news";
 import {Events} from "javascripts/components/event";
+import {Gather} from "javascripts/components/gather";
 import {InfoButton} from "javascripts/components/info";
 import {AdminPanel} from "javascripts/components/admin";
 import {Chatroom} from "javascripts/components/message";
 import {SoundPanel} from "javascripts/components/sound";
+import {GatherMenu} from "javascripts/components/gatherMenu";
 import {SettingsPanel} from "javascripts/components/settings";
-import {Gather, ArchivedGathers} from "javascripts/components/gather";
-import {TeamSpeakButton, TeamSpeakModal} from "javascripts/components/teamspeak";
+import {ArchivedGathers} from "javascripts/components/gatherArchive";
 import {CurrentUser, ProfileModal, UserMenu} from "javascripts/components/user";
+import {TeamSpeakButton, TeamSpeakModal} from "javascripts/components/teamspeak";
 
 const React = require("react");
 const Sound = require("javascripts/components/sound");
@@ -15,7 +17,7 @@ const SoundController = Sound.SoundController;
 const helper = require("javascripts/helper");
 const storageAvailable = helper.storageAvailable;
 
-const SplashScreen = React.createClass({
+const App = React.createClass({
 	getInitialState() {
 		return {
 			status: "connecting",
@@ -46,7 +48,7 @@ const SplashScreen = React.createClass({
 		const status = this.state.status;
 
 		if (status === "connected") {
-			return <App socket={this.state.socket} />;
+			return <GatherPage socket={this.state.socket} />;
 		} 
 
 		let splash;
@@ -133,7 +135,7 @@ const ConnectingSplash = React.createClass({
 	}
 });
 
-const App = React.createClass({
+const GatherPage = React.createClass({
 	propTypes: {
 		socket: React.PropTypes.object.isRequired
 	},
@@ -441,6 +443,10 @@ const App = React.createClass({
 						<UserMenu users={this.state.users} user={this.state.user} 
 							socket={socket} mountModal={this.mountModal}/>
 						<ul className="sidebar-menu">
+							<li className="header">Gathers</li>
+							<GatherMenu />
+						</ul>
+						<ul className="sidebar-menu">
 							<li className="header">Information</li>
 							<TeamSpeakButton />
 							<InfoButton />
@@ -449,7 +455,8 @@ const App = React.createClass({
 				</aside>
 				<div className="content-wrapper" style={{"minHeight": "916px"}}>
 					<section className="content-header">
-						<h1>Gathers<small>beta</small></h1>
+						<h1>Public Gather</h1>
+						<p>6 v 6 - No player requirements</p>
 					</section>
 					<section className="content">
 						<div className="row">
@@ -489,4 +496,4 @@ const App = React.createClass({
 	}
 });
 
-module.exports = SplashScreen;
+module.exports = App;

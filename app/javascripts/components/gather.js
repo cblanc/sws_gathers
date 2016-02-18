@@ -465,7 +465,7 @@ const ServerVoting = React.createClass({
 			}).map(server => {
 			let votes = self.votesForServer(server);
 			let style = thisGatherer.serverVote.some(voteId => voteId === server.id) ? 
-				"list-group-item list-group-item-success" : "list-group-item";
+				"list-group-item list-group-item-default" : "list-group-item";
 			return (
 				<a href="#" 
 					className={style} 
@@ -702,6 +702,14 @@ const GathererListItem = React.createClass({
 		this.setState({ collapse: !this.state.collapse });
 	},
 
+	caret() {
+		if (this.state.collapse) {
+			return <i className="fa fa-caret-down"></i>;
+		} else {
+			return <i className="fa fa-caret-up"></i>;
+		}
+	},
+
 	collapseState() {
 		return `panel-collapse out collapse ${this.state.collapse ? "" : "in"}`;
 	},
@@ -807,7 +815,7 @@ const GathererListItem = React.createClass({
 						<span className="pull-right">
 							<a href="#" className="btn btn-xs btn-primary add-right"
 								onClick={this.toggleCollapse}>
-								Info <span className="caret"></span></a>
+								Info {this.caret()}</a>
 							<LifeformIcons gatherer={gatherer} />
 							{action}
 						</span>
@@ -816,7 +824,7 @@ const GathererListItem = React.createClass({
 				<div id={gatherer.user.id.toString() + "-collapse"} 
 					className={this.collapseState()} >
 					<div className="panel-body">
-						<dl className="dl-horizontal">
+						<dl>
 							<dt>Skill Level</dt>
 							<dd>{skill}</dd>
 							<dt>Team</dt>
@@ -873,10 +881,7 @@ const Gatherers = React.createClass({
 
 		if (gather.gatherers.length) {
 			return (
-				<div class="panel-group" 
-					role="tablist" 
-					aria-multiselectable="true" 
-					id="gatherers-panel">
+				<div id="gatherers-panel">
 					{gatherers}
 				</div>
 			);
@@ -978,7 +983,7 @@ const GatherVotingResults = React.createClass({
 					Server
 				</div>
 				<div className="panel-body">
-					<dl className="dl-horizontal">
+					<dl>
 						<dt>Maps</dt>
 						<dd>{maps.map(map => map.name).join(" & ")}</dd>
 						<dt>Server</dt>

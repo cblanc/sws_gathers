@@ -608,7 +608,7 @@ const Gather = exports.Gather = React.createClass({
 			return (
 				<div>
 					<div className="panel panel-primary add-bottom">
-						<div className="panel-heading">Current Gather</div>
+						<div className="panel-heading">{gather.name}</div>
 						<div className="panel-body">
 							<GatherProgress gather={gather} />
 							<GatherActions gather={gather} user={user} thisGatherer={thisGatherer} 
@@ -625,7 +625,7 @@ const Gather = exports.Gather = React.createClass({
 			return (
 				<div>
 					<div className="panel panel-primary add-bottom">
-						<div className="panel-heading">Current Gather</div>
+						<div className="panel-heading">{gather.name}</div>
 					</div>
 					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} 
 						socket={socket} soundController={soundController}/>
@@ -891,7 +891,7 @@ const Gatherers = React.createClass({
 					<div className="panel-body text-center join-hero">
 						<button 
 							onClick={this.joinGather} 
-							className="btn btn-success btn-lg">Start a Gather</button>
+							className="btn btn-success btn-lg">Start Gather</button>
 					</div>
 				</div>
 			);

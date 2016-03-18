@@ -608,7 +608,7 @@ const Gather = exports.Gather = React.createClass({
 			return (
 				<div>
 					<div className="panel panel-primary add-bottom">
-						<div className="panel-heading">{gather.name}</div>
+						<div className="panel-heading">{gather.name} ({gather.description})</div>
 						<div className="panel-body">
 							<GatherProgress gather={gather} />
 							<GatherActions gather={gather} user={user} thisGatherer={thisGatherer} 
@@ -625,7 +625,7 @@ const Gather = exports.Gather = React.createClass({
 			return (
 				<div>
 					<div className="panel panel-primary add-bottom">
-						<div className="panel-heading">{gather.name}</div>
+						<div className="panel-heading">{gather.name} ({gather.description})</div>
 					</div>
 					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} 
 						socket={socket} soundController={soundController}/>

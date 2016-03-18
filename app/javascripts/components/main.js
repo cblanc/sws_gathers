@@ -454,10 +454,6 @@ const GatherPage = React.createClass({
 					</section>
 				</aside>
 				<div className="content-wrapper" style={{"minHeight": "916px"}}>
-					<section className="content-header">
-						<h1>Public Gather</h1>
-						<p>6 v 6 - No player requirements</p>
-					</section>
 					<section className="content">
 						<div className="row">
 							<div className="col-lg-8">

@@ -1042,7 +1042,7 @@ const GatherVotingResults = React.createClass({
 
 	serverTable(server, primary) {
 		let password = server.password ? server.password : "N/A";
-		let className = primary ? "btn btn-primary max-width" : "btn btn-primary";
+		let className = primary ? "btn btn-primary max-width" : "btn btn-primary pull-right";
 		let label = primary ? `Join ${server.name}` : "Join Fallback"
 		return (
 			<div>
@@ -1075,15 +1075,18 @@ const GatherVotingResults = React.createClass({
 				<div className="panel-body">
 					<div className="row">
 						<div className="col-md-4">
+							<h4>Map Selection</h4>
 							<dl>
 								<dt>Maps</dt>
 								<dd>{maps[0].name} <br />(Alternate: {maps[1].name})</dd>
 							</dl>
 						</div>
 						<div className="col-md-4">
+							<h4>Primary Server</h4>
 							{this.serverTable(mainServer, true)}
 						</div>
 						<div className="col-md-4">
+							<h4>Fallback Server</h4>
 							{this.serverTable(altServer)}
 						</div>
 					</div>

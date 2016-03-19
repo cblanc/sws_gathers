@@ -52,18 +52,46 @@ const UserLogin = React.createClass({
 	}
 });
 
+const ResetGatherButton = exports.ResetGatherButton = React.createClass({
+	propTypes: {
+		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.string.isRequired
+	},
+
+	handleGatherReset() {
+		this.props.socket.emit("gather:reset", {
+			type: this.props.gather.type
+		});
+	},
+
+	render() {
+		return (
+			<button
+				className="btn btn-danger max-width"
+				onClick={this.handleGatherReset}>
+				Reset {this.props.gather.name}</button>
+		);
+	}
+});
+
 const AdminPanel = exports.AdminPanel = React.createClass({
 	mixins: [MenubarMixin],
 
 	propTypes: {
-		socket: React.PropTypes.object.isRequired
-	},
-
-	handleGatherReset() {
-		this.props.socket.emit("gather:reset");
+		socket: React.PropTypes.object.isRequired,
+		gatherPool: React.PropTypes.object.isRequired
 	},
 
 	render() {
+		const gatherPool = this.props.gatherPool;
+		const resetButtons = [];
+		for (let attr in gatherPool) {
+			let gather = gatherPool[attr];
+			resetButtons.push(
+				<ResetGatherButton socket={this.props.socket}
+					gather={gather} key={gather.type} />
+			);
+		}
 		return (
 			<li className={this.componentClass()}>
 			  <a href="#" onClick={this.toggleShow}>
@@ -76,10 +104,7 @@ const AdminPanel = exports.AdminPanel = React.createClass({
 						<UserLogin socket={this.props.socket} />
 						<h5>Gather Options</h5>
 						<div>
-							<button
-								className="btn btn-danger max-width"
-								onClick={this.handleGatherReset}>
-								Reset Gather</button>
+							{resetButtons}
 						</div>
 				  </ul>
 			  </ul>

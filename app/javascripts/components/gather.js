@@ -1036,39 +1036,57 @@ const GatherVotingResults = React.createClass({
 		return rankVotes(this.countVotes('mapVote'), this.props.maps).slice(0, 2)
 	},
 
-	selectedServer() {
-		return rankVotes(this.countVotes('serverVote'), this.props.servers).slice(0, 1);
+	selectedServers() {
+		return rankVotes(this.countVotes('serverVote'), this.props.servers).slice(0, 2);
+	},
+
+	serverTable(server, primary) {
+		let password = server.password ? server.password : "N/A";
+		let className = primary ? "btn btn-primary max-width" : "btn btn-primary";
+		let label = primary ? `Join ${server.name}` : "Join Fallback"
+		return (
+			<div>
+				<dl>
+					<dt>Server Name</dt>
+					<dd>{server.name}</dd>
+					<dt>Address</dt>
+					<dd>{server.ip}:{server.port}</dd>
+					<dt>Password</dt>
+					<dd>{password}</dd>
+				</dl>
+				<p>
+					<a href={`steam://run/4920/connect+%20${server.ip}:${server.port}%20+password%20${server.password}`}
+						className={className}>{label}</a>
+				</p>
+			</div>
+		);
 	},
 
 	render() {
 		let maps = this.selectedMaps();
-		let server = this.selectedServer().pop();
-		let password;
-		if (server.password) {
-			password = [
-				<dt>Password</dt>,
-				<dd>{server.password}</dd>
-			];
-		}
+		let servers = this.selectedServers();
+		let mainServer = servers[0];
+		let altServer = servers[1];
 		return (
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					Server
+					Game Information
 				</div>
 				<div className="panel-body">
-					<dl>
-						<dt>Maps</dt>
-						<dd>{maps.map(map => map.name).join(" & ")}</dd>
-						<dt>Server</dt>
-						<dd>{server.name}</dd>
-						<dt>Address</dt>
-						<dd>{server.ip}:{server.port}</dd>
-						{password}
-					</dl>
-					<p>
-						<a href={`steam://run/4920/connect+%20${server.ip}:${server.port}%20+password%20${server.password}`}
-							className="btn btn-primary max-width">Join Server</a>
-					</p>
+					<div className="row">
+						<div className="col-md-4">
+							<dl>
+								<dt>Maps</dt>
+								<dd>{maps[0].name} <br />(Alternate: {maps[1].name})</dd>
+							</dl>
+						</div>
+						<div className="col-md-4">
+							{this.serverTable(mainServer, true)}
+						</div>
+						<div className="col-md-4">
+							{this.serverTable(altServer)}
+						</div>
+					</div>
 				</div>
 			</div>
 		);

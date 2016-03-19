@@ -1,11 +1,10 @@
 import {News} from "javascripts/components/news";
 import {Events} from "javascripts/components/event";
-import {Gather} from "javascripts/components/gather";
+import {Gather, GatherMenu} from "javascripts/components/gather";
 import {InfoButton} from "javascripts/components/info";
 import {AdminPanel} from "javascripts/components/admin";
 import {Chatroom} from "javascripts/components/message";
 import {SoundPanel} from "javascripts/components/sound";
-import {GatherMenu} from "javascripts/components/gatherMenu";
 import {SettingsPanel} from "javascripts/components/settings";
 import {ArchivedGathers} from "javascripts/components/gatherArchive";
 import {CurrentUser, ProfileModal, UserMenu} from "javascripts/components/user";
@@ -155,9 +154,15 @@ const GatherPage = React.createClass({
 
 		return {
 			modal: null,
-			gather: {
-				gatherers: []
+			gatherPool: {
+				public: {
+					gatherers: []
+				},
+				skilled: {
+					gatherers: []
+				}
 			},
+			currentGather: "public",
 			users: [],
 			messages: [],
 			maps: [],
@@ -175,6 +180,10 @@ const GatherPage = React.createClass({
 		};
 	},
 
+	currentGather() {
+		return this.state.gatherPool[this.state.currentGather];
+	},
+
 	componentDidMount() {
 		let self = this;
 		let socket = this.props.socket;
@@ -187,7 +196,7 @@ const GatherPage = React.createClass({
 			
 			if (state.from === 'gathering'
 					&& state.to === 'election'
-					&& this.thisGatherer()) {
+					&& this.thisGatherer(data.type)) {
 				soundController.playGatherMusic();
 			}
 
@@ -228,11 +237,13 @@ const GatherPage = React.createClass({
 		});
 
 		socket.on("gather:refresh", (data) => {
+			const gatherPool = this.state.gatherPool;
+			const type = data.type;
+			gatherPool[type] = data.gather;
 			self.setState({
-				gather: data.gather,
 				maps: data.maps,
 				servers: data.servers,
-				previousGather: data.previousGather
+				gatherPool: gatherPool
 			});
 			this.updateTitle();
 		});
@@ -267,7 +278,7 @@ const GatherPage = React.createClass({
 	},
 
 	updateTitle() {
-		let gather = this.state.gather;
+		let gather = this.currentGather();
 		if (gather && this.state.updateTitle) {
 			document.title = `NSL Gathers (${gather.gatherers.length}/12)`;
 			return;
@@ -292,8 +303,9 @@ const GatherPage = React.createClass({
 		this.updateTitle();
 	},
 
-	thisGatherer() {
-		let gather = this.state.gather;
+	thisGatherer(gatherType) {
+		if (gatherType === undefined) gatherType = this.state.currentGather;
+		let gather = this.state.gatherPool[gatherType];
 		let user = this.state.user;
 		if (gather && user && gather.gatherers.length) {
 			return gather.gatherers
@@ -344,6 +356,14 @@ const GatherPage = React.createClass({
 				user: this.state.user,
 				socket: this.props.socket
 			}
+		});
+	},
+
+	onGatherSelected(gatherName) {
+		let gather = this.state.gatherPool[gatherName];
+		if (gather === undefined) return;
+		this.setState({
+			currentGather: gather.type
 		});
 	},
 
@@ -443,10 +463,6 @@ const GatherPage = React.createClass({
 						<UserMenu users={this.state.users} user={this.state.user} 
 							socket={socket} mountModal={this.mountModal}/>
 						<ul className="sidebar-menu">
-							<li className="header">Gathers</li>
-							<GatherMenu />
-						</ul>
-						<ul className="sidebar-menu">
 							<li className="header">Information</li>
 							<TeamSpeakButton />
 							<InfoButton />
@@ -461,19 +477,22 @@ const GatherPage = React.createClass({
 									socket={socket}
 									maps={this.state.maps}
 									user={this.state.user} 
-									gather={this.state.gather}
+									gather={this.currentGather()}
 									servers={this.state.servers}
 									thisGatherer={this.thisGatherer()}
-									previousGather={this.state.previousGather}
 									soundController={this.state.soundController} />
 							</div>
 							<div className="col-lg-4 col-md-12 col-sm-12">
+								<GatherMenu 
+									gatherPool={this.state.gatherPool}
+									currentGather={this.state.currentGather}
+									gatherSelectedCallback={this.onGatherSelected} />
 								{eventsPanel}
 							</div>
 						</div>
 						<hr />
 						<div className="row">
-							<div className="col-lg-8 col-md-12 col-sm-12">
+							<div className="col-lg-12 col-md-12 col-sm-12">
 								<ArchivedGathers archive={this.state.archive}
 									maps={this.state.maps}
 									servers={this.state.servers} />

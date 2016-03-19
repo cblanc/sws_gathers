@@ -71,6 +71,11 @@ html, body {
 
 /*Gather Styles*/
 
+.archived-gather-panel {
+	max-width: 1140px;
+	margin: 0 auto;
+}
+
 .vote-button {
 	min-width: 60px;
 }

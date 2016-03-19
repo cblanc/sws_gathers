@@ -416,7 +416,8 @@ const GatherPage = React.createClass({
 		}
 
 		let adminPanel;
-		if (user && user.admin) adminPanel = <AdminPanel socket={socket} />;
+		if (user && user.admin) adminPanel = <AdminPanel socket={socket} 
+			gatherPool={this.state.gatherPool} />;
 
 		return (
 			<div className={appClass.join(" ")}>

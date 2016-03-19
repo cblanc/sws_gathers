@@ -9,6 +9,7 @@ const hiveUrl = helper.hiveUrl;
 const SelectPlayerButton = React.createClass({
 	propTypes: {
 		socket: React.PropTypes.object.isRequired,
+		gather: React.PropTypes.object.isRequired,
 		gatherer: React.PropTypes.object.isRequired
 	},
 
@@ -369,11 +370,11 @@ const GatherActions = React.createClass({
 				<div className="text-right">
 					<ul className="list-inline no-bottom">
 						<li>
-							{regatherButton}
-						</li>
-						<li>
 							<JoinGatherButton gather={gather} thisGatherer={thisGatherer}
 								user={user} socket={socket} />
+						</li>
+						<li>
+							{regatherButton}
 						</li>
 					</ul>
 				</div>
@@ -836,7 +837,9 @@ const GathererListItem = React.createClass({
 					thisGatherer.team === gather.pickingTurn) {
 				action = (
 					<span>
-						<SelectPlayerButton gatherer={gatherer} socket={socket}/>
+						<SelectPlayerButton gatherer={gatherer} 
+							gather={gather}
+							socket={socket}/>
 					</span>
 				);
 			} else {

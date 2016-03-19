@@ -15,6 +15,7 @@ const SelectPlayerButton = React.createClass({
 	selectPlayer(e) {
 		e.preventDefault();
 		this.props.socket.emit("gather:select", {
+			type: this.props.gather.type,
 			player: parseInt(e.target.value, 10)
 		});
 	},
@@ -257,12 +258,16 @@ const JoinGatherButton = React.createClass({
 
 	joinGather(e) {
 		e.preventDefault();
-		this.props.socket.emit("gather:join");
+		this.props.socket.emit("gather:join", {
+			type: this.props.gather.type
+		});
 	},
 
 	leaveGather(e) {
 		e.preventDefault();
-		this.props.socket.emit("gather:leave");
+		this.props.socket.emit("gather:leave", {
+			type: this.props.gather.type
+		});
 	},
 
 	cooldownTime() {
@@ -324,6 +329,7 @@ const GatherActions = React.createClass({
 	voteRegather(e) {
 		e.preventDefault(e);
 		this.props.socket.emit("gather:vote", {
+			type: this.props.gather.type,
 			regather: (e.target.value === "true")
 		});
 	},
@@ -380,11 +386,13 @@ const VoteButton = React.createClass({
 	propTypes: {
 		socket: React.PropTypes.object.isRequired,
 		candidate: React.PropTypes.object.isRequired,
-		thisGatherer: React.PropTypes.object
+		thisGatherer: React.PropTypes.object,
+		gather: React.PropTypes.object.isRequired
 	},
 
 	cancelVote(e) {
 		this.props.socket.emit("gather:vote", {
+			type: this.props.gather.type,
 			leader: {
 				candidate: null
 			}
@@ -394,6 +402,7 @@ const VoteButton = React.createClass({
 	vote(e) {
 		e.preventDefault();
 		this.props.socket.emit("gather:vote", {
+			type: this.props.gather.type,
 			leader: {
 				candidate: parseInt(e.target.value, 10)
 			}
@@ -441,6 +450,7 @@ const ServerVoting = React.createClass({
 		return e => {
 			e.preventDefault();
 			this.props.socket.emit("gather:vote", {
+				type: this.props.gather.type,
 				server: {
 					id: serverId
 				}
@@ -465,7 +475,7 @@ const ServerVoting = React.createClass({
 			}).map(server => {
 			let votes = self.votesForServer(server);
 			let style = thisGatherer.serverVote.some(voteId => voteId === server.id) ? 
-				"list-group-item list-group-item-default" : "list-group-item";
+				"list-group-item list-group-item-success" : "list-group-item";
 			return (
 				<a href="#" 
 					className={style} 
@@ -505,6 +515,7 @@ const MapVoting = React.createClass({
 		return e => {
 			e.preventDefault();
 			this.props.socket.emit("gather:vote", {
+				type: this.props.gather.type,
 				map: {
 					id: mapId
 				}
@@ -674,6 +685,61 @@ const LifeformIcons = exports.LifeformIcons = React.createClass({
 	}
 });
 
+const GatherMenu = exports.GatherMenu = React.createClass({
+	propTypes: {
+		gatherPool: React.PropTypes.object.isRequired,
+		currentGather: React.PropTypes.string.isRequired,
+		gatherSelectedCallback: React.PropTypes.func.isRequired
+	},
+
+	onClick(gather) {
+		return () => {
+			this.props.gatherSelectedCallback(gather.type);
+		}
+	},
+
+	itemClass(gather) {
+		let className = ["list-group-item", "pointer"];
+		if (gather.type === this.props.currentGather) {
+			className.push("list-group-item-success");
+		}
+		return className.join(" ");
+	},
+
+	gatherPoolArray() {
+		const gatherArray = [];
+		const gatherPool = this.props.gatherPool;
+		for (let attr in gatherPool) {
+			if (gatherPool.hasOwnProperty(attr)) {
+				gatherArray.push(gatherPool[attr]);
+			}
+		}
+		return gatherArray.sort((a, b) => a.name - b.name);
+	},
+
+	render() {
+		return (
+			<div className="panel panel-primary add-bottom">
+				<div className="panel-heading">Gather Menu</div>
+				<ul className="list-group">
+					{
+						this.gatherPoolArray().map(gather => {
+							return (
+								<li onClick={this.onClick(gather)} className={this.itemClass(gather)}
+									key={gather.type}>
+									<strong>{gather.name}</strong>
+									<br />
+									{gather.description}
+								</li>
+							);
+						})
+					}
+				</ul>
+			</div>
+		);
+	}
+});
+
 const GathererListItem = React.createClass({
 	propTypes: {
 		user: React.PropTypes.object.isRequired,
@@ -687,6 +753,7 @@ const GathererListItem = React.createClass({
 	bootGatherer(e) {
 		e.preventDefault();
 		this.props.socket.emit("gather:leave", {
+			type: this.props.gather.type,
 			gatherer: parseInt(e.target.value, 10) || null
 		});
 	},
@@ -755,6 +822,7 @@ const GathererListItem = React.createClass({
 					<span className="badge add-right">{votes + " votes"}</span>
 					<VoteButton 
 						socket={socket}
+						gather={gather}
 						thisGatherer={thisGatherer} 
 						soundController={soundController}
 						candidate={gatherer} />
@@ -860,7 +928,9 @@ const Gatherers = React.createClass({
 
 	joinGather(e) {
 		e.preventDefault();
-		this.props.socket.emit("gather:join");
+		this.props.socket.emit("gather:join", {
+			type: this.props.gather.type
+		});
 	},
 
 	render() {

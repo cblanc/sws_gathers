@@ -11,7 +11,7 @@
   "scripts": {
     "test": "NODE_ENV=test mocha spec/",
     "start": "npm run compile && node index.js",
-    "start_production": "npm run compile_production && node index.js",
+    "start_production": "npm run compile_production & node index.js",
     "watch": "npm run compile && node_modules/brunch/bin/brunch watch --server",
     "compile": "node node_modules/brunch/bin/brunch build",
     "compile_production": "node node_modules/brunch/bin/brunch build --production",

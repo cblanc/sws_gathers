@@ -15,7 +15,7 @@ const ArchivedGathers = exports.ArchivedGathers = React.createClass({
 			})
 			.map((archivedGather, index) => {
 				return <CompletedGather 
-					id={archivedGather.gather.done.time}
+					key={archivedGather.gather.done.time}
 					show={(index === 0) ? true : false}
 					gather={archivedGather.gather} 
 					maps={this.props.maps}

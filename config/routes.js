@@ -3,7 +3,7 @@
 const path = require("path");
 const winston = require("winston");
 const config = require("./config.js");
-const Gather = require("../lib/gather/gather_pool").get("public");
+const GatherPool = require("../lib/gather/gather_pool");
 const mongoose = require("mongoose");
 const Message = mongoose.model("Message");
 const cors = require("cors");
@@ -26,8 +26,7 @@ module.exports = app => {
 	});
 
 	app.get("/gathers/current", (request, response) => {
-		let gather = Gather.current;
-		response.status(200).json(gather.toJson());
+		response.status(200).json(GatherPool.get("classic").current.toJson());
 	});
 
 	app.get("/api/messages", (request, response) => {

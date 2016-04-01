@@ -55,7 +55,7 @@ const UserLogin = React.createClass({
 const ResetGatherButton = exports.ResetGatherButton = React.createClass({
 	propTypes: {
 		socket: React.PropTypes.object.isRequired,
-		gather: React.PropTypes.string.isRequired
+		gather: React.PropTypes.object.isRequired
 	},
 
 	handleGatherReset() {

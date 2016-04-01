@@ -864,9 +864,9 @@ const GathererListItem = React.createClass({
 		let adminOptions;
 		if ((user && user.admin) || (user && user.moderator)) {
 			adminOptions = [
-				<hr />,
-				<dt>Admin</dt>,
-				<dd>
+				<hr key="line"/>,
+				<dt key="title">Admin</dt>,
+				<dd key="adminmenu">
 					<button
 						className="btn btn-xs btn-danger"
 						value={gatherer.user.id}
@@ -951,7 +951,7 @@ const Gatherers = React.createClass({
 			})
 		.map(gatherer => {
 			return <GathererListItem socket={socket} gatherer={gatherer} thisGatherer={thisGatherer}
-				soundController={this.props.soundController}
+				soundController={this.props.soundController} key={gatherer.id}
 				user={user} gather={gather}/>
 		});
 
@@ -1004,9 +1004,9 @@ const CompletedGather = exports.CompletedGather = React.createClass({
 		let maps = this.props.maps;
 		let servers = this.props.servers;
 		if (this.state.show) {
-			gatherInfo.push(<GatherTeams gather={gather} />);
+			gatherInfo.push(<GatherTeams gather={gather} key="gatherteams" />);
 			gatherInfo.push(<GatherVotingResults gather={gather} 
-				maps={maps} 
+				maps={maps} key="gathervotingresults"
 				servers={servers}/>);
 		}
 		return (

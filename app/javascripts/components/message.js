@@ -321,16 +321,22 @@ const ChatMessage = React.createClass({
 			);
 		}
 
-		return self.autolink(message, { 
-			target: "_blank", 
-			rel: "nofollow" 
-		}).map((elem) => {
-			if (_.isString(elem)) {
-				return self.emojify(elem);
-			} else {
-				return elem;
+		return (
+			<p className="wordwrap">
+			{
+				self.autolink(message, { 
+					target: "_blank", 
+					rel: "nofollow" 
+				}).map((elem) => {
+					if (_.isString(elem)) {
+						return self.emojify(elem);
+					} else {
+						return elem;
+					}
+				})
 			}
-		});
+			</p>
+		);
 	},
 
 	render() {
@@ -360,7 +366,7 @@ const ChatMessage = React.createClass({
 							{deleteButton}
 						</small>
 					</div>
-					<p className="wordwrap">{this.messageContent()}</p>
+					{this.messageContent()}
 				</div>
 			</li>
 		);

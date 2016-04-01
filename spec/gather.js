@@ -41,6 +41,47 @@ describe("Gather Model:", function () {
 		});
 	});
 
+	describe("lobbyFull", () => {
+		let teamSize = 3;
+		beforeEach(() => {
+			gather = Gather({ teamSize: teamSize })
+		});
+		it ("returns false if lobby isn't full", () => {
+			assert.isFalse(gather.lobbyFull());
+			gather.addUser(user);
+			assert.isFalse(gather.lobbyFull());
+		});
+		it ("returns true if lobby is full", () => {
+			gatherers.forEach((g, i) => {
+				if (i < 6) gather.addUser(g);
+			});
+			assert.isTrue(gather.lobbyFull());
+		});
+	});
+
+	describe("leaderVotesFull", () => {
+		const teamSize = 3;
+		const gathererSubset = [];
+		let candidate;
+
+		beforeEach(() => {
+			gather = Gather({ teamSize: teamSize })
+			gatherers.forEach((g, i) => {
+				if (i < 6) gathererSubset.push(gather.addUser(g));
+			});
+			candidate = gatherers[0];
+		});
+		it ("returns false if leader votes are not all in", () => {
+			assert.isFalse(gather.leaderVotesFull());
+			gather.voteForLeader(gathererSubset[1], candidate);
+			assert.isFalse(gather.leaderVotesFull());
+		});
+		it ("returns true if leader votes are all in", () => {
+			gathererSubset.forEach(g => gather.voteForLeader(g, candidate));
+			assert.isTrue(gather.leaderVotesFull());
+		});
+	});
+
 	describe("moveToMarine", function () {
 		it ("moves a player to marine", function () {
 			gather.addUser(user);
@@ -52,7 +93,7 @@ describe("Gather Model:", function () {
 			gatherers.forEach(function (gatherer, index) {
 				gather.addUser(gatherer);
 				gather.moveToMarine(gatherer);
-				assert.isTrue(gather.marines().length <= gather.TEAM_SIZE);
+				assert.isTrue(gather.marines().length <= gather.teamSize);
 			});
 		});
 		describe("with mover argument", function () {
@@ -106,7 +147,7 @@ describe("Gather Model:", function () {
 			gatherers.forEach(function (gatherer, index) {
 				gather.addUser(gatherer);
 				gather.moveToAlien(gatherer);
-				assert.isTrue(gather.aliens().length <= gather.TEAM_SIZE);
+				assert.isTrue(gather.aliens().length <= gather.teamSize);
 			});
 		});
 		describe("with mover argument", function () {

@@ -173,8 +173,9 @@ const GatherProgress = React.createClass({
 	},
 
 	gatheringProgress() {
-		const num = this.props.gather.gatherers.length;
-		const den = 12;
+		const gather = this.props.gather;
+		const num = gather.gatherers.length;
+		const den = gather.teamSize * 2;
 		const remaining = den - num;
 		const message = (remaining === 1) ? 
 			"Waiting for last player" : `Waiting for ${remaining} more players`;
@@ -186,11 +187,12 @@ const GatherProgress = React.createClass({
 	},
 
 	electionProgress() {
-		const num = this.props.gather.gatherers.reduce((acc, gatherer) => {
+		const gather = this.props.gather;
+		const num = gather.gatherers.reduce((acc, gatherer) => {
 			if (gatherer.leaderVote) acc++;
 			return acc;
 		}, 0);
-		const den = 12;
+		const den = gather.teamSize * 2;
 		return {
 			num: num,
 			den: den,
@@ -199,17 +201,18 @@ const GatherProgress = React.createClass({
 	},
 
 	selectionProgress() {
-		const num = this.props.gather.gatherers.reduce((acc, gatherer) => {
+		const gather = this.props.gather;
+		const num = gather.gatherers.reduce((acc, gatherer) => {
 			if (gatherer.team !== "lobby") acc++;
 			return acc;
 		}, 0);
-		const den = 12;
+		const den = gather.teamSize * 2;
 
 		return {
 			num: num,
 			den: den,
 			message: `${num} out of ${den} players assigned. Waiting 
-				on ${_.capitalize(this.props.gather.pickingTurn)}s to pick next...`
+				on ${_.capitalize(gather.pickingTurn)}s to pick next...`
 		};
 	},
 
@@ -730,7 +733,7 @@ const GatherMenu = exports.GatherMenu = React.createClass({
 									key={gather.type}>
 									<strong>{gather.name}</strong>
 									<br />
-									{gather.description}
+									{`${gather.teamSize} v ${gather.teamSize} - ${gather.description}`}
 								</li>
 							);
 						})

@@ -158,7 +158,7 @@ const GatherPage = React.createClass({
 				public: {
 					gatherers: []
 				},
-				skilled: {
+				large: {
 					gatherers: []
 				}
 			},
@@ -280,7 +280,7 @@ const GatherPage = React.createClass({
 	updateTitle() {
 		let gather = this.currentGather();
 		if (gather && this.state.updateTitle) {
-			document.title = `NSL Gathers (${gather.gatherers.length}/12)`;
+			document.title = `NSL Gathers (${gather.gatherers.length}/${gather.teamSize * 2})`;
 			return;
 		}
 		document.title = "NSL Gathers";

@@ -155,14 +155,14 @@ const GatherPage = React.createClass({
 		return {
 			modal: null,
 			gatherPool: {
-				public: {
+				classic: {
 					gatherers: []
 				},
-				large: {
+				casual: {
 					gatherers: []
 				}
 			},
-			currentGather: "public",
+			currentGather: "classic",
 			users: [],
 			messages: [],
 			maps: [],

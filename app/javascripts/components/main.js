@@ -362,10 +362,10 @@ const GatherPage = React.createClass({
 	onGatherSelected(gatherName) {
 		let gather = this.state.gatherPool[gatherName];
 		if (gather === undefined) return;
-		this.updateTitle();
 		this.setState({
 			currentGather: gather.type
 		});
+        this.updateTitle();
 	},
 
 	render() {

@@ -84,7 +84,7 @@ const AuthFailedSplash = React.createClass({
 						<h3><small>If you are logged on, try visiting a few pages on ENSL.org so the server can update your cookies</small></h3>
 						<h3><small>If this error persists please contact an admin to fix it</small></h3>
 						<br />
-						<p><a className="btn btn-primary btn-lg" href="www.ensl.org" role="button">Go to website</a></p>
+						<p><a className="btn btn-primary btn-lg" href="http://www.ensl.org" role="button">Go to website</a></p>
 					</div>
 				</div>
 			</div>

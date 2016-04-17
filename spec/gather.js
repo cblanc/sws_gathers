@@ -31,6 +31,23 @@ describe("Gather Model:", function () {
 		});
 	});
 
+	describe("membership", () => {
+		it ("does not allow user to join if membership criteria not met", () => {
+			gather = Gather({
+				membershipTest: function (user) { return false }
+			});
+			gather.addGatherer(user);
+			assert.equal(gather.gatherers.length, 0);
+		});
+		it ("does not allow user to join if membership criteria met", () => {
+			gather = Gather({
+				membershipTest: function (user) { return true }
+			});
+			gather.addGatherer(user);
+			assert.equal(gather.gatherers.length, 1);
+		});
+	});
+
 	describe("removeUser", function () {
 		it ("removes gatherer altogether", function () {
 			gather.addUser(user);

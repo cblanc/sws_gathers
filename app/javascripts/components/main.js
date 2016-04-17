@@ -208,6 +208,8 @@ const GatherPage = React.createClass({
 			}
 		});
 
+		socket.on("notify", data => toastr[data.type](data.message));
+
 		socket.on('event:append', data => {
 			let events = self.state.events;
 			events.unshift(data);

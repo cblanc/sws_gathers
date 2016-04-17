@@ -50,15 +50,17 @@ exports.config = {
   npm: {
     enabled: true,
     styles: {
-      "bootstrap-solarized": ["bootstrap-solarized-dark.css"]
+      "bootstrap-solarized": ["bootstrap-solarized-dark.css"],
+      "toastr": ["build/toastr.min.css"]
     },
     whitelist: ["react", "react-dom", "jquery", "lodash", 
       "react-autolink", "react-dom", "react-emoji", "howler",
-      "bootstrap", "perfect-scrollbar", "moment"],
+      "bootstrap", "perfect-scrollbar", "moment", "toastr"],
     globals: {
       "_": "lodash",
       "jQuery": "jquery",
-      "$": "jquery"
+      "$": "jquery",
+      "toastr": "toastr"
     }
   },
 

@@ -703,9 +703,9 @@ const GatherMenu = exports.GatherMenu = React.createClass({
 	},
 
 	itemClass(gather) {
-		let className = ["list-group-item", "pointer"];
+		let className = ["treeview"];
 		if (gather.type === this.props.currentGather) {
-			className.push("list-group-item-success");
+			className.push("active");
 		}
 		return className.join(" ");
 	},
@@ -723,23 +723,23 @@ const GatherMenu = exports.GatherMenu = React.createClass({
 
 	render() {
 		return (
-			<div className="panel panel-primary add-bottom">
-				<div className="panel-heading">Gather Menu</div>
-				<ul className="list-group">
-					{
-						this.gatherPoolArray().map(gather => {
-							return (
-								<li onClick={this.onClick(gather)} className={this.itemClass(gather)}
-									key={gather.type}>
-									<strong>{gather.name} ({gather.gatherers.length}/{gather.teamSize * 2})</strong>
+			<ul className="sidebar-menu">
+				<li className="header">Gather Formats</li>
+				{
+					this.gatherPoolArray().map(gather => {
+						return (
+							<li className={this.itemClass(gather)}
+								key={gather.type}>
+								<a href="#" onClick={this.onClick(gather)}>
+									<strong>{gather.name}</strong> ({gather.gatherers.length}/{gather.teamSize * 2})
 									<br />
-									{gather.description}
-								</li>
-							);
-						})
-					}
-				</ul>
-			</div>
+									<small>{gather.description}</small>
+								</a>
+							</li>
+						);
+					})
+				}
+			</ul>
 		);
 	}
 });

@@ -33,6 +33,16 @@ html, body {
 	padding-right: 20px;
 }
 
+#message-input {
+	border: 1px solid #367fa9 !important;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+}
+
 .signin {
 	margin: 0px 10px;
 }
@@ -70,11 +80,6 @@ html, body {
 }
 
 /*Gather Styles*/
-
-.archived-gather-panel {
-	max-width: 1140px;
-	margin: 0 auto;
-}
 
 .vote-button {
 	min-width: 60px;
@@ -246,16 +251,15 @@ html, body {
 
 .users-list-group {
   padding: 10px 0;
-  max-height: 200px;
-  overflow-y: scroll;
 }
+
 .users-list-group-item {
   position: relative;
   display: block;
-  padding: 5px 10px;
+  padding: 5px 15px 0px 15px;
   margin-bottom: -1px;
   /*background-color: #073642;*/
-  border: 1px solid #586e75;
+  // border: 1px solid #586e75;
 }
 .users-list-group-item:first-child {
   border-top-right-radius: 3px;

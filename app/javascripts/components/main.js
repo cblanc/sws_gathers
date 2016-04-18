@@ -178,6 +178,7 @@ const GatherPage = React.createClass({
 			soundController: new SoundController(),
 			showMessageBox: true,
 			collapseMenu: false,
+			chatContainerHeight: 500,
 			connectionState: "connected"
 		};
 	},
@@ -192,6 +193,9 @@ const GatherPage = React.createClass({
 		let soundController = this.state.soundController;
 
 		this.updateTitle();
+
+		$(window).resize(_.debounce(this.reloadChatContainerHeight, 250));
+		this.reloadChatContainerHeight();
 
 		socket.on('stateChange', data => {
 			let state = data.state;
@@ -287,6 +291,13 @@ const GatherPage = React.createClass({
 			document.title = `NSL Gathers (${gather.gatherers.length}/${gather.teamSize * 2})`;
 		} else {
 			document.title = "NSL Gathers";
+		}
+	},
+
+	reloadChatContainerHeight() {
+		let chatContainer = document.getElementById("chat-container");
+		if (chatContainer) {
+			this.setState({ chatContainerHeight: chatContainer.clientHeight });
 		}
 	},
 
@@ -390,7 +401,8 @@ const GatherPage = React.createClass({
 				</li>
 			);
 			chatroom = <Chatroom messages={this.state.messages} 
-									user={this.state.user} socket={socket} />;
+									user={this.state.user} socket={socket} 
+									containerHeight={this.state.chatContainerHeight}/>;
 			currentUser = (
 				<ul className="nav navbar-top-links navbar-right" id="currentuser">
 					<CurrentUser user={this.state.user} />
@@ -506,12 +518,15 @@ const GatherPage = React.createClass({
 						</div>
 					</section>
 				</div>
-				<aside className="control-sidebar control-sidebar-dark" style={{"position": "fixed", "height": "auto"}}>
+				<aside className="control-sidebar control-sidebar-dark" 
+					style={{"position": "fixed", "height": "auto"}}>
 					<div className="chat-container">
 						{chatroom}
 					</div>
 				</aside>
-				<div className="control-sidebar-bg" style={{"position":"fixed", "height":"auto"}}></div>
+				<div className="control-sidebar-bg" 
+					id="chat-container"
+					style={{"position":"fixed", "height":"auto"}}></div>
 			</div>
 		);
 	}

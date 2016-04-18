@@ -177,7 +177,7 @@ const UserMenu = exports.UserMenu = React.createClass({
 	},
 
 	componentDidMount() {
-		Ps.initialize(document.getElementById('user-list'));
+
 	},
 
 	render() {

@@ -1014,7 +1014,7 @@ const CompletedGather = exports.CompletedGather = React.createClass({
 			<div>
 				<div className="panel panel-success add-bottom pointer"
 					onClick={this.toggleGatherInfo}>
-					<div className="panel-heading"><strong>{gatherName} {this.completionDate()}</strong></div>
+					<div className="panel-heading"><strong>{gatherName} - {this.completionDate()}</strong></div>
 				</div>
 				{gatherInfo}
 			</div>

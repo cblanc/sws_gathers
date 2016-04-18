@@ -731,9 +731,9 @@ const GatherMenu = exports.GatherMenu = React.createClass({
 							return (
 								<li onClick={this.onClick(gather)} className={this.itemClass(gather)}
 									key={gather.type}>
-									<strong>{gather.name}</strong>
+									<strong>{gather.name} ({gather.gatherers.length}/{gather.teamSize * 2})</strong>
 									<br />
-									{`${gather.teamSize} v ${gather.teamSize} - ${gather.description}`}
+									{gather.description}
 								</li>
 							);
 						})

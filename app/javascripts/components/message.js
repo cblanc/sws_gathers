@@ -193,8 +193,6 @@ const Chatroom = exports.Chatroom = React.createClass({
 	componentDidMount() {
 		let self = this;
 
-		Ps.initialize(document.getElementById('chatmessages'));
-
 		this.scrollListener = _.debounce((event) => {
 			self.temporarilyDisableAutoScroll(event);
 		}, 300, {
@@ -248,8 +246,10 @@ const Chatroom = exports.Chatroom = React.createClass({
 		}, 10000);
 	},
 
-	componentDidUpdate() {
-		this.scrollToBottom();
+	componentDidUpdate(prevProps) {
+		if (prevProps.messages.length < this.props.messages.length) {
+			this.scrollToBottom();
+		}
 	},
 
 	scrollToBottom() {

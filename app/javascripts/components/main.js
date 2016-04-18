@@ -285,9 +285,9 @@ const GatherPage = React.createClass({
 		let gather = this.currentGather();
 		if (gather && this.state.updateTitle) {
 			document.title = `NSL Gathers (${gather.gatherers.length}/${gather.teamSize * 2})`;
-			return;
+		} else {
+			document.title = "NSL Gathers";
 		}
-		document.title = "NSL Gathers";
 	},
 
 	toggleEventsPanel(event) {
@@ -369,7 +369,7 @@ const GatherPage = React.createClass({
 		this.setState({
 			currentGather: gather.type
 		});
-        this.updateTitle();
+    setTimeout(this.updateTitle, 200);
 	},
 
 	render() {

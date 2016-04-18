@@ -1003,6 +1003,7 @@ const CompletedGather = exports.CompletedGather = React.createClass({
 		let gather = this.props.gather;
 		let maps = this.props.maps;
 		let servers = this.props.servers;
+		let gatherName = gather.name || "Classic Gather";
 		if (this.state.show) {
 			gatherInfo.push(<GatherTeams gather={gather} key="gatherteams" />);
 			gatherInfo.push(<GatherVotingResults gather={gather} 
@@ -1013,7 +1014,7 @@ const CompletedGather = exports.CompletedGather = React.createClass({
 			<div>
 				<div className="panel panel-success add-bottom pointer"
 					onClick={this.toggleGatherInfo}>
-					<div className="panel-heading"><strong>{this.completionDate()}</strong></div>
+					<div className="panel-heading"><strong>{gatherName} {this.completionDate()}</strong></div>
 				</div>
 				{gatherInfo}
 			</div>

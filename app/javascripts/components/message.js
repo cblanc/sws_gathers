@@ -250,6 +250,7 @@ const Chatroom = exports.Chatroom = React.createClass({
 		if (prevProps.messages.length < this.props.messages.length) {
 			this.scrollToBottom();
 		}
+		console.log(this.props.containerHeight);
 	},
 
 	scrollToBottom() {
@@ -270,7 +271,8 @@ const Chatroom = exports.Chatroom = React.createClass({
 		});
 		return (
 			<div>
-				<ul className="chat" id="chatmessages" ref="messageContainer">
+				<ul className="chat" id="chatmessages" ref="messageContainer" 
+					style={{height: this.props.containerHeight - 170}}>
 					<li className="text-center">
 						<a href="#"
 							onClick={this.loadMoreMessages}

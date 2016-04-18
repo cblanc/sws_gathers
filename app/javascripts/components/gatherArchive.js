@@ -23,7 +23,7 @@ const ArchivedGathers = exports.ArchivedGathers = React.createClass({
 			});
 
 		return (
-			<div className="panel panel-primary archived-gather-panel">
+			<div className="panel panel-primary">
 				<div className="panel-heading">Archived Gathers</div>
 				<div className="panel-body">
 					{archive}

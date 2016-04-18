@@ -189,7 +189,7 @@ const UserMenu = exports.UserMenu = React.createClass({
 				mountModal={this.props.mountModal} />
 		});
 		return (
-			<div className="user-panel">
+			<div>
 				<ul className="users-list-group" id="user-list">
 					{users}
 				</ul>

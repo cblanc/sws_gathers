@@ -473,6 +473,15 @@ const GatherPage = React.createClass({
 								{connectionStatus}
 							</div>
 						</div>
+						<GatherMenu 
+							gatherPool={this.state.gatherPool}
+							currentGather={this.state.currentGather}
+							gatherSelectedCallback={this.onGatherSelected} />
+						<ul className="sidebar-menu">
+							<li className="header">Information</li>
+							<TeamSpeakButton />
+							<InfoButton />
+						</ul>
 						<ul className="sidebar-menu">
 							<li className="header">
 								<span className="badge">{this.state.users.length}</span> Players Online
@@ -480,17 +489,12 @@ const GatherPage = React.createClass({
 						</ul>
 						<UserMenu users={this.state.users} user={this.state.user} 
 							socket={socket} mountModal={this.mountModal}/>
-						<ul className="sidebar-menu">
-							<li className="header">Information</li>
-							<TeamSpeakButton />
-							<InfoButton />
-						</ul>
 					</section>
 				</aside>
 				<div className="content-wrapper" style={{"minHeight": "916px"}}>
 					<section className="content">
 						<div className="row">
-							<div className="col-lg-8">
+							<div className="col-lg-8 col-md-12 col-sm-12">
 								<Gather 
 									socket={socket}
 									maps={this.state.maps}
@@ -499,18 +503,12 @@ const GatherPage = React.createClass({
 									servers={this.state.servers}
 									thisGatherer={this.thisGatherer()}
 									soundController={this.state.soundController} />
-							</div>
-							<div className="col-lg-4 col-md-12 col-sm-12">
-								<GatherMenu 
-									gatherPool={this.state.gatherPool}
-									currentGather={this.state.currentGather}
-									gatherSelectedCallback={this.onGatherSelected} />
-								{eventsPanel}
+									{eventsPanel}
 							</div>
 						</div>
 						<hr />
 						<div className="row">
-							<div className="col-lg-12 col-md-12 col-sm-12">
+							<div className="col-lg-8 col-md-12 col-sm-12">
 								<ArchivedGathers archive={this.state.archive}
 									maps={this.state.maps}
 									servers={this.state.servers} />

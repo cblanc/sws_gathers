@@ -203,7 +203,7 @@ const Chatroom = exports.Chatroom = React.createClass({
 		let node = ReactDOM.findDOMNode(this.refs.messageContainer);
 		node.addEventListener('scroll', this.scrollListener);
 
-		this.scrollToBottom();
+		$(window).on("load", this.scrollToBottom);
 	},
 
 	componentWillUnmount() {
@@ -250,7 +250,6 @@ const Chatroom = exports.Chatroom = React.createClass({
 		if (prevProps.messages.length < this.props.messages.length) {
 			this.scrollToBottom();
 		}
-		console.log(this.props.containerHeight);
 	},
 
 	scrollToBottom() {
@@ -456,12 +455,13 @@ const MessageBar = React.createClass({
 			</div>;
 		}
 		return (
+
 			<form onSubmit={this.handleSubmit} autoComplete="off">
 				<div className="input-group">
 					<input 
-						id="btn-input" 
+						id="message-input" 
 						type="text" 
-						className="form-control" 
+						className="form-control message-input" 
 						ref="content"
 						onChange={this.handleInputChange}
 						autoComplete="off"

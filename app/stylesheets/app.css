@@ -255,6 +255,9 @@ html, body {
 
 .users-list-group {
   padding: 10px 0;
+  max-height: 300px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .users-list-group-item {
@@ -262,8 +265,6 @@ html, body {
   display: block;
   padding: 5px 15px 0px 15px;
   margin-bottom: -1px;
-  /*background-color: #073642;*/
-  // border: 1px solid #586e75;
 }
 .users-list-group-item:first-child {
   border-top-right-radius: 3px;

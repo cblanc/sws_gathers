@@ -33,6 +33,10 @@ html, body {
 	padding-right: 20px;
 }
 
+.chat-message {
+	list-style-type: none;
+}
+
 #message-input {
 	border: 1px solid #367fa9 !important;
 	-webkit-border-top-left-radius: 3px;

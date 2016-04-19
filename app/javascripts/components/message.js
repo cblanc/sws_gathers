@@ -272,7 +272,7 @@ const Chatroom = exports.Chatroom = React.createClass({
 			<div>
 				<ul className="chat" id="chatmessages" ref="messageContainer" 
 					style={{height: this.props.containerHeight - 170}}>
-					<li className="text-center">
+					<li className="text-center ">
 						<a href="#"
 							onClick={this.loadMoreMessages}
 							className="btn btn-primary btn-xs">
@@ -348,7 +348,7 @@ const ChatMessage = React.createClass({
 				socket={this.props.socket}/>;
 		}
 		return (
-			<li className="left clearfix">
+			<li className="left clearfix chat-message list-unstyled">
 				<span className="chat-img pull-left">
 						<img 
 							src={this.props.message.author.avatar} 

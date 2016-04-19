@@ -494,7 +494,7 @@ const GatherPage = React.createClass({
 				<div className="content-wrapper" style={{"minHeight": "916px"}}>
 					<section className="content">
 						<div className="row">
-							<div className="col-lg-8 col-md-12 col-sm-12">
+							<div className="col-lg-12 col-md-12 col-sm-12">
 								<Gather 
 									socket={socket}
 									maps={this.state.maps}
@@ -508,7 +508,7 @@ const GatherPage = React.createClass({
 						</div>
 						<hr />
 						<div className="row">
-							<div className="col-lg-8 col-md-12 col-sm-12">
+							<div className="col-lg-12 col-md-12 col-sm-12">
 								<ArchivedGathers archive={this.state.archive}
 									maps={this.state.maps}
 									servers={this.state.servers} />

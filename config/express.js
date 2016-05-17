@@ -13,6 +13,10 @@ var env = process.env.NODE_ENV || "development";
 var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
 
 module.exports = app => {
+  app.use((req, res, next) => {
+    res.setHeader('X-GNU', 'Michael J Blanchard');
+    next();
+  });
   app.use(express.static(path.join(__dirname, '../public')));
   app.use(cookieParser());
   app.use(favicon(path.join(__dirname, '../public/favicon.ico')));

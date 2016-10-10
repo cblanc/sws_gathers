@@ -979,7 +979,7 @@ const CompletedGather = exports.CompletedGather = React.createClass({
 	completionDate() {
 		let d = new Date(this.props.gather.done.time);
 		if (d) {
-			return d.toLocaleTimeString();
+			return d.toLocaleString();
 		} else {
 			return "Completed Gather"
 		}

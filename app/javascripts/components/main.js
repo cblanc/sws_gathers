@@ -158,10 +158,6 @@ const GatherPage = React.createClass({
 				classic: {
 					gatherers: [],
 					type: "classic"
-				},
-				casual: {
-					gatherers: [],
-					type: "casual"
 				}
 			},
 			currentGather: "classic",

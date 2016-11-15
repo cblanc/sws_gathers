@@ -7,7 +7,8 @@ var config = {
 	},
 	secret_token: "",
 	session_store_name: "_ENSL_session_key_staging",
-	hive_url: "http://hive.naturalselection2.com/",
+	hive_url: "http://hive.naturalselection2.com",
+	hive2_url: "http://hive2.ns2cdt.com",
 	ensl_url: "http://staging.ensl.org/",
 	ensl_rules_url: "http://www.ensl.org/articles/464",
 	steam_bot_link: "http://steamcommunity.com/id/nslgathers"

@@ -52,28 +52,24 @@ const UserModal = React.createClass({
 				<td>{user.hive.skill}</td>
 			</tr>,
 			<tr key="hours">
-				<td>Hours Played</td>
+				<td>Play Time (Hours)</td>
 				<td>{Math.round(user.hive.playTime / 3600)}</td>
 			</tr>,
-			<tr key="wins">
-				<td>Wins</td>
-				<td>{user.hive.wins}</td>
-			</tr>,
 			<tr key="losses">
-				<td>Losses</td>
-				<td>{user.hive.loses}</td>
+				<td>Marine Play Time (Hours)</td>
+				<td>{_.round(user.hive.marine_playtime / 3600, 1)}</td>
 			</tr>,
 			<tr key="kills">
-				<td>Kills (/min)</td>
-				<td>{user.hive.kills} ({_.round(user.hive.kills / (user.hive.playTime / 60), 1)})</td>
+				<td>Alien Play Time (Hours)</td>
+				<td>{_.round(user.hive.alien_playtime / 3600, 1)}</td>
 			</tr>,
 			<tr key="assists">
-				<td>Assists (/min)</td>
-				<td>{user.hive.assists} ({_.round(user.hive.assists / (user.hive.playTime / 60), 1)})</td>
+				<td>Commander Play Time (Hours)</td>
+				<td>{_.round(user.hive.commander_time / 3600, 1)}</td>
 			</tr>,
-			<tr key="deaths">
-				<td>Deaths (/min)</td>
-				<td>{user.hive.deaths} ({_.round(user.hive.deaths / (user.hive.playTime / 60), 1)})</td>
+			<tr key="wins">
+				<td>Player ID</td>
+				<td>{user.hive.pid}</td>
 			</tr>
 			]
 		}
@@ -104,7 +100,7 @@ const UserModal = React.createClass({
 							src={user.avatar} 
 							alt="User Avatar" />
 						</div>
-						<table className="table">
+						<table className="table borderless">
 							<tbody>
 								<tr>
 									<td>Lifeforms</td>

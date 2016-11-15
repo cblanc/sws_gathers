@@ -291,3 +291,6 @@ html, body {
 	font-weight: bold;
 }
 
+.borderless td, .borderless th {
+  border: none !important;
+}

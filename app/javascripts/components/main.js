@@ -11,6 +11,7 @@ import {CurrentUser, ProfileModal, UserMenu} from "javascripts/components/user";
 import {TeamSpeakButton, TeamSpeakModal} from "javascripts/components/teamspeak";
 
 const React = require("react");
+const io = require("socket.io-client");
 const Sound = require("javascripts/components/sound");
 const SoundController = Sound.SoundController;
 const helper = require("javascripts/helper");

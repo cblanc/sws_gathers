@@ -55,7 +55,8 @@ exports.config = {
     },
     whitelist: ["react", "react-dom", "jquery", "lodash", 
       "react-autolink", "react-dom", "react-emoji", "howler",
-      "bootstrap", "perfect-scrollbar", "moment", "toastr"],
+      "bootstrap", "perfect-scrollbar", "moment", "toastr", 
+      "socket.io-client"],
     globals: {
       "_": "lodash",
       "jQuery": "jquery",

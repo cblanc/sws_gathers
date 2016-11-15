@@ -1,6 +1,6 @@
 {
   "name": "sws_gathers",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "ENSL Gather Service",
   "main": "index.js",
   "keywords": [
@@ -30,13 +30,12 @@
   "dependencies": {
     "async": "~1.4.0",
     "babel": "~5.8.21",
-    "bootstrap-solarized": "~1.0.2",
     "babel-brunch": "~6.0.0",
     "babel-preset-es2015": "~6.3.13",
     "babel-preset-react": "~6.3.13",
     "bootstrap": "~3.3.6",
     "bootstrap-solarized": "~1.0.2",
-    "brunch": "~2.1.3",
+    "brunch": "~2.9.1",
     "clean-css-brunch": ">= 1.0 < 1.8",
     "cookie-parser": "~1.3.5",
     "cors": "~2.7.1",
@@ -60,7 +59,8 @@
     "react-emoji": "~0.4.1",
     "request": "~2.60.0",
     "serve-favicon": "~2.3.0",
-    "socket.io": "~1.3.7",
+    "socket.io": "~1.5.1",
+    "socket.io-client": "~1.5.1",
     "steam": "~1.1.0",
     "steamidconvert": "~0.2.4",
     "toastr": "~2.1.2",

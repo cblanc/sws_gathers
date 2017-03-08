@@ -114,7 +114,7 @@ const MessageBrowser = React.createClass({
 		const messages = this.state.messages.map(message => {
 			return (
 				<tr key={message._id}>
-					<td className="col-xs-2">{(new Date(message.createdAt)).toString()}</td>
+					<td className="col-xs-2">{(new Date(message.createdAt)).toLocaleString()}</td>
 					<td className="col-xs-3">{message.author.username}</td>
 					<td className="col-xs-5">{message.content}</td>
 					<td className="col-xs-2">{message._id}</td>

@@ -15,9 +15,9 @@ if (env === "production") require("newrelic");
 require(path.join(__dirname, "db/index"));
 
 // Initialise Steam Bot
-if (env !== "test") {
-	require(path.join(__dirname, "lib/steam/bot"))(config.steamBot);
-}
+//if (env !== "test") {
+//	require(path.join(__dirname, "lib/steam/bot"))(config.steamBot);
+//}
 
 // Configure express
 require(path.join(__dirname, "config/express"))(app);

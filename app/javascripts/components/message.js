@@ -114,7 +114,7 @@ const MessageBrowser = React.createClass({
 		const messages = this.state.messages.map(message => {
 			return (
 				<tr key={message._id}>
-					<td className="col-xs-2">{(new Date(message.createdAt)).toLocaleString()}</td>
+					<td className="col-xs-2">{(new Date(message.createdAt)).toString()}</td>
 					<td className="col-xs-3">{message.author.username}</td>
 					<td className="col-xs-5">{message.content}</td>
 					<td className="col-xs-2">{message._id}</td>
@@ -362,7 +362,7 @@ const ChatMessage = React.createClass({
 							</strong>
 						<small className="pull-right text-muted">
 							<span className="hidden-xs">
-								{moment(this.props.message.createdAt).format("hh:mm DD/MM")}&nbsp;
+								{moment(this.props.message.createdAt).format("LT DD/MM")}&nbsp;
 							</span>
 							{deleteButton}
 						</small>

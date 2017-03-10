@@ -340,6 +340,15 @@ const ChatMessage = React.createClass({
 		);
 	},
 
+	messageTime() {
+		let self = this;
+		let ts = new Date(self.props.message.createdAt);
+		let t = ts.toLocaleTimeString(undefined,{hour:"2-digit", minute:"2-digit"});
+		let d = ts.toLocaleDateString(undefined,{month: "2-digit", day:"2-digit"});
+		let r = "";
+		return r.concat(d," ", t);
+	},
+
 	render() {
 		let deleteButton;
 		let user = this.props.user;
@@ -362,7 +371,7 @@ const ChatMessage = React.createClass({
 							</strong>
 						<small className="pull-right text-muted">
 							<span className="hidden-xs">
-								{moment(this.props.message.createdAt).format("LT DD/MM")}&nbsp;
+								{this.messageTime()}
 							</span>
 							{deleteButton}
 						</small>

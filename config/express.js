@@ -17,6 +17,13 @@ module.exports = app => {
     res.setHeader('X-GNU', 'Michael J Blanchard');
     next();
   });
+  // Enforce HTTPS in production
+  if (env === 'production') {
+    app.use((req,res,next) => {
+      res.setHeader('Strict-Transport-Security', 'max-age=2592000; includeSubdomains'); // Enforce usage of HTTPS; max-age = 30 days
+      next();
+    });
+  }
   app.use(express.static(path.join(__dirname, '../public')));
   app.use(cookieParser());
   app.use(favicon(path.join(__dirname, '../public/favicon.ico')));

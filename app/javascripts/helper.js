@@ -45,7 +45,7 @@ const rankVotes = exports.rankVotes = function (votes, candidates) {
 };
 
 const enslUrl = exports.enslUrl = (gatherer) => {
-	return `http://www.ensl.org/users/${gatherer.id}`
+	return `https://www.ensl.org/users/${gatherer.id}`
 };
 
 const hiveUrl = exports.hiveUrl = (gatherer) => {

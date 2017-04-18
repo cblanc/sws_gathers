@@ -30,47 +30,47 @@ class SoundController {
 		this.tunes = {
 			"classic": {
 				description: "Gathers Classic",
-				url: 'http://www.ensl.org/files/audio/gather-1.mp3'
+				url: 'https://www.ensl.org/files/audio/gather-1.mp3'
 			},
 			"nights": {
 				description: "Nights",
-				url: 'http://www.ensl.org/files/audio/nights.mp3'
+				url: 'https://www.ensl.org/files/audio/nights.mp3'
 			},
 			"robby": {
 				description: "Robby",
-				url: 'http://www.ensl.org/files/audio/robby.mp3'
+				url: 'https://www.ensl.org/files/audio/robby.mp3'
 			},
 			"america": {
 				description: "Infamous",
-				url: 'http://www.ensl.org/files/audio/america.mp3'
+				url: 'https://www.ensl.org/files/audio/america.mp3'
 			},
 			"prommah": {
 				description: "Prommah",
-				url: 'http://www.ensl.org/files/audio/prommah.mp3'
+				url: 'https://www.ensl.org/files/audio/prommah.mp3'
 			},
 			"turts": {
 				description: "Gorges Rock your Ass",
-				url: 'http://www.ensl.org/files/audio/turts.mp3'
+				url: 'https://www.ensl.org/files/audio/turts.mp3'
 			},
 			"skyice": {
 				description: "Skyice",
-				url: 'http://www.ensl.org/files/audio/skyice.mp3'
+				url: 'https://www.ensl.org/files/audio/skyice.mp3'
 			},
 			"justwannahavefun": {
 				description: "Gorges just want to have fun",
-				url: 'http://www.ensl.org/files/audio/justwannahavefun.mp3'
+				url: 'https://www.ensl.org/files/audio/justwannahavefun.mp3'
 			},
 			"eyeofthegorgie": {
 				description: "Eye of the Gorgie",
-				url: 'http://www.ensl.org/files/audio/eyeofthegorgie.mp3'
+				url: 'https://www.ensl.org/files/audio/eyeofthegorgie.mp3'
 			},
 			"boondock": {
 				description: "Boondock Marines",
-				url: 'http://www.ensl.org/files/audio/boondock.mp3'
+				url: 'https://www.ensl.org/files/audio/boondock.mp3'
 			},
 			"preclassic": {
 				description: "Old Gathers Classic",
-				url: 'http://www.ensl.org/files/audio/gather-5.mp3'
+				url: 'https://www.ensl.org/files/audio/gather-5.mp3'
 			}
 		}
 

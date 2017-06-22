@@ -9,6 +9,7 @@ var path = require("path");
 var baseConfig = require(path.join(__dirname, path.join("environments/" + env.toLowerCase())));
 
 baseConfig.steamBot = {};
+baseConfig.discordBot = {};
 
 if (!test) {
 	if (process.env.PORT) {
@@ -30,6 +31,15 @@ if (!test) {
 	if (process.env.GATHER_STEAM_PASSWORD) {
 		baseConfig.steamBot.password = process.env.GATHER_STEAM_PASSWORD;
 	}
+
+	if (process.env.GATHER_DISCORD_HOOK_ID) {
+		baseConfig.discordBot.hook_id = process.env.GATHER_DISCORD_HOOK_ID;
+	}
+
+	if (process.env.GATHER_DISCORD_HOOK_TOKEN) {
+		baseConfig.discordBot.hook_token =  process.env.GATHER_DISCORD_HOOK_TOKEN;
+	}
+
 }
 
 module.exports = baseConfig;

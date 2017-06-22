@@ -19,6 +19,11 @@ require(path.join(__dirname, "db/index"));
 //	require(path.join(__dirname, "lib/steam/bot"))(config.steamBot);
 //}
 
+//Initialise Discord Bot
+if (env === "production") {
+	require(path.join(__dirname, "lib/discord/bot"))(config.discordBot);
+}
+
 // Configure express
 require(path.join(__dirname, "config/express"))(app);
 

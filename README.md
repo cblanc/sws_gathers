@@ -16,7 +16,7 @@ That's it
 
 ## Requirements
 
-- node.js > 4.0
+- node.js > 6.0
 
 - MongoDB
 

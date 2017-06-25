@@ -40,6 +40,10 @@ if (!test) {
 		baseConfig.discordBot.hook_token =  process.env.GATHER_DISCORD_HOOK_TOKEN;
 	}
 
+	if (process.env.GATHER_DISCORD_CLIENT_TOKEN) {
+		baseConfig.discordBot.client_token = process.env.GATHER_DISCORD_CLIENT_TOKEN;
+	}
+
 }
 
 module.exports = baseConfig;

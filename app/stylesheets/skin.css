@@ -144,3 +144,6 @@
   background-color: #F5F89F;
   color: #000;
 }
+.skin-blue .gather-voting .list-group-item-success {
+  background-color: #F8FE5D;
+}

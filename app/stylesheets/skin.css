@@ -140,3 +140,7 @@
 .skin-blue.layout-top-nav .main-header > .logo:hover {
   background-color: #3b8ab8;
 }
+.skin-blue .gather-voting .list-group-item {
+  background-color: #F5F89F;
+  color: #000;
+}

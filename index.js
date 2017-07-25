@@ -20,7 +20,7 @@ require(path.join(__dirname, "db/index"));
 //}
 
 //Initialise Discord Bot
-if (env === "production") {
+if (env !== "test") {
 	require(path.join(__dirname, "lib/discord/bot"))(config.discordBot);
 }
 

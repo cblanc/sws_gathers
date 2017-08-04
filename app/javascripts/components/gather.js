@@ -86,7 +86,7 @@ const GatherTeams = React.createClass({
 		return (
 			<div className="row add-top">
 				<div className="col-sm-6">
-					<div className="panel panel-primary panel-light-background">
+					<div className="panel panel-primary panel-light-background team-marines">
 						<div className="panel-heading">
 							Marines
 						</div>
@@ -94,7 +94,7 @@ const GatherTeams = React.createClass({
 					</div>
 				</div>
 				<div className="col-sm-6">
-					<div className="panel panel-primary panel-light-background">
+					<div className="panel panel-primary panel-light-background team-aliens">
 						<div className="panel-heading">
 							Aliens
 						</div>

@@ -347,6 +347,23 @@ const GatherActions = React.createClass({
 		}, 0);
 	},
 
+	voteAddClassicPool(e) {
+		e.preventDefault(e);
+		this.props.socket.emit("gather:vote", {
+			type: 'invitational',
+			addClassicPool: true
+		})
+	},
+
+	addClassicPoolVotes() {
+		let gather = this.props.gather;
+		if (!gather) return 0;
+		return gather.gatherers.reduce((acc, gatherer) => {
+			if (gatherer.addClassicPoolVote) acc++;
+			return acc;
+		}, 0);
+	},
+
 	render() {
 		let regatherButton;
 		const user = this.props.user;
@@ -368,6 +385,22 @@ const GatherActions = React.createClass({
 			}
 		}
 
+		let addClassicPoolButton = null;
+		const addClassicPoolThreshold = this.props.gather.addClassicPoolThreshold;
+		if (thisGatherer && addClassicPoolThreshold && gather.type === 'invitational') {
+			let addClassicPoolVotes = this.addClassicPoolVotes();
+			let addClassicPoolButtonText = 
+			  thisGatherer.addClassicPoolVote 
+			    ? `Unvote for add classic pool (${addClassicPoolVotes}/${addClassicPoolThreshold})` 
+			    : `Vote for add classic pool (${addClassicPoolVotes}/${addClassicPoolThreshold})`;
+			addClassicPoolButton = <button 
+									 className='btn btn-danger'
+									 onClick={this.voteAddClassicPool}
+									 disabled={this.props.gather.state !== 'gathering' ? true : false}>
+									  {addClassicPoolButtonText}
+								   </button>
+		}
+
 		return (
 			<div>
 				<div className="text-right">
@@ -379,6 +412,7 @@ const GatherActions = React.createClass({
 						<li>
 							{regatherButton}
 						</li>
+						{addClassicPoolButton ? <li>{addClassicPoolButton}</li> : ''}
 					</ul>
 				</div>
 			</div>

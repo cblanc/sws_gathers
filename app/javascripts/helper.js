@@ -1,8 +1,8 @@
 // Accepts an array of IDs voted
-// 1. Creates an array of tally objects, 
+// 1. Creates an array of tally objects,
 //		with ID as prop and vote count as val { 12: 0 }
 // 2. Increments ID vote tally for every vote
-// 3. Sorts 
+// 3. Sorts
 
 const rankVotes = exports.rankVotes = function (votes, candidates) {
 	var initial = candidates.reduce(function (acc, candidate) {
@@ -69,7 +69,16 @@ const storageAvailable = exports.storageAvailable = (type) => {
 		storage.removeItem(x);
 		return true;
 	}
-	catch(e) {
+	catch (e) {
 		return false;
+	}
+};
+
+const observatoryUrl = exports.observatoryUrl = (gatherer) => {
+	const steamId = gatherer.user.steam.id;
+	if (steamId) {
+		return `https://observatory.morrolan.ch/player?steam_id=STEAM_${steamId}`;
+	} else {
+		return null;
 	}
 };

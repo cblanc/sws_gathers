@@ -1,10 +1,10 @@
-import {AssumeUserIdButton} from "javascripts/components/user";
+import { AssumeUserIdButton } from "javascripts/components/user";
 
 const React = require("react");
 const helper = require("javascripts/helper");
 const enslUrl = helper.enslUrl;
 const rankVotes = helper.rankVotes;
-const hiveUrl = helper.hiveUrl;
+const obsUrl = helper.observatoryUrl;
 
 const SelectPlayerButton = React.createClass({
 	propTypes: {
@@ -24,15 +24,15 @@ const SelectPlayerButton = React.createClass({
 	render() {
 		let button;
 		if (this.props.gatherer.leader) {
-			button = <button 
+			button = <button
 				className="btn btn-xs btn-default team-label"
 				data-disabled="true">Leader</button>;
 		} else if (this.props.gatherer.team !== "lobby") {
 			button = <button
 				data-disabled="true"
-				className="btn btn-xs btn-default team-label"> 
-					{_.capitalize(this.props.gatherer.team)}
-				</button>;
+				className="btn btn-xs btn-default team-label">
+				{_.capitalize(this.props.gatherer.team)}
+			</button>;
 		} else {
 			button = <button
 				onClick={this.selectPlayer}
@@ -144,11 +144,11 @@ const ProgressBar = React.createClass({
 		const barMessage = progress.barMessage || "";
 		return (
 			<div className="progress">
-				<div className="progress-bar progress-bar-striped active" 
-					data-role="progressbar" 
-					data-aria-valuenow={progress.num} 
-					data-aria-valuemin="0" 
-					data-aria-valuemax={progress.den} 
+				<div className="progress-bar progress-bar-striped active"
+					data-role="progressbar"
+					data-aria-valuenow={progress.num}
+					data-aria-valuemin="0"
+					data-aria-valuemax={progress.den}
 					style={style}>{barMessage}
 				</div>
 			</div>
@@ -158,7 +158,7 @@ const ProgressBar = React.createClass({
 
 const GatherProgress = React.createClass({
 	stateDescription() {
-		switch(this.props.gather.state) {
+		switch (this.props.gather.state) {
 			case "gathering":
 				return "Waiting for more gatherers.";
 			case "election":
@@ -177,7 +177,7 @@ const GatherProgress = React.createClass({
 		const num = gather.gatherers.length;
 		const den = gather.teamSize * 2;
 		const remaining = den - num;
-		const message = (remaining === 1) ? 
+		const message = (remaining === 1) ?
 			"Waiting for last player" : `Waiting for ${remaining} more players`;
 		return {
 			num: num,
@@ -211,7 +211,7 @@ const GatherProgress = React.createClass({
 		return {
 			num: num,
 			den: den,
-			message: `${num} out of ${den} players assigned. Waiting 
+			message: `${num} out of ${den} players assigned. Waiting
 				on ${_.capitalize(gather.pickingTurn)}s to pick next...`
 		};
 	},
@@ -287,18 +287,18 @@ const JoinGatherButton = React.createClass({
 		let gather = this.props.gather;
 		let thisGatherer = this.props.thisGatherer;
 		if (thisGatherer) {
-			return <button 
-							onClick={this.leaveGather} 
-							className="btn btn-danger">Leave Gather</button>;
-		} 
+			return <button
+				onClick={this.leaveGather}
+				className="btn btn-danger">Leave Gather</button>;
+		}
 		if (gather.state === 'gathering') {
 			let cooldownTime = this.cooldownTime();
 			if (cooldownTime) {
 				return <CooloffButton timeRemaining={cooldownTime} />;
 			} else {
-				return <button 
-						onClick={this.joinGather} 
-						className="btn btn-success">Join Gather</button>;
+				return <button
+					onClick={this.joinGather}
+					className="btn btn-success">Join Gather</button>;
 			}
 		}
 		return false;
@@ -315,10 +315,10 @@ const CooloffButton = React.createClass({
 	},
 
 	render() {
-		return <button 
+		return <button
 			disabled="true"
 			className="btn btn-success">
-				Leaver Cooloff ({this.timeRemaining()})
+			Leaver Cooloff ({this.timeRemaining()})
 		</button>
 	}
 })
@@ -356,15 +356,15 @@ const GatherActions = React.createClass({
 		if (thisGatherer) {
 			let regatherVotes = this.regatherVotes();
 			if (thisGatherer.regatherVote) {
-				regatherButton = <button value="false" onClick={this.voteRegather} 
-						className="btn btn-danger">
-							{`Voted Regather (${regatherVotes}/8)`}
-					</button>;
+				regatherButton = <button value="false" onClick={this.voteRegather}
+					className="btn btn-danger">
+					{`Voted Regather (${regatherVotes}/8)`}
+				</button>;
 			} else {
-				regatherButton = <button value="true" onClick={this.voteRegather} 
-						className="btn btn-danger">
-							{`Vote Regather (${regatherVotes}/8)`}
-					</button>;
+				regatherButton = <button value="true" onClick={this.voteRegather}
+					className="btn btn-danger">
+					{`Vote Regather (${regatherVotes}/8)`}
+				</button>;
 			}
 		}
 
@@ -425,15 +425,15 @@ const VoteButton = React.createClass({
 		}
 		if (thisGatherer.leaderVote === candidate.id) {
 			return (
-				<button 
-					onClick={this.cancelVote} 
+				<button
+					onClick={this.cancelVote}
 					className="btn btn-xs btn-success vote-button">Voted
 				</button>
 			);
 		} else {
 			return (
-				<button 
-					onClick={this.vote} 
+				<button
+					onClick={this.vote}
 					className="btn btn-xs btn-primary vote-button"
 					value={candidate.id}>Vote
 				</button>
@@ -473,17 +473,17 @@ const ServerVoting = React.createClass({
 		let self = this;
 		let thisGatherer = self.props.thisGatherer;
 		let servers = self.props.servers.sort((a, b) => {
-				const aVotes = self.votesForServer(a);
-				const bVotes = self.votesForServer(b);
-				return bVotes - aVotes;
-			}).map(server => {
+			const aVotes = self.votesForServer(a);
+			const bVotes = self.votesForServer(b);
+			return bVotes - aVotes;
+		}).map(server => {
 			let votes = self.votesForServer(server);
-			let style = thisGatherer.serverVote.some(voteId => voteId === server.id) ? 
+			let style = thisGatherer.serverVote.some(voteId => voteId === server.id) ?
 				"list-group-item list-group-item-success" : "list-group-item";
 			return (
-				<a href="#" 
-					className={style} 
-					onClick={self.voteHandler(server.id)} 
+				<a href="#"
+					className={style}
+					onClick={self.voteHandler(server.id)}
 					key={server.id}>
 					<span className="badge">{votes}</span>
 					{server.name || server.description}
@@ -496,8 +496,8 @@ const ServerVoting = React.createClass({
 		return (
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					{votes === 2 ? "Server Votes" : 
-					`Please Vote for a Server. ${2 - votes} votes remaining` }
+					{votes === 2 ? "Server Votes" :
+						`Please Vote for a Server. ${2 - votes} votes remaining`}
 				</div>
 				<div className="list-group gather-voting">
 					{servers}
@@ -538,31 +538,31 @@ const MapVoting = React.createClass({
 		const self = this;
 		let thisGatherer = self.props.thisGatherer
 		let maps = self.props.maps.sort((a, b) => {
-					const aVotes = self.votesForMap(a);
-					const bVotes = self.votesForMap(b);
-					return bVotes - aVotes;
-				}).map(map => {
-				let votes = self.votesForMap(map);
-				let style = thisGatherer.mapVote.some(voteId => voteId === map.id) ? 
-					"list-group-item list-group-item-success" : "list-group-item";
-				return (
-					<a href="#" 
-						key={map.id} 
-						onClick={self.voteHandler(map.id)}
-						className={style}>
-							<span className="badge">{votes}</span>
-							{map.name}
-					</a>
-				);
-			});
+			const aVotes = self.votesForMap(a);
+			const bVotes = self.votesForMap(b);
+			return bVotes - aVotes;
+		}).map(map => {
+			let votes = self.votesForMap(map);
+			let style = thisGatherer.mapVote.some(voteId => voteId === map.id) ?
+				"list-group-item list-group-item-success" : "list-group-item";
+			return (
+				<a href="#"
+					key={map.id}
+					onClick={self.voteHandler(map.id)}
+					className={style}>
+					<span className="badge">{votes}</span>
+					{map.name}
+				</a>
+			);
+		});
 
 		let votes = thisGatherer.mapVote.length;
 
 		return (
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					{votes === 2 ? "Map Votes" : 
-						`Please Vote for a Map. ${2 - votes} votes remaining` }
+					{votes === 2 ? "Map Votes" :
+						`Please Vote for a Map. ${2 - votes} votes remaining`}
 				</div>
 				<div className="list-group gather-voting">
 					{maps}
@@ -598,7 +598,7 @@ const Gather = exports.Gather = React.createClass({
 				voting = (
 					<div className="row add-top">
 						<div className="col-sm-6">
-							<MapVoting gather={gather} maps={maps} 
+							<MapVoting gather={gather} maps={maps}
 								socket={socket} thisGatherer={thisGatherer} />
 						</div>
 						<div className="col-sm-6">
@@ -608,8 +608,8 @@ const Gather = exports.Gather = React.createClass({
 					</div>
 				);
 			} else {
-				voting = <GatherVotingResults gather={gather} 
-					servers={servers} 
+				voting = <GatherVotingResults gather={gather}
+					servers={servers}
 					maps={maps} />;
 			}
 		}
@@ -626,12 +626,12 @@ const Gather = exports.Gather = React.createClass({
 						<div className="panel-heading">{gather.name} ({gather.description})</div>
 						<div className="panel-body">
 							<GatherProgress gather={gather} />
-							<GatherActions gather={gather} user={user} thisGatherer={thisGatherer} 
+							<GatherActions gather={gather} user={user} thisGatherer={thisGatherer}
 								socket={socket} />
 						</div>
 					</div>
-					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} 
-						socket={socket} soundController={soundController}/>
+					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer}
+						socket={socket} soundController={soundController} />
 					{gatherTeams}
 					{voting}
 				</div>
@@ -642,8 +642,8 @@ const Gather = exports.Gather = React.createClass({
 					<div className="panel panel-primary add-bottom">
 						<div className="panel-heading">{gather.name} ({gather.description})</div>
 					</div>
-					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer} 
-						socket={socket} soundController={soundController}/>
+					<Gatherers gather={gather} user={user} thisGatherer={thisGatherer}
+						socket={socket} soundController={soundController} />
 				</div>
 			);
 		}
@@ -667,19 +667,19 @@ const LifeformIcons = exports.LifeformIcons = React.createClass({
 	},
 
 	render() {
-		let lifeforms = this.gathererLifeforms();	
+		let lifeforms = this.gathererLifeforms();
 		let availableLifeforms = this.availableLifeforms();
 		let icons = availableLifeforms.map(lifeform => {
 			let containsAbility = lifeforms.some(gathererLifeform => {
 				return gathererLifeform.toLowerCase() === lifeform.toLowerCase()
 			});
 			if (containsAbility) {
-				return <img 
+				return <img
 					className="lifeform-icon"
 					key={lifeform}
 					src={`/${lifeform.toLowerCase()}.png`} />
 			} else {
-				return <img 
+				return <img
 					className="lifeform-icon"
 					key={lifeform}
 					src={`/blank.gif`} />
@@ -796,8 +796,8 @@ const GathererListItem = React.createClass({
 		let country;
 		if (gatherer.user.country) {
 			country = (
-				<img src="/blank.gif" 
-					className={"flag flag-" + gatherer.user.country.toLowerCase()} 
+				<img src="/blank.gif"
+					className={"flag flag-" + gatherer.user.country.toLowerCase()}
 					alt={gatherer.user.country} />
 			);
 		};
@@ -812,7 +812,7 @@ const GathererListItem = React.createClass({
 		}
 
 		const hive = (hiveStats.length) ? hiveStats.join(", ") : "Not Available";
-		
+
 		const team = (gatherer.user.team) ? gatherer.user.team.name : "None";
 
 		let action;
@@ -824,10 +824,10 @@ const GathererListItem = React.createClass({
 			action = (
 				<span>
 					<span className="badge add-right">{votes + " votes"}</span>
-					<VoteButton 
+					<VoteButton
 						socket={socket}
 						gather={gather}
-						thisGatherer={thisGatherer} 
+						thisGatherer={thisGatherer}
 						soundController={soundController}
 						candidate={gatherer} />
 				</span>
@@ -835,24 +835,24 @@ const GathererListItem = React.createClass({
 		}
 
 		if (gather.state === 'selection') {
-			if (thisGatherer && 
-					thisGatherer.leader &&
-					thisGatherer.team === gather.pickingTurn) {
+			if (thisGatherer &&
+				thisGatherer.leader &&
+				thisGatherer.team === gather.pickingTurn) {
 				action = (
 					<span>
-						<SelectPlayerButton gatherer={gatherer} 
+						<SelectPlayerButton gatherer={gatherer}
 							gather={gather}
-							socket={socket}/>
+							socket={socket} />
 					</span>
 				);
 			} else {
 				if (gatherer.leader) {
-					action = (<span className={`label label-padding 
-						label-${gatherer.team} 
+					action = (<span className={`label label-padding
+						label-${gatherer.team}
 						team-label`}>Leader</span>);
 				} else if (gatherer.team !== "lobby") {
-					action = (<span className={`label label-padding 
-						label-${gatherer.team} 
+					action = (<span className={`label label-padding
+						label-${gatherer.team}
 						team-label`}>{_.capitalize(gatherer.team)}</span>);
 				} else {
 					action = (<span className="label label-padding label-default team-label">
@@ -864,7 +864,7 @@ const GathererListItem = React.createClass({
 		let adminOptions;
 		if ((user && user.admin) || (user && user.moderator)) {
 			adminOptions = [
-				<hr key="line"/>,
+				<hr key="line" />,
 				<dt key="title">Admin</dt>,
 				<dd key="adminmenu">
 					<button
@@ -881,7 +881,7 @@ const GathererListItem = React.createClass({
 
 		let tabColor = gatherer.team !== "lobby" ? `panel-${gatherer.team}` : "panel-info";
 		return (
-			<div className={`panel ${tabColor} gatherer-panel`} 
+			<div className={`panel ${tabColor} gatherer-panel`}
 				key={gatherer.user.id} data-userid={gatherer.user.id}>
 				<div className="panel-heading">
 					<h4 className="panel-title">
@@ -895,7 +895,7 @@ const GathererListItem = React.createClass({
 						</span>
 					</h4>
 				</div>
-				<div id={gatherer.user.id.toString() + "-collapse"} 
+				<div id={gatherer.user.id.toString() + "-collapse"}
 					className={this.collapseState()} >
 					<div className="panel-body">
 						<dl>
@@ -907,12 +907,12 @@ const GathererListItem = React.createClass({
 							<dd>{hive}</dd>
 							<dt>Links</dt>
 							<dd>
-								<a href={enslUrl(gatherer)} 
+								<a href={enslUrl(gatherer)}
 									className="btn btn-xs btn-primary"
 									target="_blank">ENSL Profile</a>&nbsp;
-								<a href={hiveUrl(gatherer)} 
+								<a href={obsUrl(gatherer)}
 									className="btn btn-xs btn-primary"
-									target="_blank">Hive Profile</a>
+									target="_blank">Observatory Profile</a>
 							</dd>
 							{adminOptions}
 						</dl>
@@ -946,14 +946,14 @@ const Gatherers = React.createClass({
 		const gather = this.props.gather;
 		const thisGatherer = this.props.thisGatherer;
 		const gatherers = gather.gatherers
-		.sort((a, b) => {
+			.sort((a, b) => {
 				return (b.user.hive.skill || 1000) - (a.user.hive.skill || 1000);
 			})
-		.map(gatherer => {
-			return <GathererListItem socket={socket} gatherer={gatherer} thisGatherer={thisGatherer}
-				soundController={this.props.soundController} key={gatherer.id}
-				user={user} gather={gather}/>
-		});
+			.map(gatherer => {
+				return <GathererListItem socket={socket} gatherer={gatherer} thisGatherer={thisGatherer}
+					soundController={this.props.soundController} key={gatherer.id}
+					user={user} gather={gather} />
+			});
 
 		if (gather.gatherers.length) {
 			return (
@@ -965,8 +965,8 @@ const Gatherers = React.createClass({
 			return (
 				<div className="panel panel-primary add-bottom">
 					<div className="panel-body text-center join-hero">
-						<button 
-							onClick={this.joinGather} 
+						<button
+							onClick={this.joinGather}
 							className="btn btn-success btn-lg">Start Gather</button>
 					</div>
 				</div>
@@ -1006,9 +1006,9 @@ const CompletedGather = exports.CompletedGather = React.createClass({
 		let gatherName = gather.name || "Classic Gather";
 		if (this.state.show) {
 			gatherInfo.push(<GatherTeams gather={gather} key="gatherteams" />);
-			gatherInfo.push(<GatherVotingResults gather={gather} 
+			gatherInfo.push(<GatherVotingResults gather={gather}
 				maps={maps} key="gathervotingresults"
-				servers={servers}/>);
+				servers={servers} />);
 		}
 		return (
 			<div>

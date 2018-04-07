@@ -200,6 +200,10 @@ const GatherPage = React.createClass({
 			if (state.from === 'gathering'
 					&& state.to === 'election'
 					&& this.thisGatherer(data.type)) {
+				soundController.stop();
+				this.setState({
+					currentGather: data.type
+				});
 				soundController.playGatherMusic();
 			}
 

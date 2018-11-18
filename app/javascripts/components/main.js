@@ -16,11 +16,9 @@ const Sound = require("javascripts/components/sound");
 const SoundController = Sound.SoundController;
 const helper = require("javascripts/helper");
 const storageAvailable = helper.storageAvailable;
+const io = require("socket.io-client");
 
 const App = React.createClass({
-  propTypes: {
-		socket: React.PropTypes.object.isRequired
-	},
 
 	getInitialState() {
 		return {
@@ -30,8 +28,9 @@ const App = React.createClass({
 	},
 
 	componentDidMount() {
-    const socket = this.props.socket;
-    socket.on("connect", () => {
+    const socketUrl = window.location.origin;
+    const socket = io(socketUrl)
+      .on("connect", () => {
 				this.setState({ status: "connected" });
 				socket
 					.on("reconnect", () => {})
@@ -42,7 +41,9 @@ const App = React.createClass({
 					this.setState({ status: "authFailed" });
 				} else if (error === "Gather Banned") {
 					this.setState({ status: "banned" });
-				}
+				} else {
+          console.dir(error);
+        }
 			});
     this.setState({ socket: socket });
     socket.open();

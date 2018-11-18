@@ -1,9 +1,12 @@
 const React = require("react");
 const ReactDOM = require("react-dom");
 const App = require("javascripts/components/main");
+const io = require("socket.io-client");
+const socketUrl = window.location.protocol + "//" + window.location.host;
+const socket = io(socketUrl);
 
-module.exports = function (mount) { 
-	ReactDOM.render(<App />, mount);
+module.exports = function (mount) {
+	ReactDOM.render(<App socket={socket} />, mount);
 };
 
 toastr.options = {

@@ -11,13 +11,17 @@ import {CurrentUser, ProfileModal, UserMenu} from "javascripts/components/user";
 import {TeamSpeakButton, TeamSpeakModal} from "javascripts/components/teamspeak";
 
 const React = require("react");
-const io = require("socket.io-client");
+
 const Sound = require("javascripts/components/sound");
 const SoundController = Sound.SoundController;
 const helper = require("javascripts/helper");
 const storageAvailable = helper.storageAvailable;
 
 const App = React.createClass({
+  propTypes: {
+		socket: React.PropTypes.object.isRequired
+	},
+
 	getInitialState() {
 		return {
 			status: "connecting",
@@ -26,9 +30,8 @@ const App = React.createClass({
 	},
 
 	componentDidMount() {
-		const socketUrl = window.location.protocol + "//" + window.location.host;
-		const socket = io(socketUrl)
-			.on("connect", () => {
+    const socket = this.props.socket;
+    socket.on("connect", () => {
 				this.setState({ status: "connected" });
 				socket
 					.on("reconnect", () => {})
@@ -49,7 +52,7 @@ const App = React.createClass({
 
 		if (status === "connected") {
 			return <GatherPage socket={this.state.socket} />;
-		} 
+		}
 
 		let splash;
 		if (status === "authFailed") {
@@ -196,7 +199,7 @@ const GatherPage = React.createClass({
 
 		socket.on('stateChange', data => {
 			let state = data.state;
-			
+
 			if (state.from === 'gathering'
 					&& state.to === 'election'
 					&& this.thisGatherer(data.type)) {
@@ -219,7 +222,7 @@ const GatherPage = React.createClass({
 			});
 		});
 
-		socket.on('users:update', 
+		socket.on('users:update',
 			data => self.setState({
 				users: data.users,
 				user: data.currentUser
@@ -330,7 +333,7 @@ const GatherPage = React.createClass({
 	mountModal(options) {
 		this.setState({ modal: options });
 	},
-	
+
 	closeModal() {
 		this.setState({ modal: null });
 	},
@@ -397,8 +400,8 @@ const GatherPage = React.createClass({
 					</a>
 				</li>
 			);
-			chatroom = <Chatroom messages={this.state.messages} 
-									user={this.state.user} socket={socket} 
+			chatroom = <Chatroom messages={this.state.messages}
+									user={this.state.user} socket={socket}
 									containerHeight={this.state.chatContainerHeight}/>;
 			currentUser = (
 				<ul className="nav navbar-top-links navbar-right" id="currentuser">
@@ -429,7 +432,7 @@ const GatherPage = React.createClass({
 		}
 
 		let adminPanel;
-		if (user && user.admin) adminPanel = <AdminPanel socket={socket} 
+		if (user && user.admin) adminPanel = <AdminPanel socket={socket}
 			gatherPool={this.state.gatherPool} />;
 
 		return (
@@ -440,12 +443,12 @@ const GatherPage = React.createClass({
 						<span className="logo-mini">NSL Gathers</span>
 						<span className="logo-lg">NSL Gathers</span>
 					</a>
-					<nav className="navbar navbar-static-top" role="navigation">      
+					<nav className="navbar navbar-static-top" role="navigation">
 						<a href="#" className="sidebar-toggle" onClick={this.toggleCollapseMenu} role="button">
 							<span className="sr-only">Toggle navigation</span>
 						</a>
 						<div className="navbar-custom-menu">
-							<ul className="nav navbar-nav">    
+							<ul className="nav navbar-nav">
 								{adminPanel}
 								<SoundPanel soundController={this.state.soundController} />
 								{profileLink}
@@ -470,7 +473,7 @@ const GatherPage = React.createClass({
 								{connectionStatus}
 							</div>
 						</div>
-						<GatherMenu 
+						<GatherMenu
 							gatherPool={this.state.gatherPool}
 							currentGather={this.state.currentGather}
 							gatherSelectedCallback={this.onGatherSelected} />
@@ -484,7 +487,7 @@ const GatherPage = React.createClass({
 								<span className="badge">{this.state.users.length}</span> Players Online
 							</li>
 						</ul>
-						<UserMenu users={this.state.users} user={this.state.user} 
+						<UserMenu users={this.state.users} user={this.state.user}
 							socket={socket} mountModal={this.mountModal}/>
 					</section>
 				</aside>
@@ -492,10 +495,10 @@ const GatherPage = React.createClass({
 					<section className="content">
 						<div className="row">
 							<div className="col-lg-12 col-md-12 col-sm-12">
-								<Gather 
+								<Gather
 									socket={socket}
 									maps={this.state.maps}
-									user={this.state.user} 
+									user={this.state.user}
 									gather={this.currentGather()}
 									servers={this.state.servers}
 									thisGatherer={this.thisGatherer()}
@@ -513,13 +516,13 @@ const GatherPage = React.createClass({
 						</div>
 					</section>
 				</div>
-				<aside className="control-sidebar control-sidebar-dark" 
+				<aside className="control-sidebar control-sidebar-dark"
 					style={{"position": "fixed", "height": "auto"}}>
 					<div className="chat-container">
 						{chatroom}
 					</div>
 				</aside>
-				<div className="control-sidebar-bg" 
+				<div className="control-sidebar-bg"
 					id="chat-container"
 					style={{"position":"fixed", "height":"auto"}}></div>
 			</div>

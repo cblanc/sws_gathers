@@ -42,7 +42,7 @@ const App = React.createClass({
 				} else if (error === "Gather Banned") {
 					this.setState({ status: "banned" });
 				} else {
-          console.dir(error);
+          socket.disconnect();
         }
 			});
     this.setState({ socket: socket });

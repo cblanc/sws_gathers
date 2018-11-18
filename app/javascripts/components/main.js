@@ -44,7 +44,8 @@ const App = React.createClass({
 					this.setState({ status: "banned" });
 				}
 			});
-		this.setState({ socket: socket });
+    this.setState({ socket: socket });
+    socket.open();
 	},
 
 	render() {

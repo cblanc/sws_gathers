@@ -20,9 +20,9 @@ require(path.join(__dirname, "db/index"));
 //}
 
 //Initialise Discord Bot
-if (env !== "test") {
-	require(path.join(__dirname, "lib/discord/bot"))(config.discordBot);
-}
+// if (env !== "test") {
+// 	require(path.join(__dirname, "lib/discord/bot"))(config.discordBot);
+// }
 
 // Configure express
 require(path.join(__dirname, "config/express"))(app);

@@ -52,7 +52,7 @@
     "moment": "~2.11.2",
     "mongoose": "~4.4.6",
     "morgan": "~1.6.1",
-    "newrelic": "~1.22.1",
+    "newrelic": "~1.22.2",
     "perfect-scrollbar": "~0.6.10",
     "react": "~0.14.6",
     "react-autolink": "~0.2.1",
@@ -64,7 +64,7 @@
     "socket.io-client": "~2.1.1",
     "steam": "~1.4.0",
     "steamidconvert": "~0.2.4",
-    "toastr": "~2.1.2",
+    "toastr": "~2.1.4",
     "uglify-js-brunch": ">= 2.0.1",
     "winston": "~1.0.1"
   },

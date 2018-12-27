@@ -447,7 +447,6 @@ const ServerVoting = React.createClass({
 		socket: React.PropTypes.object.isRequired,
 		gather: React.PropTypes.object.isRequired,
 		thisGatherer: React.PropTypes.object,
-		servers: React.PropTypes.array.isRequired,
 	},
 
 	voteHandler(serverId) {
@@ -472,7 +471,7 @@ const ServerVoting = React.createClass({
 	render() {
 		let self = this;
 		let thisGatherer = self.props.thisGatherer;
-		let servers = self.props.servers.sort((a, b) => {
+		let servers = self.props.gather.servers.sort((a, b) => {
 			const aVotes = self.votesForServer(a);
 			const bVotes = self.votesForServer(b);
 			return bVotes - aVotes;
@@ -576,7 +575,6 @@ const Gather = exports.Gather = React.createClass({
 	propTypes: {
 		thisGatherer: React.PropTypes.object,
 		maps: React.PropTypes.array.isRequired,
-		servers: React.PropTypes.array.isRequired,
 		socket: React.PropTypes.object.isRequired,
 		gather: React.PropTypes.object.isRequired
 	},
@@ -586,7 +584,6 @@ const Gather = exports.Gather = React.createClass({
 		const gather = this.props.gather;
 		const thisGatherer = this.props.thisGatherer;
 		const soundController = this.props.soundController;
-		const servers = this.props.servers;
 		const maps = this.props.maps;
 		const user = this.props.user;
 		if (gather === null) return <div></div>;
@@ -602,15 +599,13 @@ const Gather = exports.Gather = React.createClass({
 								socket={socket} thisGatherer={thisGatherer} />
 						</div>
 						<div className="col-sm-6">
-							<ServerVoting gather={gather} servers={servers}
+							<ServerVoting gather={gather}
 								socket={socket} thisGatherer={thisGatherer} />
 						</div>
 					</div>
 				);
 			} else {
-				voting = <GatherVotingResults gather={gather}
-					servers={servers}
-					maps={maps} />;
+				voting = <GatherVotingResults gather={gather} maps={maps} />;
 			}
 		}
 
@@ -1002,13 +997,11 @@ const CompletedGather = exports.CompletedGather = React.createClass({
 		let gatherInfo = [];
 		let gather = this.props.gather;
 		let maps = this.props.maps;
-		let servers = this.props.servers;
 		let gatherName = gather.name || "Classic Gather";
 		if (this.state.show) {
 			gatherInfo.push(<GatherTeams gather={gather} key="gatherteams" />);
 			gatherInfo.push(<GatherVotingResults gather={gather}
-				maps={maps} key="gathervotingresults"
-				servers={servers} />);
+				maps={maps} key="gathervotingresults" />);
 		}
 		return (
 			<div>
@@ -1041,7 +1034,7 @@ const GatherVotingResults = React.createClass({
 	},
 
 	selectedServers() {
-		return rankVotes(this.countVotes('serverVote'), this.props.servers).slice(0, 2);
+		return rankVotes(this.countVotes('serverVote'), this.props.gather.servers).slice(0, 2);
 	},
 
 	serverTable(server, primary) {

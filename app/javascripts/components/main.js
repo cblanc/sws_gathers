@@ -249,9 +249,7 @@ const GatherPage = React.createClass({
 		socket.on("gather:refresh", (data) => {
 			const gatherPool = this.state.gatherPool;
 			const type = data.type;
-			console.log(data.gather);
 			gatherPool[type] = data.gather;
-			gatherPool[type].servers = data.servers;
 			self.setState({
 				maps: data.maps,
 				gatherPool: gatherPool
@@ -262,7 +260,8 @@ const GatherPage = React.createClass({
 		socket.on("gather:archive:refresh", data => {
 			self.setState({
 				archive: data.archive,
-				maps: data.maps
+				maps: data.maps,
+				servers: data.servers
 			});
 		});
 
@@ -502,7 +501,6 @@ const GatherPage = React.createClass({
 									maps={this.state.maps}
 									user={this.state.user}
 									gather={this.currentGather()}
-									servers={this.currentGather().servers}
 									thisGatherer={this.thisGatherer()}
 									soundController={this.state.soundController} />
 									{eventsPanel}

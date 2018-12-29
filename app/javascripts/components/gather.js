@@ -1034,7 +1034,7 @@ const GatherVotingResults = React.createClass({
 	},
 
 	selectedServers() {
-		return rankVotes(this.countVotes('serverVote'), this.props.gather.servers).slice(0, 2);
+		return rankVotes(this.countVotes('serverVote'), this.props.gather.servers || []).slice(0, 2);
 	},
 
 	serverTable(server, primary) {

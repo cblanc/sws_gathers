@@ -4,7 +4,6 @@ import {CompletedGather} from "javascripts/components/gather";
 const ArchivedGathers = exports.ArchivedGathers = React.createClass({
 	propTypes: {
 		archive: React.PropTypes.array.isRequired,
-		servers: React.PropTypes.array.isRequired,
 		maps: React.PropTypes.array.isRequired
 	},
 
@@ -18,8 +17,7 @@ const ArchivedGathers = exports.ArchivedGathers = React.createClass({
 					key={archivedGather.gather.done.time}
 					show={(index === 0) ? true : false}
 					gather={archivedGather.gather} 
-					maps={this.props.maps}
-					servers={this.props.servers} />
+					maps={this.props.maps} />
 			});
 
 		return (

@@ -510,8 +510,7 @@ const GatherPage = React.createClass({
 						<div className="row">
 							<div className="col-lg-12 col-md-12 col-sm-12">
 								<ArchivedGathers archive={this.state.archive}
-									maps={this.state.maps}
-									servers={this.state.servers} />
+									maps={this.state.maps} />
 							</div>
 						</div>
 					</section>

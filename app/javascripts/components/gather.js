@@ -1062,8 +1062,15 @@ const GatherVotingResults = React.createClass({
 	render() {
 		let maps = this.selectedMaps();
 		let servers = this.selectedServers();
-		let mainServer = servers[0];
-		let altServer = servers[1];
+		let mainServer;
+		if (servers[0]) {
+			mainServer = this.serverTable(servers[0], true);
+		}
+
+		let altServer;
+		if (servers[1]) {
+			altServer = this.serverTable(servers[1]);
+		}
 		return (
 			<div className="panel panel-primary">
 				<div className="panel-heading">
@@ -1080,11 +1087,11 @@ const GatherVotingResults = React.createClass({
 						</div>
 						<div className="col-md-4">
 							<h4>Primary Server</h4>
-							{this.serverTable(mainServer, true)}
+							{mainServer}
 						</div>
 						<div className="col-md-4">
 							<h4>Fallback Server</h4>
-							{this.serverTable(altServer)}
+							{altServer}
 						</div>
 					</div>
 				</div>

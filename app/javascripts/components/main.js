@@ -252,7 +252,6 @@ const GatherPage = React.createClass({
 			gatherPool[type] = data.gather;
 			self.setState({
 				maps: data.maps,
-				servers: data.servers,
 				gatherPool: gatherPool
 			});
 			this.updateTitle();
@@ -502,7 +501,6 @@ const GatherPage = React.createClass({
 									maps={this.state.maps}
 									user={this.state.user}
 									gather={this.currentGather()}
-									servers={this.state.servers}
 									thisGatherer={this.thisGatherer()}
 									soundController={this.state.soundController} />
 									{eventsPanel}

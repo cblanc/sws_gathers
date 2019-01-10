@@ -873,14 +873,28 @@ const GathererListItem = React.createClass({
 				</dd>
 			]
 		}
+		
+		const lastSeenInMinutes = (gatherer) => {
+			return parseInt((Date.now() - gatherer.user.lastSeen) / (1000 * 60));
+		};
+
+		let idleStatus;
+		if (!gatherer.user.online) {
+			const mins = lastSeenInMinutes(gatherer);
+			idleStatus = [
+				<dt>Last Seen</dt>,
+				<dd>{mins} mins ago</dd>
+			]
+		}
 
 		let tabColor = gatherer.team !== "lobby" ? `panel-${gatherer.team}` : "panel-info";
+		let onlineStatus = gatherer.user.online ? "" : "font-italic"
 		return (
 			<div className={`panel ${tabColor} gatherer-panel`}
 				key={gatherer.user.id} data-userid={gatherer.user.id}>
 				<div className="panel-heading">
 					<h4 className="panel-title">
-						{country} {gatherer.user.username}
+						{country} <span className={onlineStatus}>{gatherer.user.username}</span> 
 						<span className="pull-right">
 							<a href="#" className="btn btn-xs btn-primary add-right"
 								onClick={this.toggleCollapse}>
@@ -894,6 +908,7 @@ const GathererListItem = React.createClass({
 					className={this.collapseState()} >
 					<div className="panel-body">
 						<dl>
+							{idleStatus}
 							<dt>Skill Level</dt>
 							<dd>{skill}</dd>
 							<dt>Team</dt>

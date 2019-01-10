@@ -6,6 +6,10 @@ html, body {
 	margin-top: 1em;
 }
 
+.font-italic {
+	font-style: italic;
+}
+
 /*Chat*/
 
 .wordwrap { 

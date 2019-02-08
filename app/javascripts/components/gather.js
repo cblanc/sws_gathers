@@ -1067,6 +1067,7 @@ const GatherVotingResults = React.createClass({
 					<dd>{password}</dd>
 				</dl>
 				<p>
+
 					<a href={`steam://run/4920//+connect%20${server.ip}:${server.port}%20+password%20${server.password}`}
 						className={className}>{label}</a>
 				</p>

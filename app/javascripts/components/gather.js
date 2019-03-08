@@ -697,7 +697,7 @@ const GatherMenu = exports.GatherMenu = React.createClass({
 		}
 	},
 
-	itemClass(gather) {
+	itemClass(gather) { 
 		let className = ["treeview"];
 		if (gather.type === this.props.currentGather) {
 			className.push("active");
@@ -716,22 +716,56 @@ const GatherMenu = exports.GatherMenu = React.createClass({
 		return gatherArray.sort((a, b) => a.name - b.name);
 	},
 
+	drawerItemsClass(open){
+		if(!open){
+			return 'drawerItems'
+		}
+	},
+
+	getGatherTypeIcon(name){
+		switch(name){
+			case 'Classic Gather':
+				return <img className="gatherTypeIcons" src={'/normalGather.png'}/>
+			break;
+			case 'Progressive Mod Gather':
+				return <img className="gatherTypeIcons" src={'/progmodGather.png'}/>
+			break;
+			case 'Invitational Gather':
+				return <img className="gatherTypeIcons" src={'/inviteGather.png'}/>
+			break
+		}
+	},
+
 	render() {
+		let open = !this.props.drawerState
+
 		return (
 			<ul className="sidebar-menu">
 				<li className="header">Gather Formats</li>
 				{
 					this.gatherPoolArray().map(gather => {
-						return (
-							<li className={this.itemClass(gather)}
-								key={gather.type}>
-								<a href="#" onClick={this.onClick(gather)}>
-									<strong>{gather.name}</strong> ({gather.gatherers.length}/{gather.teamSize * 2})
-									<br />
-									<small>{gather.description}</small>
-								</a>
-							</li>
-						);
+						if (open){
+							return (
+								<li className={this.itemClass(gather)}
+									key={gather.type}>
+									<a href="#" onClick={this.onClick(gather)}>
+										<strong>{gather.name + ' ' + '(' + gather.gatherers.length + '/' + gather.teamSize * 2 + ')'}</strong>
+										<br />
+										<small>{gather.description}</small>
+									</a>
+								</li>
+							);
+						}else{
+							return (
+								<li className={this.itemClass(gather)}
+									key={gather.type}>
+									<a className='aOpened' href="#" onClick={this.onClick(gather)}>
+										<div className='drawerItemsIcon'>{this.getGatherTypeIcon(gather.name)}</div><p className='drawerItems'><strong>{gather.gatherers.length + '/' + gather.teamSize * 2}</strong></p>
+										<br />
+									</a>
+								</li>
+							);
+						}
 					})
 				}
 			</ul>
@@ -1067,7 +1101,6 @@ const GatherVotingResults = React.createClass({
 					<dd>{password}</dd>
 				</dl>
 				<p>
-
 					<a href={`steam://run/4920//+connect%20${server.ip}:${server.port}%20+password%20${server.password}`}
 						className={className}>{label}</a>
 				</p>

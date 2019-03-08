@@ -358,6 +358,7 @@ const GatherPage = React.createClass({
 	},
 
 	toggleCollapseMenu(e) {
+		console.log(this.state)
 		e.preventDefault();
 		this.setState({
 			collapseMenu: !this.state.collapseMenu
@@ -419,8 +420,12 @@ const GatherPage = React.createClass({
 		}
 
 		let appClass = ["skin-blue", "sidebar-mini", "fixed"];
-		if (this.state.showMessageBox) appClass.push("control-sidebar-open");
-		if (this.state.collapseMenu) appClass.push("sidebar-collapse");
+		if (this.state.showMessageBox){
+			appClass.push("control-sidebar-open");
+		} 
+		if (this.state.collapseMenu){
+			appClass.push("sidebar-collapse");
+		}
 
 		let connectionStatus;
 		const connectionState = this.state.connectionState;
@@ -475,6 +480,7 @@ const GatherPage = React.createClass({
 							</div>
 						</div>
 						<GatherMenu
+							drawerState={this.state.collapseMenu}
 							gatherPool={this.state.gatherPool}
 							currentGather={this.state.currentGather}
 							gatherSelectedCallback={this.onGatherSelected} />

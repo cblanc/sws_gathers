@@ -358,7 +358,6 @@ const GatherPage = React.createClass({
 	},
 
 	toggleCollapseMenu(e) {
-		console.log(this.state)
 		e.preventDefault();
 		this.setState({
 			collapseMenu: !this.state.collapseMenu

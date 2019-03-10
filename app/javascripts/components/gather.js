@@ -722,20 +722,6 @@ const GatherMenu = exports.GatherMenu = React.createClass({
 		}
 	},
 
-	getGatherTypeIcon(name){
-		switch(name){
-			case 'Classic Gather':
-				return <img className="gatherTypeIcons" src={'/normalGather.png'}/>
-			break;
-			case 'Progressive Mod Gather':
-				return <img className="gatherTypeIcons" src={'/progmodGather.png'}/>
-			break;
-			case 'Invitational Gather':
-				return <img className="gatherTypeIcons" src={'/inviteGather.png'}/>
-			break
-		}
-	},
-
 	render() {
 		let open = !this.props.drawerState
 
@@ -760,7 +746,7 @@ const GatherMenu = exports.GatherMenu = React.createClass({
 								<li className={this.itemClass(gather)}
 									key={gather.type}>
 									<a className='aOpened' href="#" onClick={this.onClick(gather)}>
-										<div className='drawerItemsIcon'>{this.getGatherTypeIcon(gather.name)}</div><p className='drawerItems'><strong>{gather.gatherers.length + '/' + gather.teamSize * 2}</strong></p>
+										<div className='drawerItemsIcon'><img className="gatherTypeIcons" src={gather.icon}/></div><p className='drawerItems'><strong>{gather.gatherers.length + '/' + gather.teamSize * 2}</strong></p>
 										<br />
 									</a>
 								</li>

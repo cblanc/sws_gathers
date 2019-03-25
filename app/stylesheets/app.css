@@ -230,6 +230,26 @@ html, body {
 	padding: 5px;
 }
 
+.drawerItems {
+	text-align:center;
+	font-size: 110%;
+	margin-bottom: -4px;
+}
+
+.drawerItemsIcon{
+	text-align:center;
+	font-size: 150%;
+	margin-top: 4px;
+	margin-bottom: 2px;
+}
+
+.aOpened{
+	padding-left:0px !important;
+	padding-right:0px !important;
+	padding-top:8px !important;
+	padding-bottom:0px !important;
+}
+
 /* Events */
 
 .events-panel {
@@ -245,6 +265,17 @@ html, body {
 
 .badge {
 	color: #fff;
+}
+
+.mapvotes{
+	border-top-width: 1px !important;
+	border-width: 1px 1px !important;
+	border-bottom-right-radius: 0px !important;
+	border-bottom-left-radius: 0px !important;
+}
+
+.unset1stborder{
+	border-top: unset;
 }
 
 .gather-voting {
@@ -298,3 +329,10 @@ html, body {
 .borderless td, .borderless th {
   border: none !important;
 }
+
+/* minimized drawer gather icons */
+
+.gatherTypeIcons{
+	width: 35px;
+}
+

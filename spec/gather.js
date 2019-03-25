@@ -282,6 +282,7 @@ describe("Gather Model:", function () {
 		it ("returns a json representation of the gather instance", function () {
 			var output = gather.toJson();
 			assert.isString(output.name);
+			assert.isString(output.icon);
 			assert.isString(output.description);
 			assert.isArray(output.gatherers);
 			assert.isString(output.state);

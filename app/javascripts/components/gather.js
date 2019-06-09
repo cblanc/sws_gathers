@@ -349,10 +349,12 @@ const GatherActions = React.createClass({
 
 	render() {
 		let regatherButton;
+		let pickPatternIndicator;
 		const user = this.props.user;
 		const gather = this.props.gather;
 		const socket = this.props.socket;
 		const thisGatherer = this.props.thisGatherer;
+		let pickIndex = this.props.gather.pickingTurnIndex - 1;
 		if (thisGatherer) {
 			let regatherVotes = this.regatherVotes();
 			if (thisGatherer.regatherVote) {
@@ -366,19 +368,42 @@ const GatherActions = React.createClass({
 					{`Vote Regather (${regatherVotes}/8)`}
 				</button>;
 			}
+
+			pickPatternIndicator = <ul className="list-inline">
+  				{gather.pickingPattern.map((team, index) => {
+  					if (team === 'alien') {
+  						if(index <= pickIndex){
+       						return <li className="padding-y-1"><div className="pick-pattern-box alien-box-active"></div></li>
+  						}else{
+  							return <li className="padding-y-1"><div className="pick-pattern-box alien-box"></div></li>
+  						}
+  					} else {
+  						if(index <= pickIndex){
+       						return <li className="padding-y-1"><div className="pick-pattern-box marine-box-active"></div></li>
+  						}else{
+  							return <li className="padding-y-1"><div className="pick-pattern-box marine-box"></div></li>
+  						}
+  					}
+      			})}
+			</ul>;
 		}
 
 		return (
 			<div>
 				<div className="text-right">
-					<ul className="list-inline no-bottom">
+					<ul className="list-inline no-bottom content-center">
 						<li>
-							<JoinGatherButton gather={gather} thisGatherer={thisGatherer}
-								user={user} socket={socket} />
+							{pickPatternIndicator}
 						</li>
-						<li>
-							{regatherButton}
-						</li>
+						<ul className='list-inline no-bottom'>
+							<li className='padding-right-0'>
+								<JoinGatherButton gather={gather} thisGatherer={thisGatherer}
+									user={user} socket={socket} />
+							</li>
+							<li className='padding-right-0'>
+								{regatherButton}
+							</li>
+						</ul>
 					</ul>
 				</div>
 			</div>

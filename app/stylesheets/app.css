@@ -332,7 +332,52 @@ html, body {
 
 /* minimized drawer gather icons */
 
-.gatherTypeIcons{
+.gatherTypeIcons {
 	width: 35px;
+}
+
+/* pick pattern */
+
+.float-left {
+	float: left;
+}
+
+.pick-pattern-box {
+	width: 75px;
+	height: 6px;
+	border-radius: 1px;
+}
+
+.marine-box {
+	background-color: #2c689c;
+}
+
+.alien-box {
+	background-color: #9c602c;
+}
+
+.marine-box-active {
+	box-shadow: 0px 0px 4px 0px #0072ff;
+	background-color: #0072ff;
+}
+
+.alien-box-active {
+	box-shadow: 0px 0px 4px 0px #ff8e00;
+	background-color: #ff8e00;
+}
+
+.content-center {
+	display: flex;
+  	align-items: center;
+  	justify-content: space-between;
+}
+
+.padding-right-0 {
+	padding-right: 0 !important;
+}
+
+.padding-y-1 {
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 

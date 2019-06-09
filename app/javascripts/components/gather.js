@@ -372,13 +372,13 @@ const GatherActions = React.createClass({
 			pickPatternIndicator = <ul className="list-inline">
   				{gather.pickingPattern.map((team, index) => {
   					if (team === 'alien') {
-  						if(index <= pickIndex){
+  						if (index <= pickIndex) {
        						return <li className="padding-y-1"><div className="pick-pattern-box alien-box-active"></div></li>
   						}else{
   							return <li className="padding-y-1"><div className="pick-pattern-box alien-box"></div></li>
   						}
   					} else {
-  						if(index <= pickIndex){
+  						if (index <= pickIndex) {
        						return <li className="padding-y-1"><div className="pick-pattern-box marine-box-active"></div></li>
   						}else{
   							return <li className="padding-y-1"><div className="pick-pattern-box marine-box"></div></li>

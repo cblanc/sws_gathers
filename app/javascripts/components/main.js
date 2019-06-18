@@ -8,7 +8,7 @@ import {SoundPanel} from "javascripts/components/sound";
 import {SettingsPanel} from "javascripts/components/settings";
 import {ArchivedGathers} from "javascripts/components/gatherArchive";
 import {CurrentUser, ProfileModal, UserMenu} from "javascripts/components/user";
-import {TeamSpeakButton, TeamSpeakModal} from "javascripts/components/teamspeak";
+import {DiscordButton, DiscordModal} from "javascripts/components/discord";
 
 const React = require("react");
 
@@ -485,7 +485,7 @@ const GatherPage = React.createClass({
 							gatherSelectedCallback={this.onGatherSelected} />
 						<ul className="sidebar-menu">
 							<li className="header">Information</li>
-							<TeamSpeakButton />
+							<DiscordButton />
 							<InfoButton />
 						</ul>
 						<ul className="sidebar-menu">

@@ -381,3 +381,9 @@ html, body {
 	padding-bottom: 2px;
 }
 
+.let-me-copy {
+	padding: 5px 5px 5px 15px;
+    display: block;
+    font-size: 14px;
+}
+

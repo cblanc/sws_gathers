@@ -1,1 +1,114 @@
-{"servers":[{"id":3,"description":"Paid by jiriki, Admirable, Amx etc.","dns":"s2.ensl.org","ip":"78.46.36.107","port":"27015","password":"europe","category_id":44},{"id":6,"description":"","dns":"ensl.org","ip":"78.46.36.107","port":"28100","password":"","category_id":44},{"id":7,"description":"","dns":"ensl.org","ip":"78.46.36.107","port":"28200","password":"","category_id":44},{"id":8,"description":"","dns":"ensl.org","ip":"78.46.36.107","port":"28300","password":"","category_id":44},{"id":68,"description":"","dns":"Team Work and Tactics","ip":"94.23.44.64","port":"27019","password":"twats","category_id":44},{"id":82,"description":"Gather Server","dns":"Gather -Paris-","ip":"62.210.206.58","port":"27023","password":"ns2nsl","category_id":44},{"id":83,"description":"","dns":"Gather -Paris- ","ip":"62.210.206.58","port":"27023","password":"ns2nsl","category_id":45},{"id":89,"description":"US Server","dns":"Gather -US-","ip":"50.97.73.146","port":"27023","password":"pug","category_id":45},{"id":90,"description":"","dns":"85.229.112.48","ip":"85.229.112.48","port":"27029","password":"ns2nsl","category_id":45},{"id":91,"description":"","dns":"adm.0ffline.at","ip":"91.206.237.100","port":"27015","password":"ns2nsl","category_id":45},{"id":92,"description":"wat","dns":"lon040.multiplay.co.uk","ip":"85.236.100.182","port":"27015","password":"ns2nsl","category_id":45},{"id":94,"description":"Matches and gathers - Courtesy of ns2.guru","dns":"hodor.ns2.guru","ip":"87.252.1.252","port":"27666","password":"ns2nsl","category_id":45},{"id":95,"description":"Hosted by Kaneh","dns":"158.85.65.172","ip":"158.85.65.172","port":"27019","password":"ns2nsl","category_id":45},{"id":96,"description":"","dns":"37.187.56.111","ip":"37.187.56.111","port":"27115","password":"ns2nsl","category_id":45},{"id":97,"description":"","dns":"rraawwrr.com","ip":"77.174.163.156","port":"27015","password":"ns2nsl","category_id":45},{"id":98,"description":"Owner is Shameless - Ping is good for EU & NA","dns":"208.167.249.165","ip":"208.167.249.165","port":"27015","password":"ns2nsl","category_id":45},{"id":99,"description":"Description","dns":"NSL SERVAH","ip":"192.1.1.1","port":"8000","password":"NSLSLSLS","category_id":45}]}
+{
+  "servers": [
+    {
+      "id": 113,
+      "name": "ENSL.org | Stockholm by TTO",
+      "description": "",
+      "dns": "85.224.126.239",
+      "ip": "85.224.126.239",
+      "port": "27029",
+      "password": "ns2nsI",
+      "category_id": 45
+    },
+    {
+      "id": 145,
+      "name": "ENSL.org | Paris #1 Inc. Rates",
+      "description": "French ENSL Competitive Server #1",
+      "dns": "62.210.247.232",
+      "ip": "62.210.247.232",
+      "port": "27023",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 146,
+      "name": "ENSL.org | Paris #2",
+      "description": "French ENSL Competitive Server #2",
+      "dns": "62.210.247.232",
+      "ip": "62.210.247.232",
+      "port": "27015",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 147,
+      "name": "ENSL.org | PG NY #1",
+      "description": "ENSL compliant server",
+      "dns": "8.8.8.8",
+      "ip": "209.222.16.170",
+      "port": "27015",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 148,
+      "name": "ENSL.org | PG NY #2 HighTick",
+      "description": "",
+      "dns": "8.8.8.8",
+      "ip": "209.222.16.170",
+      "port": "27019",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 150,
+      "name": "ENSL.org | London #1 Inc.Rates",
+      "description": "London server instance 1",
+      "dns": "8.8.8.8",
+      "ip": "78.129.187.15",
+      "port": "27015",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 151,
+      "name": "ENSL.org | London #2 ",
+      "description": "London Server #2",
+      "dns": "8.8.8.8",
+      "ip": "78.129.187.15",
+      "port": "27035",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 152,
+      "name": "ENSL.org | Singapore by Ghoul",
+      "description": "",
+      "dns": "103.62.48.4",
+      "ip": "103.62.48.4",
+      "port": "27015",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 153,
+      "name": "ENSL.org | Kansas City by TFA",
+      "description": "Located in Kansas City, MO. 7700k, 32GB 2400 MHz DDR4, M.2 SATA Drives",
+      "dns": "1.1.1.1",
+      "ip": "69.197.179.197",
+      "port": "27015",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 154,
+      "name": "ENSL.org|Los Angeles by Ghoul",
+      "description": "Located at Los Angeles (US West Coast)",
+      "dns": "160.202.164.25",
+      "ip": "160.202.164.25",
+      "port": "27015",
+      "password": "ns2nsl",
+      "category_id": 45
+    },
+    {
+      "id": 155,
+      "name": "ENSL.org | Sydney #1",
+      "description": "",
+      "dns": "20.40.191.155",
+      "ip": "20.40.191.155",
+      "port": "27050",
+      "password": "ns2nsl",
+      "category_id": 44
+    }
+  ]
+}

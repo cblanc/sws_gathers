@@ -920,16 +920,32 @@ const GathererListItem = React.createClass({
 		}
 		
 		const lastSeenInMinutes = (gatherer) => {
-			return parseInt((Date.now() - gatherer.user.lastSeen) / (1000 * 60));
+			const now = Date.now();
+			const minutesSinceLastSeen = (now - gatherer.user.lastSeen) / 60000;
+
+			if (minutesSinceLastSeen < 0) {
+				return 0;
+			}
+
+			return parseInt(minutesSinceLastSeen || 0);
 		};
 
 		let idleStatus;
 		if (!gatherer.user.online) {
 			const mins = lastSeenInMinutes(gatherer);
-			idleStatus = [
-				<dt>Last Seen</dt>,
-				<dd>{mins} mins ago</dd>
-			]
+
+			if (mins > 60) {
+				const hours = Math.round(mins / 6) / 10;
+				idleStatus = [
+					<dt>Last Seen</dt>,
+					<dd>{hours} hours ago</dd>
+				]
+			} else{
+				idleStatus = [
+					<dt>Last Seen</dt>,
+					<dd>{mins} mins ago</dd>
+				]
+			}
 		}
 
 		let tabColor = gatherer.team !== "lobby" ? `panel-${gatherer.team}` : "panel-info";

@@ -933,7 +933,6 @@ const GathererListItem = React.createClass({
 		let idleStatus;
 		if (!gatherer.user.online) {
 			const mins = lastSeenInMinutes(gatherer);
-
 			if (mins > 60) {
 				const hours = Math.round(mins / 6) / 10;
 				idleStatus = [

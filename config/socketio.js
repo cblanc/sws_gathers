@@ -23,10 +23,23 @@ var assignRandomUser = (socket, next) => {
 	});
 };
 
+var assignFixedUser = (socket, next, userId) => {
+	usersHelper.getFixedUser(userId, function (error, user) {
+		if (error) {
+			winston.error(error);
+			return next(new Error("Authentication Failed"))
+		}
+		socket._user = user;
+		return next();
+	});
+};
+
 var handleFailedAuth = (socket, next) => {
 	if (process.env.RANDOM_USER) {
 		return assignRandomUser(socket, next);
-	} else {
+    } else if (process.env.FIXED_USER) {
+        return assignFixedUser(socket, next, process.env.FIXED_USER);
+    } else {
 		return next(new Error("Authentication Failed"));
 	}
 };

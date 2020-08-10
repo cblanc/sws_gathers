@@ -29,7 +29,7 @@ npm run watch # Compile and watch frontend assets
 
 RANDOM_USER=true npm run dev # Run dev server, loading yourself as a random user
 # or
-Fixed_USER=989 npm run dev # Run dev server, loading yourself as any user with the specified id
+FIXED_USER=989 npm run dev # Run dev server, loading yourself as any user with the specified id
 ```
 
 ## Run in production

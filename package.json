@@ -27,7 +27,7 @@
     "type": "git",
     "url": "git+https://github.com/cblanc/sws_gathers.git"
   },
-  "author": "",
+  "author": "Christopher Blanchard",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/cblanc/sws_gathers/issues"
@@ -50,7 +50,7 @@
     "moment": "^2.27.0",
     "mongoose": "~4.4.6",
     "morgan": "^1.10.0",
-    "newrelic": "^6.12.1",
+    "newrelic": "~1.22.1",
     "perfect-scrollbar": "~0.6.10",
     "popper.js": "^1.16.1",
     "react": "~0.14.6",
@@ -61,7 +61,7 @@
     "serve-favicon": "~2.4.5",
     "socket.io": "~2.1.1",
     "socket.io-client": "~2.1.1",
-    "steam": "^1.4.1",
+    "steam": "~1.4.0",
     "steamidconvert": "^0.2.4",
     "toastr": "~2.1.2",
     "winston": "^3.3.3"

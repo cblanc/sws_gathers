@@ -1,17 +1,18 @@
 "use strict";
 
-var env = process.env.NODE_ENV || "development";
-var test = env === "test";
+const env = (process.env.NODE_ENV || "development").toLowerCase().trimRight();
+const isTest = env === "test";
 
-var fs = require("fs");
-var path = require("path");
+const fs = require("fs");
+const path = require("path");
 
-var baseConfig = require(path.join(__dirname, path.join("environments/" + env.toLowerCase())));
+const baseConfigFilePath = path.join(__dirname, path.join("environments", env + ".js"));
 
+const baseConfig = require(baseConfigFilePath);
 baseConfig.steamBot = {};
 baseConfig.discordBot = {};
 
-if (!test) {
+if (!isTest) {
 	if (process.env.PORT) {
 		baseConfig.port = parseInt(process.env.PORT, 10);
 	}

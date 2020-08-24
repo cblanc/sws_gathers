@@ -50,7 +50,7 @@
     "jquery": "~2.2.0",
     "lodash": "~4.17.16",
     "moment": "~2.11.2",
-    "mongoose": "~4.7.6",
+    "mongoose": "~4.13.17",
     "morgan": "~1.9.1",
     "newrelic": "~4.0.0",
     "perfect-scrollbar": "~0.6.10",

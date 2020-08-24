@@ -47,7 +47,7 @@
     "howler": "~1.1.28",
     "javascript-brunch": ">= 1.0 < 1.8",
     "javascript-state-machine": "~2.3.5",
-    "jquery": "~2.2.0",
+    "jquery": "~3.4.0",
     "lodash": "~4.17.16",
     "moment": "~2.11.2",
     "mongoose": "~4.13.17",

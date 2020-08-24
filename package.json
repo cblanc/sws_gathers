@@ -15,7 +15,9 @@
     "watch": "npm run compile && node_modules/brunch/bin/brunch watch --server",
     "compile": "node node_modules/brunch/bin/brunch build",
     "compile_production": "node node_modules/brunch/bin/brunch build --production",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -66,7 +68,8 @@
     "steamidconvert": "~0.2.4",
     "toastr": "~2.1.4",
     "uglify-js-brunch": ">= 2.0.1",
-    "winston": "~1.0.1"
+    "winston": "~1.0.1",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "chai": "~3.1.0",
@@ -76,5 +79,6 @@
   },
   "engines": {
     "node": "^10.13.0"
-  }
+  },
+  "snyk": true
 }

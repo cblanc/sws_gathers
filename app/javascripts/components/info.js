@@ -39,7 +39,7 @@ const InfoButton = exports.InfoButton = React.createClass({
 						</a>
 					</li>
 					<li>
-						<a href="/gatherre" target="_blank">
+						<a href="https://www.ensl.org/gatherre" target="_blank">
 							<i className="fa fa-legal">&nbsp;</i>&nbsp;Gather Rules
 						</a>
 					</li>

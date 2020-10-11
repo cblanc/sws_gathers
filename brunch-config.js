@@ -34,7 +34,12 @@ exports.config = {
   // Configure your plugins
   plugins: {
     babel: {
-      presets: ["es2015", "react"],
+      presets: [
+        ["@babel/preset-env", {
+          "bugfixes": true,
+          "shippedProposals": true
+        }],
+        "@babel/preset-react"],
       // Do not use ES6 compiler in vendor code
       ignore: [/vendor/]
     }
@@ -46,16 +51,16 @@ exports.config = {
   //     'app.js': ['app']
   //   }
   // },
-  
+
   npm: {
     enabled: true,
     styles: {
       "bootstrap-solarized": ["bootstrap-solarized-dark.css"],
       "toastr": ["build/toastr.min.css"]
     },
-    whitelist: ["react", "react-dom", "jquery", "lodash", 
+    whitelist: ["react", "react-dom", "jquery", "lodash",
       "react-autolink", "react-dom", "react-emoji", "howler",
-      "bootstrap", "perfect-scrollbar", "moment", "toastr", 
+      "bootstrap", "perfect-scrollbar", "moment", "toastr",
       "socket.io-client"],
     globals: {
       "_": "lodash",
@@ -63,7 +68,5 @@ exports.config = {
       "$": "jquery",
       "toastr": "toastr"
     }
-  },
-
-  notifications: true
+  }
 };

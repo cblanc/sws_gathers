@@ -1,26 +1,24 @@
-const React = require("react");
+import React from "react"
 
-const InfoButton = exports.InfoButton = React.createClass({
-  getInitialState() {
-    return {
-      open: false
-    };
-  },
+class InfoButton extends React.Component {
+  state = {
+    open: false
+  }
 
-  toggleOpen(e) {
+  toggleOpen = (e) => {
     e.preventDefault();
     this.setState({ open: !this.state.open });
-  },
+  }
 
-  chevron() {
+  chevron = () => {
     if (this.state.open) {
       return <i className="fa fa-angle-down pull-right"></i>;
     } else {
       return <i className="fa fa-angle-right pull-right"></i>;
     }
-  },
+  }
 
-  render() {
+  render = () => {
     const open = this.state.open;
     let componentClass = ["treeview"];
     let dropdown;
@@ -62,5 +60,7 @@ const InfoButton = exports.InfoButton = React.createClass({
       </li>
     );
   }
-});
+}
+
+export { InfoButton }
 

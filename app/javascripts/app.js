@@ -1,9 +1,10 @@
-const React = require("react");
-const ReactDOM = require("react-dom");
-const App = require("javascripts/components/main");
+import React from "react";
+import ReactDOM from "react-dom";
+import { App } from "./components/main";
+
 
 module.exports = function (mount) {
-	ReactDOM.render(<App />, mount);
+  ReactDOM.render(<App />, mount);
 };
 
 toastr.options = {

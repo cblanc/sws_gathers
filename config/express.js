@@ -19,7 +19,7 @@ module.exports = app => {
   });
   // Enforce HTTPS in production
   if (env === 'production') {
-    app.use((req,res,next) => {
+    app.use((req, res, next) => {
       res.setHeader('Strict-Transport-Security', 'max-age=2592000; includeSubdomains'); // Enforce usage of HTTPS; max-age = 30 days
       next();
     });
@@ -28,27 +28,27 @@ module.exports = app => {
   app.use(cookieParser());
   app.use(favicon(path.join(__dirname, '../public/favicon.ico')));
 
-	// Use winston on production
-  var log;
-  if (env !== 'development') {
-    log = {
-      stream: {
-        write: (message, encoding) => {
-          winston.info(message);
-        }
-      }
-    };
-  } else {
-    log = 'dev';
-  }
+  // // Use winston on production
+  // var log;
+  // if (env !== 'development') {
+  //   log = {
+  //     stream: {
+  //       write: (message, encoding) => {
+  //         winston.info(message);
+  //       }
+  //     }
+  //   };
+  // } else {
+  //   log = 'dev';
+  // }
 
-  if (env !== 'test') app.use(morgan(log));
-  
+  // if (env !== 'test') app.use(morgan(log));
+
   var hbs = exphbs({
-    defaultLayout: 'main', 
+    defaultLayout: 'main',
     extname: '.hbs'
   });
 
-	app.engine('.hbs', hbs);
-	app.set('view engine', '.hbs');
+  app.engine('.hbs', hbs);
+  app.set('view engine', '.hbs');
 };

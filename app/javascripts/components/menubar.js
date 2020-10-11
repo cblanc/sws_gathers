@@ -1,17 +1,20 @@
-const MenubarMixin = exports.MenubarMixin = {
-	getInitialState() {
-		return {
-			show: false
-		}
-	},
+var MenubarMixin = Base => class extends Base {
 
-	toggleShow() {
-		this.setState({ show: !this.state.show });
-	},
+  getInitialState() {
+    return {
+      show: false
+    }
+  }
 
-	componentClass() {
-		let componentClass = ["dropdown", "messages-menu"];
-		if (this.state.show) componentClass.push("open");
-		return componentClass.join(" ");
-	}
+  toggleShow = () => {
+    this.setState({ show: !this.state.show });
+  }
+
+  componentClass = () => {
+    let componentClass = ["dropdown", "messages-menu"];
+    if (this.state.show) componentClass.push("open");
+    return componentClass.join(" ");
+  }
 };
+
+export { MenubarMixin }

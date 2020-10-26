@@ -1,11 +1,9 @@
-#!/bin/bash
-
 cd /app
 
 if [ -f "/home/web/tmp/.updatePublic" ]; then
-  cp -r /home/web/tmp/public /app/public
+  /bin/cp -rf /home/web/tmp/public /app
   rm -rf /home/web/tmp/public
-  rm /home/web/tmp/.updatePublic
+  rm -f /home/web/tmp/.updatePublic
 fi
 
 node index.js

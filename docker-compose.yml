@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  production:
+    container_name: ensl_gather_production
+    build:
+      context: ./
+      target: production
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+    command: ["/app/bin/entry.sh"]
+    user: web:web
+    environment:
+      - NODE_ENV=production
+      - PORT=$NODE_PORT
+      - "MONGOLAB_URI=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb/${MONGODB_DATABASE}"
+      - RAILS_SECRET
+      - NEW_RELIC_LICENSE_KEY
+      - GATHER_STEAM_ACCOUNT
+      - GATHER_STEAM_PASSWORD
+      - GATHER_DISCORD_HOOK_ID
+      - GATHER_DISCORD_HOOK_TOKEN
+      - RANDOM_USER
+      - FIXED_USER
+    ports:
+      - "${NODE_PORT}:${NODE_PORT}"
+    volumes:
+      - "./public:/app/public"
+    init: true
+  mongodb:
+    image: "bitnami/mongodb:latest"
+    container_name: ensl_gather_mongodb
+    volumes:
+      - "./db/data:/bitnami/mongodb"
+    environment:
+      - MONGODB_USERNAME
+      - MONGODB_PASSWORD
+      - MONGODB_DATABASE

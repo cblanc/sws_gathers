@@ -6,25 +6,22 @@ var mongoose = require("mongoose");
 var config = require(path.join(__dirname, "../config/config.js"));
 
 var connect = function () {
-	mongoose.connect(config.mongo.uri, { 
-		server: { 
-			socketOptions: { 
-				keepAlive: 1, 
-				connectTimeoutMS: 30000 
-			} 
-		} 
-	});
+  mongoose.connect(config.mongo.uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }).then(
+    () => winston.info("MongoDB: Connection established"),
+    error => winston.error(error)
+  );
 };
 
 connect();
 
-mongoose.connection.on("error", function (error) {
-	winston.error(error);
-});
+mongoose.connection.on("error", (error) => winston.error(error));
+mongoose.connection.on("disconnected", () => winston.error("MongoDB: Was disconnected."));
+mongoose.connection.on("reconnectFailed", () => winston.error("MongoDB: Reconnect Failed!"));
 
-mongoose.connection.on("disconnected", function () {
-	winston.error("MongoDB: Was disconnected.");
-});
+mongoose.connection.on("reconnected", () => winston.info("MongoDB: Connection established"));
 
 // Load models
 require(path.join(__dirname, "/models/event"));

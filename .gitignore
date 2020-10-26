@@ -9,3 +9,5 @@ public/app.css
 public/app.css.map
 public/vendor.js
 public/vendor.js.map
+db/data
+.env

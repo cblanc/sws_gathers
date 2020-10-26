@@ -1,0 +1,9 @@
+node_modules
+.snyk
+*.md
+db/data
+Procfile
+Dockerfile
+docker-compose.yml
+.env*
+.nvmrc

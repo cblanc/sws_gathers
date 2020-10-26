@@ -31,7 +31,7 @@
   "homepage": "https://github.com/cblanc/sws_gathers",
   "dependencies": {
     "async": "~1.4.0",
-    "bootstrap": "~4.0.0",
+    "bootstrap": "~4.3.1",
     "bootstrap-solarized": "~1.0.2",
     "brunch": "~3.0.0",
     "clean-css-brunch": ">=3.0.0",

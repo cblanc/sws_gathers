@@ -31,7 +31,7 @@
   "homepage": "https://github.com/cblanc/sws_gathers",
   "dependencies": {
     "async": "~1.4.0",
-    "bootstrap": "~4.0.0",
+    "bootstrap": "~4.1.2",
     "bootstrap-solarized": "~1.0.2",
     "brunch": "~3.0.0",
     "clean-css-brunch": ">=3.0.0",
@@ -55,7 +55,7 @@
     "perfect-scrollbar": "~0.6.10",
     "react": "^16.13.1",
     "react-autolink": "~0.2.1",
-    "react-dom": "~16.0.1",
+    "react-dom": "~16.5.0",
     "react-emoji": "~0.4.1",
     "request": "~2.88.0",
     "serve-favicon": "~2.4.5",

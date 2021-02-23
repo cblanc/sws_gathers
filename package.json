@@ -46,7 +46,7 @@
     "javascript-brunch": ">= 1.0 < 1.8",
     "javascript-state-machine": "~2.3.5",
     "jquery": "~3.5.0",
-    "lodash": "~4.17.20",
+    "lodash": "~4.17.21",
     "marshal": "^0.5.2",
     "moment": "~2.11.2",
     "mongoose": "~5.7.5",

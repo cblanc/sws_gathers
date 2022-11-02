@@ -82,8 +82,8 @@
     "@types/winston": "^2.4.4",
     "babel-brunch": "^7.0.1",
     "chai": "~3.1.0",
-    "mocha": "~2.2.5",
-    "nodemon": "~1.4.0",
+    "mocha": "~10.1.0",
+    "nodemon": "~1.19.4",
     "supertest": "~1.0.1",
     "terser-brunch": "^4.0.0"
   },

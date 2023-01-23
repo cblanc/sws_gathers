@@ -84,7 +84,7 @@
     "chai": "~3.1.0",
     "mocha": "~2.2.5",
     "nodemon": "~1.4.0",
-    "supertest": "~1.0.1",
+    "supertest": "~6.3.3",
     "terser-brunch": "^4.0.0"
   },
   "engines": {

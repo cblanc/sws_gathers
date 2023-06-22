@@ -51,7 +51,7 @@
     "moment": "~2.11.2",
     "mongoose": "~5.7.5",
     "morgan": "~1.9.1",
-    "newrelic": "~5.13.1",
+    "newrelic": "~9.0.0",
     "perfect-scrollbar": "~0.6.10",
     "react": "^16.13.1",
     "react-autolink": "~0.2.1",

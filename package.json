@@ -47,7 +47,7 @@
     "javascript-state-machine": "~2.3.5",
     "jquery": "~3.5.0",
     "lodash": "~4.17.20",
-    "marshal": "^0.5.2",
+    "marshal": "^0.5.3",
     "moment": "~2.11.2",
     "mongoose": "~5.7.5",
     "morgan": "~1.9.1",
